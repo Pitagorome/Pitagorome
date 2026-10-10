@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://e2m8qf3v4p7x1"]
+[gd_scene load_steps=30 format=3 uid="uid://e2m8qf3v4p7x1"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -43,6 +43,15 @@ size = Vector2(90, 20)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c_wall_bottom_inner"]
 size = Vector2(60, 20)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_250"]
+size = Vector2(250, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_100"]
+size = Vector2(100, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_110"]
+size = Vector2(110, 20)
+
 [node name="SchoolCorridor" type="Node2D"]
 script = ExtResource("90_room")
 location_id = "corredor"
@@ -82,28 +91,28 @@ texture = ExtResource("11_clock")
 [node name="MapWalls" type="StaticBody2D" parent="."]
 
 [node name="TopLeft" type="CollisionShape2D" parent="MapWalls"]
-position = Vector2(-150, -85)
-shape = SubResource("RectangleShape2D_c_wall_top_l")
+position = Vector2(-145, -85)
+shape = SubResource("RectangleShape2D_wall_250")
 
 [node name="TopRight" type="CollisionShape2D" parent="MapWalls"]
-position = Vector2(150, -85)
-shape = SubResource("RectangleShape2D_c_wall_top_r")
+position = Vector2(145, -85)
+shape = SubResource("RectangleShape2D_wall_250")
 
-[node name="BottomLeftOuter" type="CollisionShape2D" parent="MapWalls"]
-position = Vector2(-215, 85)
-shape = SubResource("RectangleShape2D_c_wall_bottom_outer")
+[node name="BottomA" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(-220, 85)
+shape = SubResource("RectangleShape2D_wall_100")
 
-[node name="BottomLeftInner" type="CollisionShape2D" parent="MapWalls"]
-position = Vector2(-100, 85)
-shape = SubResource("RectangleShape2D_c_wall_bottom_inner")
+[node name="BottomB" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(-75, 85)
+shape = SubResource("RectangleShape2D_wall_110")
 
-[node name="BottomRightInner" type="CollisionShape2D" parent="MapWalls"]
-position = Vector2(100, 85)
-shape = SubResource("RectangleShape2D_c_wall_bottom_inner")
+[node name="BottomC" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(75, 85)
+shape = SubResource("RectangleShape2D_wall_110")
 
-[node name="BottomRightOuter" type="CollisionShape2D" parent="MapWalls"]
-position = Vector2(215, 85)
-shape = SubResource("RectangleShape2D_c_wall_bottom_outer")
+[node name="BottomD" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(220, 85)
+shape = SubResource("RectangleShape2D_wall_100")
 
 [node name="LeftWall" type="CollisionShape2D" parent="MapWalls"]
 position = Vector2(-270, 0)
