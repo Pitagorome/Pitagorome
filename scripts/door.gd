@@ -12,7 +12,7 @@ func _ready() -> void:
 	get_tree().create_timer(0.5).timeout.connect(func(): can_teleport = true)
 
 func _on_body_entered(body: Node2D) -> void:
-	if not can_teleport:
+	if not can_teleport or Transition.is_transitioning:
 		return
 	if body.is_in_group("player") or body.name == "Player" or body.name == "director":
 		if target_scene != "":

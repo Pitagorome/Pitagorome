@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://d9v1x3k5m7p8a"]
+[gd_scene load_steps=6 format=3 uid="uid://d9v1x3k5m7p8a"]
 
 [ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="2_font_bold"]
+[ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Regular.ttf" id="3_font_reg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
 bg_color = Color(0.18, 0.25, 0.16, 0.85)
@@ -53,18 +54,32 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 4
 
-[node name="LabelTask" type="Label" parent="Control/MarginContainer/HBoxContainer/PanelTask/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Control/MarginContainer/HBoxContainer/PanelTask/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="LabelTask" type="Label" parent="Control/MarginContainer/HBoxContainer/PanelTask/Margin/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
 theme_override_fonts/font = ExtResource("2_font_bold")
 theme_override_font_sizes/font_size = 11
-text = "📋 Tarefa 1: Tour na Escola"
+text = "Tarefa 1: Tour na Escola"
+
+[node name="LabelObjective" type="Label" parent="Control/MarginContainer/HBoxContainer/PanelTask/Margin/VBox"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 0.78, 1)
+theme_override_fonts/font = ExtResource("3_font_reg")
+theme_override_font_sizes/font_size = 8
+text = "Objetivo"
+autowrap_mode = 3
 
 [node name="Spacer" type="Control" parent="Control/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="PanelDirector" type="PanelContainer" parent="Control/MarginContainer/HBoxContainer"]
+size_flags_vertical = 0
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
 
@@ -80,4 +95,4 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.99, 0.75, 0.35, 1)
 theme_override_fonts/font = ExtResource("2_font_bold")
 theme_override_font_sizes/font_size = 11
-text = "🎓 Diretor: Diretor"
+text = "Diretor: Diretor"

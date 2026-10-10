@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://c8m3qf9v1p0d1"]
+[gd_scene load_steps=6 format=3 uid="uid://c8m3qf9v1p0d1"]
 
 [ext_resource type="Script" path="res://scripts/dialogue_box.gd" id="1_dlgbox"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="2_font_bold"]
@@ -30,6 +30,8 @@ corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_gender"]
 
 [node name="DialogueBox" type="CanvasLayer"]
 layer = 10
@@ -102,10 +104,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -140.0
-offset_top = -60.0
-offset_right = 140.0
-offset_bottom = 60.0
+offset_left = -150.0
+offset_top = -85.0
+offset_right = 150.0
+offset_bottom = 85.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_dlg")
@@ -126,7 +128,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.290196, 0.403922, 0.254902, 1)
 theme_override_fonts/font = ExtResource("2_font_bold")
 theme_override_font_sizes/font_size = 13
-text = "Como devemos te chamar?"
+text = "Crie seu personagem"
 horizontal_alignment = 1
 
 [node name="LineEdit" type="LineEdit" parent="Control/NameInputModal/MarginContainer/VBoxContainer"]
@@ -138,6 +140,70 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_input")
 text = "Diretor(a)"
 placeholder_text = "Digite seu nome..."
 alignment = 1
+
+[node name="GenderRow" type="HBoxContainer" parent="Control/NameInputModal/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="GenderLabel" type="Label" parent="Control/NameInputModal/MarginContainer/VBoxContainer/GenderRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.33, 0.33, 0.33, 1)
+theme_override_fonts/font = ExtResource("3_font_reg")
+theme_override_font_sizes/font_size = 10
+text = "Você é:"
+
+[node name="MaleButton" type="Button" parent="Control/NameInputModal/MarginContainer/VBoxContainer/GenderRow"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font_bold")
+theme_override_font_sizes/font_size = 10
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_gender")
+text = "Diretor"
+
+[node name="FemaleButton" type="Button" parent="Control/NameInputModal/MarginContainer/VBoxContainer/GenderRow"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font_bold")
+theme_override_font_sizes/font_size = 10
+toggle_mode = true
+button_group = SubResource("ButtonGroup_gender")
+text = "Diretora"
+
+[node name="AppearanceRow" type="HBoxContainer" parent="Control/NameInputModal/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="AppearanceTitle" type="Label" parent="Control/NameInputModal/MarginContainer/VBoxContainer/AppearanceRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.33, 0.33, 0.33, 1)
+theme_override_fonts/font = ExtResource("3_font_reg")
+theme_override_font_sizes/font_size = 10
+text = "Aparência:"
+
+[node name="PrevButton" type="Button" parent="Control/NameInputModal/MarginContainer/VBoxContainer/AppearanceRow"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font_bold")
+theme_override_font_sizes/font_size = 10
+text = " < "
+
+[node name="AppearanceLabel" type="Label" parent="Control/NameInputModal/MarginContainer/VBoxContainer/AppearanceRow"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.45, 0.05, 1)
+theme_override_fonts/font = ExtResource("2_font_bold")
+theme_override_font_sizes/font_size = 10
+text = "Visual 1"
+horizontal_alignment = 1
+
+[node name="NextButton" type="Button" parent="Control/NameInputModal/MarginContainer/VBoxContainer/AppearanceRow"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font_bold")
+theme_override_font_sizes/font_size = 10
+text = " > "
 
 [node name="ConfirmButton" type="Button" parent="Control/NameInputModal/MarginContainer/VBoxContainer"]
 layout_mode = 2

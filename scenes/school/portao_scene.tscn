@@ -1,0 +1,365 @@
+[gd_scene load_steps=21 format=3]
+
+[ext_resource type="Script" path="res://scripts/school_room.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="3_coord"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npc_aluno.tscn" id="4_aluno"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="5_dlgbox"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="6_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/challenge_modal.tscn" id="7_modal"]
+[ext_resource type="Script" path="res://scripts/door.gd" id="8_door"]
+[ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="9_font"]
+[ext_resource type="Texture2D" path="res://assets/props/plant_palm.png" id="10_palm"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/amelia_frames.tres" id="95_amelia"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/adam_frames.tres" id="96_adam"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/bob_frames.tres" id="97_bob"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/alex_frames.tres" id="98_alex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
+size = Vector2(180, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_side"]
+size = Vector2(20, 260)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_bottom"]
+size = Vector2(440, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_van"]
+size = Vector2(68, 28)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
+size = Vector2(40, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_plant"]
+size = Vector2(14, 8)
+
+[node name="PortaoScene" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_room")
+location_id = "portao"
+
+[node name="MapBackground" type="Node2D" parent="."]
+
+[node name="Grass" type="ColorRect" parent="MapBackground"]
+offset_left = -200.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = 100.0
+color = Color(0.56, 0.72, 0.46, 1)
+
+[node name="Sidewalk" type="ColorRect" parent="MapBackground"]
+offset_left = -200.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = -60.0
+color = Color(0.82, 0.79, 0.72, 1)
+
+[node name="Path" type="ColorRect" parent="MapBackground"]
+offset_left = -18.0
+offset_top = -60.0
+offset_right = 18.0
+offset_bottom = 34.0
+color = Color(0.82, 0.79, 0.72, 1)
+
+[node name="Street" type="ColorRect" parent="MapBackground"]
+offset_left = -200.0
+offset_top = 34.0
+offset_right = 200.0
+offset_bottom = 100.0
+color = Color(0.36, 0.36, 0.4, 1)
+
+[node name="StreetLine" type="ColorRect" parent="MapBackground"]
+offset_left = -200.0
+offset_top = 90.0
+offset_right = 200.0
+offset_bottom = 92.0
+color = Color(0.95, 0.9, 0.6, 1)
+
+[node name="Facade" type="ColorRect" parent="MapBackground"]
+offset_left = -200.0
+offset_top = -130.0
+offset_right = 200.0
+offset_bottom = -95.0
+color = Color(0.72, 0.42, 0.33, 1)
+
+[node name="Gate" type="ColorRect" parent="MapBackground"]
+offset_left = -20.0
+offset_top = -125.0
+offset_right = 20.0
+offset_bottom = -95.0
+color = Color(0.3, 0.32, 0.3, 1)
+
+[node name="SchoolSign" type="Label" parent="MapBackground"]
+offset_left = -120.0
+offset_top = -128.0
+offset_right = -30.0
+offset_bottom = -113.0
+theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_fonts/font = ExtResource("9_font")
+theme_override_font_sizes/font_size = 8
+text = "ESCOLA PITAGOROME"
+horizontal_alignment = 1
+
+[node name="MapWalls" type="StaticBody2D" parent="."]
+
+[node name="TopLeft" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(-110, -100)
+shape = SubResource("RectangleShape2D_wall_top")
+
+[node name="TopRight" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(110, -100)
+shape = SubResource("RectangleShape2D_wall_top")
+
+[node name="Left" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(-210, 0)
+shape = SubResource("RectangleShape2D_wall_side")
+
+[node name="Right" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(210, 0)
+shape = SubResource("RectangleShape2D_wall_side")
+
+[node name="Bottom" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(0, 110)
+shape = SubResource("RectangleShape2D_wall_bottom")
+
+[node name="Decor" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="PalmLeft" type="StaticBody2D" parent="Decor"]
+position = Vector2(-185, -55)
+
+[node name="Sprite2D" type="Sprite2D" parent="Decor/PalmLeft"]
+texture = ExtResource("10_palm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Decor/PalmLeft"]
+position = Vector2(0, 16)
+shape = SubResource("RectangleShape2D_plant")
+
+[node name="PalmRight" type="StaticBody2D" parent="Decor"]
+position = Vector2(185, -55)
+
+[node name="Sprite2D" type="Sprite2D" parent="Decor/PalmRight"]
+texture = ExtResource("10_palm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Decor/PalmRight"]
+position = Vector2(0, 16)
+shape = SubResource("RectangleShape2D_plant")
+
+[node name="Vans" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Van1" type="StaticBody2D" parent="Vans"]
+position = Vector2(-70, 62)
+
+[node name="Body" type="ColorRect" parent="Vans/Van1"]
+offset_left = -34.0
+offset_top = -20.0
+offset_right = 34.0
+offset_bottom = 10.0
+color = Color(0.98, 0.85, 0.35, 1)
+
+[node name="Windows" type="ColorRect" parent="Vans/Van1"]
+offset_left = -28.0
+offset_top = -16.0
+offset_right = 20.0
+offset_bottom = -6.0
+color = Color(0.62, 0.8, 0.9, 1)
+
+[node name="Windshield" type="ColorRect" parent="Vans/Van1"]
+offset_left = 24.0
+offset_top = -16.0
+offset_right = 32.0
+offset_bottom = -2.0
+color = Color(0.5, 0.7, 0.85, 1)
+
+[node name="WheelBack" type="ColorRect" parent="Vans/Van1"]
+offset_left = -26.0
+offset_top = 6.0
+offset_right = -14.0
+offset_bottom = 14.0
+color = Color(0.15, 0.15, 0.15, 1)
+
+[node name="WheelFront" type="ColorRect" parent="Vans/Van1"]
+offset_left = 14.0
+offset_top = 6.0
+offset_right = 26.0
+offset_bottom = 14.0
+color = Color(0.15, 0.15, 0.15, 1)
+
+[node name="Label" type="Label" parent="Vans/Van1"]
+offset_left = -30.0
+offset_top = -6.0
+offset_right = 24.0
+offset_bottom = 7.0
+theme_override_colors/font_color = Color(0.2, 0.25, 0.2, 1)
+theme_override_fonts/font = ExtResource("9_font")
+theme_override_font_sizes/font_size = 7
+text = "VAN 1"
+horizontal_alignment = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Vans/Van1"]
+position = Vector2(0, -2)
+shape = SubResource("RectangleShape2D_van")
+
+[node name="Van2" type="StaticBody2D" parent="Vans"]
+position = Vector2(70, 62)
+
+[node name="Body" type="ColorRect" parent="Vans/Van2"]
+offset_left = -34.0
+offset_top = -20.0
+offset_right = 34.0
+offset_bottom = 10.0
+color = Color(0.95, 0.95, 0.92, 1)
+
+[node name="Windows" type="ColorRect" parent="Vans/Van2"]
+offset_left = -28.0
+offset_top = -16.0
+offset_right = 20.0
+offset_bottom = -6.0
+color = Color(0.62, 0.8, 0.9, 1)
+
+[node name="Windshield" type="ColorRect" parent="Vans/Van2"]
+offset_left = 24.0
+offset_top = -16.0
+offset_right = 32.0
+offset_bottom = -2.0
+color = Color(0.5, 0.7, 0.85, 1)
+
+[node name="WheelBack" type="ColorRect" parent="Vans/Van2"]
+offset_left = -26.0
+offset_top = 6.0
+offset_right = -14.0
+offset_bottom = 14.0
+color = Color(0.15, 0.15, 0.15, 1)
+
+[node name="WheelFront" type="ColorRect" parent="Vans/Van2"]
+offset_left = 14.0
+offset_top = 6.0
+offset_right = 26.0
+offset_bottom = 14.0
+color = Color(0.15, 0.15, 0.15, 1)
+
+[node name="Label" type="Label" parent="Vans/Van2"]
+offset_left = -30.0
+offset_top = -6.0
+offset_right = 24.0
+offset_bottom = 7.0
+theme_override_colors/font_color = Color(0.2, 0.25, 0.2, 1)
+theme_override_fonts/font = ExtResource("9_font")
+theme_override_font_sizes/font_size = 7
+text = "VAN 2"
+horizontal_alignment = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Vans/Van2"]
+position = Vector2(0, -2)
+shape = SubResource("RectangleShape2D_van")
+
+[node name="SpawnFromCorridor" type="Marker2D" parent="."]
+position = Vector2(0, -70)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(0, -70)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(2.5, 2.5)
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
+
+[node name="NPCCoordenadora" parent="." instance=ExtResource("3_coord")]
+position = Vector2(0, 15)
+visible_in_tasks = Array[int]([5])
+
+[node name="Excursao" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="AlunoJoao" parent="Excursao" groups=["excursao"] instance=ExtResource("4_aluno")]
+position = Vector2(-150, -25)
+npc_name = "João"
+visible_in_tasks = Array[int]([5])
+frames = ExtResource("96_adam")
+tint = Color(1, 0.9, 0.8, 1)
+lines = Array[String](["Se o Pedro for na minha van, eu vou a pé!"])
+
+[node name="AlunoPedro" parent="Excursao" groups=["excursao"] instance=ExtResource("4_aluno")]
+position = Vector2(-110, -25)
+npc_name = "Pedro"
+visible_in_tasks = Array[int]([5])
+frames = ExtResource("97_bob")
+tint = Color(0.85, 0.95, 1, 1)
+lines = Array[String](["Nem pensar em viajar com o João depois daquela briga."])
+
+[node name="AlunaAna" parent="Excursao" groups=["excursao"] instance=ExtResource("4_aluno")]
+position = Vector2(-70, -25)
+npc_name = "Ana"
+visible_in_tasks = Array[int]([5])
+frames = ExtResource("95_amelia")
+tint = Color(1, 0.85, 0.9, 1)
+lines = Array[String](["Eu e a Maria vamos juntas, combinado?"])
+
+[node name="AlunoLucas" parent="Excursao" groups=["excursao"] instance=ExtResource("4_aluno")]
+position = Vector2(-30, -25)
+npc_name = "Lucas"
+visible_in_tasks = Array[int]([5])
+frames = ExtResource("98_alex")
+tint = Color(0.9, 1, 0.85, 1)
+lines = Array[String](["Eu e a Ana somos líderes: cada um cuida de um grupo."])
+
+[node name="AlunaMaria" parent="Excursao" groups=["excursao"] instance=ExtResource("4_aluno")]
+position = Vector2(30, -25)
+npc_name = "Maria"
+visible_in_tasks = Array[int]([5])
+frames = ExtResource("95_amelia")
+tint = Color(0.9, 0.9, 1, 1)
+lines = Array[String](["Onde a Ana for, eu vou!"])
+
+[node name="AlunoCarlos" parent="Excursao" groups=["excursao"] instance=ExtResource("4_aluno")]
+position = Vector2(70, -25)
+npc_name = "Carlos"
+visible_in_tasks = Array[int]([5])
+frames = ExtResource("97_bob")
+tint = Color(1, 1, 0.8, 1)
+lines = Array[String](["O João fica me cutucando a viagem toda... prefiro outra van."])
+
+[node name="MonitorRafael" parent="Excursao" groups=["excursao"] instance=ExtResource("4_aluno")]
+position = Vector2(110, -25)
+npc_name = "Monitor Rafael"
+visible_in_tasks = Array[int]([5])
+frames = ExtResource("96_adam")
+tint = Color(0.8, 0.8, 0.8, 1)
+lines = Array[String](["Cada van precisa de exatamente um monitor. Eu vou em qualquer uma."])
+
+[node name="MonitoraBeatriz" parent="Excursao" groups=["excursao"] instance=ExtResource("4_aluno")]
+position = Vector2(150, -25)
+npc_name = "Monitora Beatriz"
+visible_in_tasks = Array[int]([5])
+frames = ExtResource("95_amelia")
+tint = Color(0.8, 0.8, 0.8, 1)
+lines = Array[String](["Só cabem 4 pessoas em cada van, contando com a gente!"])
+
+[node name="DoorToCorridor" type="Area2D" parent="."]
+position = Vector2(0, -100)
+script = ExtResource("8_door")
+target_scene = "res://scenes/school/school_corridor.tscn"
+target_spawn_id = "SpawnFromPortao"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToCorridor"]
+shape = SubResource("RectangleShape2D_door")
+
+[node name="DoorLabel" type="Label" parent="DoorToCorridor"]
+offset_left = -50.0
+offset_top = 12.0
+offset_right = 50.0
+offset_bottom = 25.0
+theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("9_font")
+theme_override_font_sizes/font_size = 7
+text = "▲ Entrar na escola"
+horizontal_alignment = 1
+
+[node name="HUD" parent="." instance=ExtResource("6_hud")]
+
+[node name="DialogueBox" parent="." instance=ExtResource("5_dlgbox")]
+
+[node name="ChallengeModal" parent="." instance=ExtResource("7_modal")]

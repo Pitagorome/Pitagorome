@@ -7,6 +7,8 @@ extends StaticBody2D
 @export var object_name: String = "Objeto"
 @export var hint_text: String = "[E] Examinar"
 @export_multiline var examine_text: String = ""
+# Se preenchido, quem decide o que acontece é o Fase1Flow (ex: "cofre", "calendario")
+@export var flow_event: String = ""
 
 # Se estiver vinculado a um desafio
 @export var is_challenge_trigger: bool = false
@@ -36,7 +38,7 @@ func _ready() -> void:
 		interaction_area.body_exited.connect(_on_body_exited)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not player_in_range or DialogueManager.is_active:
+	if not player_in_range or DialogueManager.is_busy():
 		return
 	
 	if event.is_action_pressed("abrir_licoes") or event.is_action_pressed("ui_accept") or (event is InputEventKey and event.pressed and (event.keycode == KEY_E or event.physical_keycode == KEY_E or event.keycode == KEY_SPACE or event.keycode == KEY_ENTER)):
@@ -59,8 +61,10 @@ func interact() -> void:
 	if hint_label:
 		hint_label.visible = false
 	
-	# Se for um desafio e a tarefa estiver ativa ou disponível
-	if is_challenge_trigger:
+	if flow_event != "":
+		Fase1Flow.on_object_event(flow_event, self)
+	# Desafio só abre se for a tarefa atual; fora dela o objeto só é examinado
+	elif is_challenge_trigger and GameManager.current_task_id == challenge_task_id:
 		_trigger_challenge()
 	elif examine_text != "":
 		DialogueManager.start_dialogue([

@@ -17,11 +17,24 @@ func _ready() -> void:
 			print("[Player] Posicionado no spawn point: ", GameManager.target_spawn_id)
 		GameManager.target_spawn_id = ""
 	
+	_apply_appearance()
+	GameManager.player_info_updated.connect(func(_n, _g): _apply_appearance())
+
 	if animated_sprite:
 		animated_sprite.play("idle_down")
 
+# Troca o sprite pela aparência escolhida na criação do personagem
+func _apply_appearance() -> void:
+	if not animated_sprite:
+		return
+	var frames: SpriteFrames = GameManager.get_appearance_frames()
+	if frames and animated_sprite.sprite_frames != frames:
+		var anim: StringName = animated_sprite.animation
+		animated_sprite.sprite_frames = frames
+		animated_sprite.play(anim)
+
 func _physics_process(_delta: float) -> void:
-	if DialogueManager.is_active:
+	if DialogueManager.is_busy():
 		velocity = Vector2.ZERO
 		_update_animation(Vector2.ZERO)
 		move_and_slide()
@@ -44,11 +57,13 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if DialogueManager.is_active:
+	if DialogueManager.is_busy():
 		return
 	
 	if event.is_action_pressed("abrir_licoes") or event.is_action_pressed("ui_accept"):
-		_try_interact()
+		if _try_interact():
+			# Evita que o mesmo aperto de tecla acione o objeto de novo pela área dele
+			get_viewport().set_input_as_handled()
 
 func _update_raycast_direction(dir: Vector2) -> void:
 	if abs(dir.x) > abs(dir.y):
@@ -83,8 +98,10 @@ func _update_animation(input_dir: Vector2) -> void:
 			else:
 				animated_sprite.play("walk_down")
 
-func _try_interact() -> void:
+func _try_interact() -> bool:
 	if interact_ray and interact_ray.is_colliding():
 		var collider = interact_ray.get_collider()
 		if collider and collider.has_method("interact"):
 			collider.interact()
+			return true
+	return false

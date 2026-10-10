@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://e2m8qf3v4p7x1"]
+[gd_scene load_steps=27 format=3 uid="uid://e2m8qf3v4p7x1"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -12,17 +12,17 @@
 [ext_resource type="Texture2D" path="res://assets/props/plant_palm.png" id="10_palm"]
 [ext_resource type="Texture2D" path="res://assets/props/wall_clock.png" id="11_clock"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="12_font"]
+[ext_resource type="Script" path="res://scripts/school_room.gd" id="90_room"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npc_aluno.tscn" id="93_aluno"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npc_professor.tscn" id="94_prof"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/adam_frames.tres" id="96_adam"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/bob_frames.tres" id="97_bob"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/alex_frames.tres" id="98_alex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c_wall_top_l"]
 size = Vector2(160, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c_wall_top_r"]
-size = Vector2(160, 20)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_c_wall_bottom_l"]
-size = Vector2(160, 20)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_c_wall_bottom_r"]
 size = Vector2(160, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c_wall_left"]
@@ -37,7 +37,15 @@ size = Vector2(16, 20)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
 size = Vector2(40, 20)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c_wall_bottom_outer"]
+size = Vector2(90, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c_wall_bottom_inner"]
+size = Vector2(60, 20)
+
 [node name="SchoolCorridor" type="Node2D"]
+script = ExtResource("90_room")
+location_id = "corredor"
 y_sort_enabled = true
 
 [node name="MapBackground" type="Node2D" parent="."]
@@ -80,13 +88,21 @@ shape = SubResource("RectangleShape2D_c_wall_top_l")
 position = Vector2(150, -85)
 shape = SubResource("RectangleShape2D_c_wall_top_r")
 
-[node name="BottomLeft" type="CollisionShape2D" parent="MapWalls"]
-position = Vector2(-150, 85)
-shape = SubResource("RectangleShape2D_c_wall_bottom_l")
+[node name="BottomLeftOuter" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(-215, 85)
+shape = SubResource("RectangleShape2D_c_wall_bottom_outer")
 
-[node name="BottomRight" type="CollisionShape2D" parent="MapWalls"]
-position = Vector2(150, 85)
-shape = SubResource("RectangleShape2D_c_wall_bottom_r")
+[node name="BottomLeftInner" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(-100, 85)
+shape = SubResource("RectangleShape2D_c_wall_bottom_inner")
+
+[node name="BottomRightInner" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(100, 85)
+shape = SubResource("RectangleShape2D_c_wall_bottom_inner")
+
+[node name="BottomRightOuter" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(215, 85)
+shape = SubResource("RectangleShape2D_c_wall_bottom_outer")
 
 [node name="LeftWall" type="CollisionShape2D" parent="MapWalls"]
 position = Vector2(-270, 0)
@@ -159,6 +175,12 @@ position = Vector2(-210, 0)
 [node name="SpawnFromLibrary" type="Marker2D" parent="."]
 position = Vector2(0, -45)
 
+[node name="SpawnFromAlmox" type="Marker2D" parent="."]
+position = Vector2(-150, 38)
+
+[node name="SpawnFromPortao" type="Marker2D" parent="."]
+position = Vector2(150, 38)
+
 [node name="Player" parent="." instance=ExtResource("1_player")]
 position = Vector2(0, 45)
 
@@ -169,7 +191,47 @@ position_smoothing_speed = 8.0
 
 [node name="NPCCoordenadora" parent="." instance=ExtResource("2_coord")]
 position = Vector2(35, 45)
-is_intro_scene = false
+visible_in_tasks = Array[int]([1])
+
+[node name="Task4Group" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="NPCCoordenadoraTask4" parent="Task4Group" instance=ExtResource("2_coord")]
+position = Vector2(110, 30)
+visible_in_tasks = Array[int]([4])
+
+[node name="NPCProfessorTask4" parent="Task4Group" instance=ExtResource("94_prof")]
+position = Vector2(160, 30)
+default_animation = "idle_up"
+visible_in_tasks = Array[int]([4])
+
+[node name="AlunoJoao" parent="Task4Group" instance=ExtResource("93_aluno")]
+position = Vector2(110, -20)
+npc_name = "João"
+default_animation = "idle_down"
+visible_in_tasks = Array[int]([4])
+frames = ExtResource("96_adam")
+tint = Color(1, 0.9, 0.8, 1)
+testimony_id = "joao"
+
+[node name="AlunoPedro" parent="Task4Group" instance=ExtResource("93_aluno")]
+position = Vector2(155, -20)
+npc_name = "Pedro"
+default_animation = "idle_down"
+visible_in_tasks = Array[int]([4])
+frames = ExtResource("97_bob")
+tint = Color(0.85, 0.95, 1, 1)
+testimony_id = "pedro"
+
+[node name="AlunoLucas" parent="Task4Group" instance=ExtResource("93_aluno")]
+position = Vector2(200, -20)
+npc_name = "Lucas"
+default_animation = "idle_down"
+visible_in_tasks = Array[int]([4])
+frames = ExtResource("98_alex")
+tint = Color(0.9, 1, 0.85, 1)
+testimony_id = "lucas"
+
 
 [node name="NPCZelador" parent="." instance=ExtResource("3_zelador")]
 position = Vector2(-60, -10)
@@ -256,6 +318,48 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
 theme_override_fonts/font = ExtResource("12_font")
 theme_override_font_sizes/font_size = 7
 text = "▲ Biblioteca"
+horizontal_alignment = 1
+
+[node name="DoorToAlmox" type="Area2D" parent="."]
+position = Vector2(-150, 85)
+script = ExtResource("7_door")
+target_scene = "res://scenes/school/almoxarifado_scene.tscn"
+target_spawn_id = "SpawnFromCorridor"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToAlmox"]
+shape = SubResource("RectangleShape2D_door")
+
+[node name="DoorLabel" type="Label" parent="DoorToAlmox"]
+offset_left = -50.0
+offset_top = -24.0
+offset_right = 50.0
+offset_bottom = -11.0
+theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("12_font")
+theme_override_font_sizes/font_size = 7
+text = "▼ Almoxarifado"
+horizontal_alignment = 1
+
+[node name="DoorToPortao" type="Area2D" parent="."]
+position = Vector2(150, 85)
+script = ExtResource("7_door")
+target_scene = "res://scenes/school/portao_scene.tscn"
+target_spawn_id = "SpawnFromCorridor"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToPortao"]
+shape = SubResource("RectangleShape2D_door")
+
+[node name="DoorLabel" type="Label" parent="DoorToPortao"]
+offset_left = -50.0
+offset_top = -24.0
+offset_right = 50.0
+offset_bottom = -11.0
+theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("12_font")
+theme_override_font_sizes/font_size = 7
+text = "▼ Portão"
 horizontal_alignment = 1
 
 [node name="HUD" parent="." instance=ExtResource("5_hud")]

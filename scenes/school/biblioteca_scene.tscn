@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b8c9qf7v2p1x9"]
+[gd_scene load_steps=21 format=3 uid="uid://b8c9qf7v2p1x9"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="2_dlgbox"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" path="res://assets/props/globe.png" id="9_globe"]
 [ext_resource type="Texture2D" path="res://assets/props/plant_palm.png" id="10_plant"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="11_font"]
+[ext_resource type="Script" path="res://scripts/school_room.gd" id="90_room"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(340, 20)
@@ -37,6 +38,8 @@ size = Vector2(60, 22)
 size = Vector2(40, 20)
 
 [node name="BibliotecaScene" type="Node2D"]
+script = ExtResource("90_room")
+location_id = "biblioteca"
 y_sort_enabled = true
 
 [node name="MapBackground" type="Node2D" parent="."]

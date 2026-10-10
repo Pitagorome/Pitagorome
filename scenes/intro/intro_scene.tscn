@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://b6m4qf1v9p5z2"]
+[gd_scene load_steps=27 format=3 uid="uid://b6m4qf1v9p5z2"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -13,6 +13,9 @@
 [ext_resource type="Texture2D" path="res://assets/props/wall_clock.png" id="11_clock"]
 [ext_resource type="Texture2D" path="res://assets/props/diploma.png" id="12_diploma"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="13_font"]
+[ext_resource type="Script" path="res://scripts/school_room.gd" id="90_room"]
+[ext_resource type="PackedScene" path="res://scenes/ui/exclamation_marker.tscn" id="91_marker"]
+[ext_resource type="Script" path="res://scripts/interactable_object.gd" id="92_obj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(340, 20)
@@ -41,7 +44,12 @@ size = Vector2(44, 20)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
 size = Vector2(40, 20)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_calendar"]
+radius = 26.0
+
 [node name="IntroScene" type="Node2D"]
+script = ExtResource("90_room")
+location_id = "gabinete"
 y_sort_enabled = true
 
 [node name="RoomBackground" type="Node2D" parent="."]
@@ -158,6 +166,64 @@ texture = ExtResource("10_plant")
 position = Vector2(135, -25)
 texture = ExtResource("10_plant")
 
+[node name="SpawnDesk" type="Marker2D" parent="."]
+position = Vector2(0, 0)
+
+[node name="Calendar" type="StaticBody2D" parent="Furniture"]
+position = Vector2(88, -93)
+script = ExtResource("92_obj")
+object_name = "Calendário"
+hint_text = "[E] Calendário"
+flow_event = "calendario"
+
+[node name="Paper" type="ColorRect" parent="Furniture/Calendar"]
+offset_left = -8.0
+offset_top = -9.0
+offset_right = 8.0
+offset_bottom = 9.0
+color = Color(0.97, 0.96, 0.92, 1)
+
+[node name="Header" type="ColorRect" parent="Furniture/Calendar"]
+offset_left = -8.0
+offset_top = -9.0
+offset_right = 8.0
+offset_bottom = -4.0
+color = Color(0.8, 0.25, 0.2, 1)
+
+[node name="Day" type="Label" parent="Furniture/Calendar"]
+offset_left = -8.0
+offset_top = -5.0
+offset_right = 8.0
+offset_bottom = 9.0
+theme_override_colors/font_color = Color(0.25, 0.25, 0.25, 1)
+theme_override_fonts/font = ExtResource("13_font")
+theme_override_font_sizes/font_size = 8
+text = "31"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InteractionArea" type="Area2D" parent="Furniture/Calendar"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Calendar/InteractionArea"]
+shape = SubResource("CircleShape2D_calendar")
+
+[node name="HintLabel" type="Label" parent="Furniture/Calendar"]
+offset_left = -40.0
+offset_top = 12.0
+offset_right = 40.0
+offset_bottom = 25.0
+theme_override_colors/font_color = Color(0.98, 0.95, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("13_font")
+theme_override_font_sizes/font_size = 7
+text = "[E] Calendário"
+horizontal_alignment = 1
+
+[node name="ExclamationMarker" parent="Furniture/Calendar" instance=ExtResource("91_marker")]
+position = Vector2(0, -18)
+show_in_tasks = Array[int]([5])
+hide_after_event = "t5_calendar"
+
 [node name="SpawnFromCorridor" type="Marker2D" parent="."]
 position = Vector2(0, 55)
 
@@ -171,8 +237,7 @@ position_smoothing_speed = 8.0
 
 [node name="NPCCoordenadora" parent="." instance=ExtResource("2_coord")]
 position = Vector2(50, 15)
-auto_start_dialogue = true
-is_intro_scene = true
+visible_in_tasks = Array[int]([1, 2])
 
 [node name="DoorToCorridor" type="Area2D" parent="."]
 position = Vector2(0, 105)

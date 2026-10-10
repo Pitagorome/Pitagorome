@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/exclamation_marker.gd" id="1_marker"]
+[ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="2_font"]
+
+[node name="ExclamationMarker" type="Node2D"]
+z_index = 5
+script = ExtResource("1_marker")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -8.0
+offset_top = -10.0
+offset_right = 8.0
+offset_bottom = 10.0
+theme_override_colors/font_color = Color(0.99, 0.63, 0.14, 1)
+theme_override_colors/font_outline_color = Color(0.25, 0.15, 0.05, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "!"
+horizontal_alignment = 1
+vertical_alignment = 1

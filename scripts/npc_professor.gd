@@ -1,7 +1,7 @@
 extends "res://scripts/npc.gd"
 
 # NPC Professor de Matemática
-# Encontrado na sala de aula durante o tour inicial.
+# Apresentado no tour (Task 1) e presente na confusão do corredor (Task 4).
 
 func _ready() -> void:
 	super._ready()
@@ -9,6 +9,4 @@ func _ready() -> void:
 
 func interact() -> void:
 	super.interact()
-	GameManager.tour_talked_professor = true
-	GameManager.check_tour_progress()
-	DialogueManager.start_dialogue(IntroDialogues.get_professor_matematica_sequence())
+	Fase1Flow.on_professor_interact()

@@ -11,6 +11,11 @@ extends CanvasLayer
 @onready var name_input_modal: PanelContainer = $Control/NameInputModal
 @onready var name_line_edit: LineEdit = $Control/NameInputModal/MarginContainer/VBoxContainer/LineEdit
 @onready var confirm_btn: Button = $Control/NameInputModal/MarginContainer/VBoxContainer/ConfirmButton
+@onready var male_btn: Button = $Control/NameInputModal/MarginContainer/VBoxContainer/GenderRow/MaleButton
+@onready var female_btn: Button = $Control/NameInputModal/MarginContainer/VBoxContainer/GenderRow/FemaleButton
+@onready var appearance_label: Label = $Control/NameInputModal/MarginContainer/VBoxContainer/AppearanceRow/AppearanceLabel
+@onready var prev_btn: Button = $Control/NameInputModal/MarginContainer/VBoxContainer/AppearanceRow/PrevButton
+@onready var next_btn: Button = $Control/NameInputModal/MarginContainer/VBoxContainer/AppearanceRow/NextButton
 
 var waiting_for_name: bool = false
 
@@ -25,6 +30,11 @@ func _ready() -> void:
 		confirm_btn.pressed.connect(_on_confirm_name_pressed)
 	if name_line_edit:
 		name_line_edit.text_submitted.connect(_on_name_submitted)
+	# Gênero e aparência são aplicados na hora, para o jogador ver o sprite mudando
+	male_btn.pressed.connect(func(): GameManager.set_player_info("", "M"))
+	female_btn.pressed.connect(func(): GameManager.set_player_info("", "F"))
+	prev_btn.pressed.connect(func(): _cycle_appearance(-1))
+	next_btn.pressed.connect(func(): _cycle_appearance(1))
 	
 	panel.visible = false
 	name_input_modal.visible = false
@@ -55,8 +65,19 @@ func _on_dialogue_event_triggered(event_name: String) -> void:
 		waiting_for_name = true
 		name_input_modal.visible = true
 		name_line_edit.text = GameManager.player_name
+		male_btn.button_pressed = GameManager.player_gender != "F"
+		female_btn.button_pressed = GameManager.player_gender == "F"
+		_update_appearance_label()
 		name_line_edit.grab_focus()
 		name_line_edit.select_all()
+
+func _cycle_appearance(step: int) -> void:
+	var total: int = GameManager.APPEARANCES.size()
+	GameManager.set_player_info("", "", (GameManager.player_appearance + step + total) % total)
+	_update_appearance_label()
+
+func _update_appearance_label() -> void:
+	appearance_label.text = "Visual %d" % (GameManager.player_appearance + 1)
 
 func _on_confirm_name_pressed() -> void:
 	_save_name_and_continue()
@@ -67,8 +88,8 @@ func _on_name_submitted(_new_text: String) -> void:
 func _save_name_and_continue() -> void:
 	var typed_name: String = name_line_edit.text.strip_edges()
 	if typed_name.is_empty():
-		typed_name = "Diretor(a)"
-	GameManager.set_player_info(typed_name)
+		typed_name = GameManager.get_director_title()
+	GameManager.set_player_info(typed_name, "F" if female_btn.button_pressed else "M")
 	waiting_for_name = false
 	name_input_modal.visible = false
 	DialogueManager.advance()

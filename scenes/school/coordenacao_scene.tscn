@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://c2c9qf5v8p3x1"]
+[gd_scene load_steps=25 format=3 uid="uid://c2c9qf5v8p3x1"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" path="res://assets/props/red_sofa.png" id="11_sofa"]
 [ext_resource type="Texture2D" path="res://assets/props/plant_ficus.png" id="12_plant"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="13_font"]
+[ext_resource type="Script" path="res://scripts/school_room.gd" id="90_room"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(340, 20)
@@ -45,6 +46,8 @@ size = Vector2(20, 40)
 radius = 28.0
 
 [node name="CoordenacaoScene" type="Node2D"]
+script = ExtResource("90_room")
+location_id = "coordenacao"
 y_sort_enabled = true
 
 [node name="MapBackground" type="Node2D" parent="."]
@@ -127,16 +130,9 @@ shape = SubResource("RectangleShape2D_sofa")
 [node name="SchoolSafe" type="StaticBody2D" parent="Furniture"]
 position = Vector2(-100, -65)
 script = ExtResource("7_obj")
-object_name = "Cofre do Almoxarifado"
-hint_text = "[E] Abrir Cofre"
-is_challenge_trigger = true
-challenge_task_id = 3
-challenge_type = "code"
-challenge_title = "🔐 Tarefa 3: O Cofre da Escola"
-challenge_context = "O zelador guardou os novos materiais escolares no armário trancado e deixou as seguintes pistas: \n• O cadeado possui 3 dígitos.\n• O primeiro número é PAR.\n• A soma dos 3 números é 12.\n• Nenhum dígito se repete e estão em ordem CRESCENTE."
-challenge_question = "Qual é a senha de 3 dígitos do cadeado? (ex: 2 4 6)"
-challenge_correct_code = "246"
-challenge_success_feedback = "Cofre aberto com sucesso! Os dígitos 2, 4 e 6 atendem perfeitamente a todas as condições: 2 é par, 2+4+6 = 12, são únicos e estritamente crescentes!"
+object_name = "Arquivo da Coordenação"
+hint_text = "[E] Examinar"
+examine_text = "Pastas e mais pastas de documentos dos alunos. Os materiais novos ficam no almoxarifado."
 
 [node name="Sprite2D" type="Sprite2D" parent="Furniture/SchoolSafe"]
 texture = ExtResource("10_safe")
@@ -159,7 +155,7 @@ theme_override_colors/font_color = Color(0.98, 0.95, 0.8, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
 theme_override_fonts/font = ExtResource("13_font")
 theme_override_font_sizes/font_size = 7
-text = "[E] Cofre"
+text = "[E] Arquivo"
 horizontal_alignment = 1
 
 [node name="Plant" type="Sprite2D" parent="Furniture"]
@@ -179,7 +175,6 @@ position_smoothing_speed = 8.0
 
 [node name="NPCCoordenadora" parent="." instance=ExtResource("2_coord")]
 position = Vector2(60, -15)
-is_intro_scene = false
 
 [node name="DoorToCorridor" type="Area2D" parent="."]
 position = Vector2(150, 0)

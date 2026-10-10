@@ -1,0 +1,279 @@
+[gd_scene load_steps=26 format=3]
+
+[ext_resource type="Script" path="res://scripts/school_room.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="3_coord"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npc_zelador.tscn" id="4_zelador"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="5_dlgbox"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="6_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/challenge_modal.tscn" id="7_modal"]
+[ext_resource type="PackedScene" path="res://scenes/ui/exclamation_marker.tscn" id="8_marker"]
+[ext_resource type="Script" path="res://scripts/door.gd" id="9_door"]
+[ext_resource type="Script" path="res://scripts/interactable_object.gd" id="10_obj"]
+[ext_resource type="Texture2D" path="res://assets/props/bookshelf_wood.png" id="11_shelf"]
+[ext_resource type="Texture2D" path="res://assets/props/wood_cabinet.png" id="12_cabinet"]
+[ext_resource type="Texture2D" path="res://assets/props/safe_cabinet.png" id="13_safe"]
+[ext_resource type="Texture2D" path="res://assets/props/books_stack.png" id="14_boxes"]
+[ext_resource type="Texture2D" path="res://assets/props/trash_bin.png" id="15_bin"]
+[ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="16_font"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
+size = Vector2(140, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_side"]
+size = Vector2(20, 260)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_bottom"]
+size = Vector2(340, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_shelf"]
+size = Vector2(30, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_box"]
+size = Vector2(14, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
+size = Vector2(40, 20)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_safe"]
+radius = 30.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_note"]
+radius = 22.0
+
+[node name="AlmoxarifadoScene" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_room")
+location_id = "almoxarifado"
+
+[node name="MapBackground" type="Node2D" parent="."]
+
+[node name="Floor" type="ColorRect" parent="MapBackground"]
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = 100.0
+color = Color(0.72, 0.69, 0.62, 1)
+
+[node name="FloorStripe" type="ColorRect" parent="MapBackground"]
+offset_left = -150.0
+offset_top = 20.0
+offset_right = 150.0
+offset_bottom = 24.0
+color = Color(0.85, 0.72, 0.3, 0.6)
+
+[node name="WallTop" type="ColorRect" parent="MapBackground"]
+offset_left = -150.0
+offset_top = -120.0
+offset_right = 150.0
+offset_bottom = -90.0
+color = Color(0.38, 0.48, 0.35, 1)
+
+[node name="DoorGap" type="ColorRect" parent="MapBackground"]
+offset_left = -20.0
+offset_top = -120.0
+offset_right = 20.0
+offset_bottom = -90.0
+color = Color(0.55, 0.42, 0.28, 1)
+
+[node name="MapWalls" type="StaticBody2D" parent="."]
+
+[node name="TopLeft" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(-90, -100)
+shape = SubResource("RectangleShape2D_wall_top")
+
+[node name="TopRight" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(90, -100)
+shape = SubResource("RectangleShape2D_wall_top")
+
+[node name="Left" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(-160, 0)
+shape = SubResource("RectangleShape2D_wall_side")
+
+[node name="Right" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(160, 0)
+shape = SubResource("RectangleShape2D_wall_side")
+
+[node name="Bottom" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(0, 110)
+shape = SubResource("RectangleShape2D_wall_bottom")
+
+[node name="Furniture" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Shelf1" type="StaticBody2D" parent="Furniture"]
+position = Vector2(-115, -75)
+
+[node name="Sprite2D" type="Sprite2D" parent="Furniture/Shelf1"]
+texture = ExtResource("11_shelf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Shelf1"]
+position = Vector2(0, 10)
+shape = SubResource("RectangleShape2D_shelf")
+
+[node name="Shelf2" type="StaticBody2D" parent="Furniture"]
+position = Vector2(-75, -75)
+
+[node name="Sprite2D" type="Sprite2D" parent="Furniture/Shelf2"]
+texture = ExtResource("11_shelf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Shelf2"]
+position = Vector2(0, 10)
+shape = SubResource("RectangleShape2D_shelf")
+
+[node name="Cabinet" type="StaticBody2D" parent="Furniture"]
+position = Vector2(70, -75)
+
+[node name="Sprite2D" type="Sprite2D" parent="Furniture/Cabinet"]
+texture = ExtResource("12_cabinet")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Cabinet"]
+position = Vector2(0, 10)
+shape = SubResource("RectangleShape2D_shelf")
+
+[node name="LockedCabinet" type="StaticBody2D" parent="Furniture"]
+position = Vector2(115, -75)
+script = ExtResource("10_obj")
+object_name = "Armário trancado"
+hint_text = "[E] Abrir cadeado"
+flow_event = "cofre"
+
+[node name="Sprite2D" type="Sprite2D" parent="Furniture/LockedCabinet"]
+texture = ExtResource("13_safe")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/LockedCabinet"]
+position = Vector2(0, 10)
+shape = SubResource("RectangleShape2D_shelf")
+
+[node name="InteractionArea" type="Area2D" parent="Furniture/LockedCabinet"]
+position = Vector2(0, 20)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/LockedCabinet/InteractionArea"]
+shape = SubResource("CircleShape2D_safe")
+
+[node name="HintLabel" type="Label" parent="Furniture/LockedCabinet"]
+offset_left = -40.0
+offset_top = 24.0
+offset_right = 40.0
+offset_bottom = 37.0
+theme_override_colors/font_color = Color(0.98, 0.95, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("16_font")
+theme_override_font_sizes/font_size = 7
+text = "[E] Abrir cadeado"
+horizontal_alignment = 1
+
+[node name="ExclamationMarker" parent="Furniture/LockedCabinet" instance=ExtResource("8_marker")]
+position = Vector2(0, -32)
+show_in_tasks = Array[int]([3])
+
+[node name="Boxes1" type="StaticBody2D" parent="Furniture"]
+position = Vector2(-115, 50)
+
+[node name="Sprite2D" type="Sprite2D" parent="Furniture/Boxes1"]
+texture = ExtResource("14_boxes")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Boxes1"]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_box")
+
+[node name="Boxes2" type="StaticBody2D" parent="Furniture"]
+position = Vector2(-98, 62)
+
+[node name="Sprite2D" type="Sprite2D" parent="Furniture/Boxes2"]
+texture = ExtResource("14_boxes")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Boxes2"]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_box")
+
+[node name="Boxes3" type="StaticBody2D" parent="Furniture"]
+position = Vector2(110, 60)
+
+[node name="Sprite2D" type="Sprite2D" parent="Furniture/Boxes3"]
+texture = ExtResource("14_boxes")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Boxes3"]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_box")
+
+[node name="TrashBin" type="Sprite2D" parent="Furniture"]
+position = Vector2(-135, 80)
+texture = ExtResource("15_bin")
+
+[node name="SupplyNote" type="StaticBody2D" parent="Furniture"]
+position = Vector2(-75, 40)
+script = ExtResource("10_obj")
+object_name = "Bilhete"
+hint_text = "[E] Ler bilhete"
+examine_text = "\"Encomenda de materiais novos: 30 cadernos, 30 calculadoras e 1 caixa de giz. Guardado no armário do canto.\" — Zelador"
+
+[node name="Paper" type="ColorRect" parent="Furniture/SupplyNote"]
+offset_left = -5.0
+offset_top = -4.0
+offset_right = 5.0
+offset_bottom = 4.0
+color = Color(0.97, 0.95, 0.85, 1)
+
+[node name="InteractionArea" type="Area2D" parent="Furniture/SupplyNote"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/SupplyNote/InteractionArea"]
+shape = SubResource("CircleShape2D_note")
+
+[node name="HintLabel" type="Label" parent="Furniture/SupplyNote"]
+offset_left = -40.0
+offset_top = -20.0
+offset_right = 40.0
+offset_bottom = -7.0
+theme_override_colors/font_color = Color(0.98, 0.95, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("16_font")
+theme_override_font_sizes/font_size = 7
+text = "[E] Ler bilhete"
+horizontal_alignment = 1
+
+[node name="SpawnFromCorridor" type="Marker2D" parent="."]
+position = Vector2(0, -55)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(0, -55)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(2.5, 2.5)
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
+
+[node name="NPCCoordenadora" parent="." instance=ExtResource("3_coord")]
+position = Vector2(-30, 0)
+visible_in_tasks = Array[int]([3])
+
+[node name="NPCZelador" parent="." instance=ExtResource("4_zelador")]
+position = Vector2(60, -10)
+visible_in_tasks = Array[int]([3])
+
+[node name="DoorToCorridor" type="Area2D" parent="."]
+position = Vector2(0, -100)
+script = ExtResource("9_door")
+target_scene = "res://scenes/school/school_corridor.tscn"
+target_spawn_id = "SpawnFromAlmox"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToCorridor"]
+shape = SubResource("RectangleShape2D_door")
+
+[node name="DoorLabel" type="Label" parent="DoorToCorridor"]
+offset_left = -50.0
+offset_top = 12.0
+offset_right = 50.0
+offset_bottom = 25.0
+theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("16_font")
+theme_override_font_sizes/font_size = 7
+text = "▲ Corredor"
+horizontal_alignment = 1
+
+[node name="HUD" parent="." instance=ExtResource("6_hud")]
+
+[node name="DialogueBox" parent="." instance=ExtResource("5_dlgbox")]
+
+[node name="ChallengeModal" parent="." instance=ExtResource("7_modal")]

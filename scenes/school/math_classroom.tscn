@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://m1c9qf4v8p2x7"]
+[gd_scene load_steps=26 format=3 uid="uid://m1c9qf4v8p2x7"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_professor.tscn" id="2_prof"]
@@ -13,6 +13,8 @@
 [ext_resource type="Texture2D" path="res://assets/props/bookshelf_wood.png" id="11_shelf"]
 [ext_resource type="Texture2D" path="res://assets/props/schedule_chart.png" id="12_chart"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="13_font"]
+[ext_resource type="Script" path="res://scripts/school_room.gd" id="90_room"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="95_coord"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(320, 20)
@@ -45,6 +47,8 @@ size = Vector2(20, 40)
 radius = 28.0
 
 [node name="MathClassroom" type="Node2D"]
+script = ExtResource("90_room")
+location_id = "matematica"
 y_sort_enabled = true
 
 [node name="MapBackground" type="Node2D" parent="."]
@@ -156,16 +160,8 @@ shape = SubResource("RectangleShape2D_shelf")
 position = Vector2(80, -95)
 script = ExtResource("7_obj")
 object_name = "Quadro de Horários"
-hint_text = "[E] Resolver Horários"
-is_challenge_trigger = true
-challenge_task_id = 2
-challenge_type = "choice"
-challenge_title = "📐 Tarefa 2: Conflito no Horário"
-challenge_context = "Duas turmas (1º Ano A e 2º Ano B) foram agendadas na Sala de Matemática no mesmo horário! Cada professor só pode dar 1 aula por vez e o Laboratório de Ciências está livre."
-challenge_question = "Como diretor(a), qual é a reorganização lógica correta?"
-challenge_options = ["A) Alocar o 2º Ano B no Laboratório de Ciências com o Prof. de Ciências.", "B) Juntar as duas turmas na mesma sala com o Prof. de Matemática.", "C) Cancelar a aula do 1º Ano A para liberar a sala."]
-challenge_correct_index = 0
-challenge_success_feedback = "Excelente! Ao realocar o 2º Ano B no Laboratório de Ciências, respeitamos a capacidade das salas e a disponibilidade dos professores sem prejudicar nenhuma turma!"
+hint_text = "[E] Examinar"
+examine_text = "Quadro de horários da Sala de Matemática. A grade oficial da escola fica no gabinete do diretor."
 
 [node name="Sprite2D" type="Sprite2D" parent="Furniture/ScheduleBoard"]
 texture = ExtResource("12_chart")
@@ -200,6 +196,11 @@ position_smoothing_speed = 8.0
 
 [node name="NPCProfessor" parent="." instance=ExtResource("2_prof")]
 position = Vector2(0, -40)
+hidden_in_tasks = Array[int]([4])
+
+[node name="NPCCoordenadora" parent="." instance=ExtResource("95_coord")]
+position = Vector2(-60, -40)
+visible_in_tasks = Array[int]([1])
 
 [node name="DoorToCorridor" type="Area2D" parent="."]
 position = Vector2(-140, 0)
