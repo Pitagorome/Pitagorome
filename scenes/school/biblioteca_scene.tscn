@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://b8c9qf7v2p1x9"]
+[gd_scene load_steps=35 format=3 uid="uid://b8c9qf7v2p1x9"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="2_dlgbox"]
@@ -12,6 +12,20 @@
 [ext_resource type="Texture2D" path="res://assets/props/plant_palm.png" id="10_plant"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="11_font"]
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="90_room"]
+[ext_resource type="PackedScene" path="res://scenes/props/tapete_comprido.tscn" id="p_tapete_comprido"]
+[ext_resource type="PackedScene" path="res://scenes/props/mapa_mundi.tscn" id="p_mapa_mundi"]
+[ext_resource type="PackedScene" path="res://scenes/props/quadro_floresta.tscn" id="p_quadro_floresta"]
+[ext_resource type="PackedScene" path="res://scenes/props/quadro_mapa.tscn" id="p_quadro_mapa"]
+[ext_resource type="PackedScene" path="res://scenes/props/estante_livros_a.tscn" id="p_estante_livros_a"]
+[ext_resource type="PackedScene" path="res://scenes/props/estante_livros_b.tscn" id="p_estante_livros_b"]
+[ext_resource type="PackedScene" path="res://scenes/props/estante_livros_c.tscn" id="p_estante_livros_c"]
+[ext_resource type="PackedScene" path="res://scenes/props/globo.tscn" id="p_globo"]
+[ext_resource type="PackedScene" path="res://scenes/props/cadeira_madeira.tscn" id="p_cadeira_madeira"]
+[ext_resource type="PackedScene" path="res://scenes/props/mesa_professor.tscn" id="p_mesa_professor"]
+[ext_resource type="PackedScene" path="res://scenes/props/estante_madeira.tscn" id="p_estante_madeira"]
+[ext_resource type="PackedScene" path="res://scenes/props/luminaria.tscn" id="p_luminaria"]
+[ext_resource type="PackedScene" path="res://scenes/props/planta_grande.tscn" id="p_planta_grande"]
+[ext_resource type="PackedScene" path="res://scenes/props/palmeira.tscn" id="p_palmeira"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(340, 20)
@@ -52,19 +66,30 @@ offset_right = 150.0
 offset_bottom = 100.0
 color = Color(0.82, 0.72, 0.58, 1)
 
-[node name="ReadingCarpet" type="ColorRect" parent="MapBackground"]
-offset_left = -70.0
-offset_top = -30.0
-offset_right = 70.0
-offset_bottom = 45.0
-color = Color(0.70, 0.65, 0.55, 0.8)
-
 [node name="WallTop" type="ColorRect" parent="MapBackground"]
 offset_left = -150.0
 offset_top = -120.0
 offset_right = 150.0
 offset_bottom = -90.0
 color = Color(0.38, 0.48, 0.35, 1)
+
+[node name="Tapetes" type="Node2D" parent="."]
+z_index = 0
+
+[node name="TapeteLeitura" parent="Tapetes" instance=ExtResource("p_tapete_comprido")]
+position = Vector2(0, 15)
+
+[node name="Parede" type="Node2D" parent="."]
+z_index = 0
+
+[node name="Mapa" parent="Parede" instance=ExtResource("p_mapa_mundi")]
+position = Vector2(0, -106)
+
+[node name="QuadroFloresta" parent="Parede" instance=ExtResource("p_quadro_floresta")]
+position = Vector2(-30, -105)
+
+[node name="QuadroMapa" parent="Parede" instance=ExtResource("p_quadro_mapa")]
+position = Vector2(30, -105)
 
 [node name="MapWalls" type="StaticBody2D" parent="."]
 
@@ -91,63 +116,50 @@ shape = SubResource("RectangleShape2D_wall_bottom_r")
 [node name="Furniture" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[node name="Shelf1" type="StaticBody2D" parent="Furniture"]
-position = Vector2(-110, -75)
+[node name="Estante1" parent="Furniture" instance=ExtResource("p_estante_livros_a")]
+position = Vector2(-128, -91)
 
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Shelf1"]
-texture = ExtResource("7_shelf")
+[node name="Estante2" parent="Furniture" instance=ExtResource("p_estante_livros_b")]
+position = Vector2(-96, -91)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Shelf1"]
-position = Vector2(0, 10)
-shape = SubResource("RectangleShape2D_shelf")
+[node name="Estante3" parent="Furniture" instance=ExtResource("p_estante_livros_c")]
+position = Vector2(-64, -91)
 
-[node name="Shelf2" type="StaticBody2D" parent="Furniture"]
-position = Vector2(-70, -75)
+[node name="Estante4" parent="Furniture" instance=ExtResource("p_estante_livros_c")]
+position = Vector2(64, -91)
 
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Shelf2"]
-texture = ExtResource("7_shelf")
+[node name="Estante5" parent="Furniture" instance=ExtResource("p_estante_livros_a")]
+position = Vector2(96, -91)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Shelf2"]
-position = Vector2(0, 10)
-shape = SubResource("RectangleShape2D_shelf")
+[node name="Estante6" parent="Furniture" instance=ExtResource("p_estante_livros_b")]
+position = Vector2(128, -91)
 
-[node name="Shelf3" type="StaticBody2D" parent="Furniture"]
-position = Vector2(70, -75)
+[node name="Globo" parent="Furniture" instance=ExtResource("p_globo")]
+position = Vector2(0, -70)
 
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Shelf3"]
-texture = ExtResource("7_shelf")
+[node name="CadeiraEsq" parent="Furniture" instance=ExtResource("p_cadeira_madeira")]
+position = Vector2(-70, -12)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Shelf3"]
-position = Vector2(0, 10)
-shape = SubResource("RectangleShape2D_shelf")
+[node name="MesaEsq" parent="Furniture" instance=ExtResource("p_mesa_professor")]
+position = Vector2(-70, 2)
 
-[node name="Shelf4" type="StaticBody2D" parent="Furniture"]
-position = Vector2(110, -75)
+[node name="CadeiraDir" parent="Furniture" instance=ExtResource("p_cadeira_madeira")]
+position = Vector2(70, -12)
 
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Shelf4"]
-texture = ExtResource("7_shelf")
+[node name="MesaDir" parent="Furniture" instance=ExtResource("p_mesa_professor")]
+position = Vector2(70, 2)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Shelf4"]
-position = Vector2(0, 10)
-shape = SubResource("RectangleShape2D_shelf")
+[node name="EstanteLateralEsq" parent="Furniture" instance=ExtResource("p_estante_madeira")]
+position = Vector2(-135, 40)
 
-[node name="StudyTable1" type="StaticBody2D" parent="Furniture"]
-position = Vector2(0, -10)
+[node name="Luminaria" parent="Furniture" instance=ExtResource("p_luminaria")]
+position = Vector2(140, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/StudyTable1"]
-texture = ExtResource("8_desk")
+[node name="Planta" parent="Furniture" instance=ExtResource("p_planta_grande")]
+position = Vector2(-125, 85)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/StudyTable1"]
-position = Vector2(0, 4)
-shape = SubResource("RectangleShape2D_desk")
-
-[node name="Globe" type="Sprite2D" parent="Furniture/StudyTable1"]
-position = Vector2(20, -12)
-texture = ExtResource("9_globe")
-
-[node name="Plant" type="Sprite2D" parent="Furniture"]
-position = Vector2(130, 45)
-texture = ExtResource("10_plant")
+[node name="Palmeira" parent="Furniture" instance=ExtResource("p_palmeira")]
+position = Vector2(132, 82)
 
 [node name="SpawnFromCorridor" type="Marker2D" parent="."]
 position = Vector2(0, 55)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://c2c9qf5v8p3x1"]
+[gd_scene load_steps=41 format=3 uid="uid://c2c9qf5v8p3x1"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -14,6 +14,21 @@
 [ext_resource type="Texture2D" path="res://assets/props/plant_ficus.png" id="12_plant"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="13_font"]
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="90_room"]
+[ext_resource type="PackedScene" path="res://scenes/props/tapete_azul.tscn" id="p_tapete_azul"]
+[ext_resource type="PackedScene" path="res://scenes/props/quadro_avisos.tscn" id="p_quadro_avisos"]
+[ext_resource type="PackedScene" path="res://scenes/props/janela.tscn" id="p_janela"]
+[ext_resource type="PackedScene" path="res://scenes/props/quadro_peixe.tscn" id="p_quadro_peixe"]
+[ext_resource type="PackedScene" path="res://scenes/props/cadeira_madeira.tscn" id="p_cadeira_madeira"]
+[ext_resource type="PackedScene" path="res://scenes/props/balcao.tscn" id="p_balcao"]
+[ext_resource type="PackedScene" path="res://scenes/props/planta_pequena.tscn" id="p_planta_pequena"]
+[ext_resource type="PackedScene" path="res://scenes/props/armario_alto.tscn" id="p_armario_alto"]
+[ext_resource type="PackedScene" path="res://scenes/props/prateleira.tscn" id="p_prateleira"]
+[ext_resource type="PackedScene" path="res://scenes/props/armario_madeira.tscn" id="p_armario_madeira"]
+[ext_resource type="PackedScene" path="res://scenes/props/comoda.tscn" id="p_comoda"]
+[ext_resource type="PackedScene" path="res://scenes/props/sofa_vermelho.tscn" id="p_sofa_vermelho"]
+[ext_resource type="PackedScene" path="res://scenes/props/planta_grande.tscn" id="p_planta_grande"]
+[ext_resource type="PackedScene" path="res://scenes/props/vaso.tscn" id="p_vaso"]
+[ext_resource type="Texture2D" path="res://Tilemap-pronto/Modern tiles_Free/Interiors_free/16x16/Interiors_free_16x16.png" id="atlas_interiors"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(340, 20)
@@ -45,6 +60,10 @@ size = Vector2(20, 40)
 [sub_resource type="CircleShape2D" id="CircleShape2D_safe"]
 radius = 28.0
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_arquivo"]
+atlas = ExtResource("atlas_interiors")
+region = Rect2(144, 820, 32, 39)
+
 [node name="CoordenacaoScene" type="Node2D"]
 script = ExtResource("90_room")
 location_id = "coordenacao"
@@ -74,6 +93,24 @@ offset_right = 150.0
 offset_bottom = -90.0
 color = Color(0.38, 0.48, 0.35, 1)
 
+[node name="Tapetes" type="Node2D" parent="."]
+z_index = 0
+
+[node name="Tapete" parent="Tapetes" instance=ExtResource("p_tapete_azul")]
+position = Vector2(60, 40)
+
+[node name="Parede" type="Node2D" parent="."]
+z_index = 0
+
+[node name="Avisos" parent="Parede" instance=ExtResource("p_quadro_avisos")]
+position = Vector2(60, -106)
+
+[node name="Janela" parent="Parede" instance=ExtResource("p_janela")]
+position = Vector2(0, -105)
+
+[node name="Quadro" parent="Parede" instance=ExtResource("p_quadro_peixe")]
+position = Vector2(-60, -106)
+
 [node name="MapWalls" type="StaticBody2D" parent="."]
 
 [node name="Top" type="CollisionShape2D" parent="MapWalls"]
@@ -99,44 +136,17 @@ shape = SubResource("RectangleShape2D_wall_right_b")
 [node name="Furniture" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[node name="CoordDesk" type="StaticBody2D" parent="Furniture"]
-position = Vector2(60, -40)
-
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/CoordDesk"]
-texture = ExtResource("8_desk")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/CoordDesk"]
-position = Vector2(0, 4)
-shape = SubResource("RectangleShape2D_desk")
-
-[node name="FilingCabinet1" type="StaticBody2D" parent="Furniture"]
-position = Vector2(120, -65)
-
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/FilingCabinet1"]
-texture = ExtResource("9_cab")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/FilingCabinet1"]
-position = Vector2(0, 10)
-shape = SubResource("RectangleShape2D_shelf")
-
-[node name="WaitingSofa" type="StaticBody2D" parent="Furniture"]
-position = Vector2(60, 50)
-
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/WaitingSofa"]
-texture = ExtResource("11_sofa")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/WaitingSofa"]
-shape = SubResource("RectangleShape2D_sofa")
-
 [node name="SchoolSafe" type="StaticBody2D" parent="Furniture"]
-position = Vector2(-100, -65)
+z_index = 1
+position = Vector2(-100, -86)
 script = ExtResource("7_obj")
 object_name = "Arquivo da Coordenação"
 hint_text = "[E] Examinar"
 examine_text = "Pastas e mais pastas de documentos dos alunos. Os materiais novos ficam no almoxarifado."
 
 [node name="Sprite2D" type="Sprite2D" parent="Furniture/SchoolSafe"]
-texture = ExtResource("10_safe")
+offset = Vector2(0, -3)
+texture = SubResource("AtlasTexture_arquivo")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/SchoolSafe"]
 position = Vector2(0, 6)
@@ -159,9 +169,35 @@ theme_override_font_sizes/font_size = 7
 text = "[E] Arquivo"
 horizontal_alignment = 1
 
-[node name="Plant" type="Sprite2D" parent="Furniture"]
-position = Vector2(130, 50)
-texture = ExtResource("12_plant")
+[node name="CadeiraCoord" parent="Furniture" instance=ExtResource("p_cadeira_madeira")]
+position = Vector2(60, -60)
+
+[node name="MesaCoord" parent="Furniture" instance=ExtResource("p_balcao")]
+position = Vector2(60, -46)
+
+[node name="PlantaMesa" parent="Furniture" instance=ExtResource("p_planta_pequena")]
+position = Vector2(82, -50)
+
+[node name="ArmarioAlto" parent="Furniture" instance=ExtResource("p_armario_alto")]
+position = Vector2(125, -91)
+
+[node name="Prateleira" parent="Furniture" instance=ExtResource("p_prateleira")]
+position = Vector2(-135, -91)
+
+[node name="ArmarioMadeira" parent="Furniture" instance=ExtResource("p_armario_madeira")]
+position = Vector2(-62, -91)
+
+[node name="Comoda" parent="Furniture" instance=ExtResource("p_comoda")]
+position = Vector2(-135, 40)
+
+[node name="Sofa" parent="Furniture" instance=ExtResource("p_sofa_vermelho")]
+position = Vector2(60, 62)
+
+[node name="Planta" parent="Furniture" instance=ExtResource("p_planta_grande")]
+position = Vector2(130, 70)
+
+[node name="Vaso" parent="Furniture" instance=ExtResource("p_vaso")]
+position = Vector2(-40, 80)
 
 [node name="SpawnFromCorridor" type="Marker2D" parent="."]
 position = Vector2(95, 0)

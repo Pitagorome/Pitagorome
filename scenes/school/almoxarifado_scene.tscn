@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3]
+[gd_scene load_steps=33 format=3]
 
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="1_room"]
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="2_player"]
@@ -16,6 +16,13 @@
 [ext_resource type="Texture2D" path="res://assets/props/books_stack.png" id="14_boxes"]
 [ext_resource type="Texture2D" path="res://assets/props/trash_bin.png" id="15_bin"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="16_font"]
+[ext_resource type="PackedScene" path="res://scenes/props/prateleira.tscn" id="p_prateleira"]
+[ext_resource type="PackedScene" path="res://scenes/props/armario_madeira.tscn" id="p_armario_madeira"]
+[ext_resource type="PackedScene" path="res://scenes/props/armario_alto.tscn" id="p_armario_alto"]
+[ext_resource type="PackedScene" path="res://scenes/props/estante_madeira.tscn" id="p_estante_madeira"]
+[ext_resource type="PackedScene" path="res://scenes/props/comoda.tscn" id="p_comoda"]
+[ext_resource type="PackedScene" path="res://scenes/props/vaso.tscn" id="p_vaso"]
+[ext_resource type="Texture2D" path="res://Tilemap-pronto/Modern tiles_Free/Interiors_free/16x16/Interiors_free_16x16.png" id="atlas_interiors"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(140, 20)
@@ -40,6 +47,10 @@ radius = 30.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_note"]
 radius = 22.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_armario"]
+atlas = ExtResource("atlas_interiors")
+region = Rect2(114, 820, 27, 39)
 
 [node name="AlmoxarifadoScene" type="Node2D"]
 y_sort_enabled = true
@@ -102,48 +113,44 @@ shape = SubResource("RectangleShape2D_wall_bottom")
 [node name="Furniture" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[node name="Shelf1" type="StaticBody2D" parent="Furniture"]
-position = Vector2(-115, -75)
+[node name="Prateleira1" parent="Furniture" instance=ExtResource("p_prateleira")]
+position = Vector2(-130, -91)
 
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Shelf1"]
-texture = ExtResource("11_shelf")
+[node name="Prateleira2" parent="Furniture" instance=ExtResource("p_prateleira")]
+position = Vector2(-106, -91)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Shelf1"]
-position = Vector2(0, 10)
-shape = SubResource("RectangleShape2D_shelf")
+[node name="Prateleira3" parent="Furniture" instance=ExtResource("p_prateleira")]
+position = Vector2(-82, -91)
 
-[node name="Shelf2" type="StaticBody2D" parent="Furniture"]
-position = Vector2(-75, -75)
+[node name="Armario" parent="Furniture" instance=ExtResource("p_armario_madeira")]
+position = Vector2(50, -91)
 
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Shelf2"]
-texture = ExtResource("11_shelf")
+[node name="ArmarioAlto" parent="Furniture" instance=ExtResource("p_armario_alto")]
+position = Vector2(80, -91)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Shelf2"]
-position = Vector2(0, 10)
-shape = SubResource("RectangleShape2D_shelf")
+[node name="Estante" parent="Furniture" instance=ExtResource("p_estante_madeira")]
+position = Vector2(-134, 10)
 
-[node name="Cabinet" type="StaticBody2D" parent="Furniture"]
-position = Vector2(70, -75)
+[node name="Comoda" parent="Furniture" instance=ExtResource("p_comoda")]
+position = Vector2(134, 10)
 
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Cabinet"]
-texture = ExtResource("12_cabinet")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Cabinet"]
-position = Vector2(0, 10)
-shape = SubResource("RectangleShape2D_shelf")
+[node name="Vaso" parent="Furniture" instance=ExtResource("p_vaso")]
+position = Vector2(40, 80)
 
 [node name="LockedCabinet" type="StaticBody2D" parent="Furniture"]
-position = Vector2(115, -75)
+z_index = 1
+position = Vector2(115, -91)
 script = ExtResource("10_obj")
 object_name = "Armário trancado"
 hint_text = "[E] Abrir cadeado"
 flow_event = "cofre"
 
 [node name="Sprite2D" type="Sprite2D" parent="Furniture/LockedCabinet"]
-texture = ExtResource("13_safe")
+offset = Vector2(0, -2.5)
+texture = SubResource("AtlasTexture_armario")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/LockedCabinet"]
-position = Vector2(0, 10)
+position = Vector2(0, 7)
 shape = SubResource("RectangleShape2D_shelf")
 
 [node name="InteractionArea" type="Area2D" parent="Furniture/LockedCabinet"]
@@ -169,6 +176,7 @@ position = Vector2(0, -32)
 show_in_tasks = Array[int]([3])
 
 [node name="Boxes1" type="StaticBody2D" parent="Furniture"]
+z_index = 1
 position = Vector2(-115, 50)
 
 [node name="Sprite2D" type="Sprite2D" parent="Furniture/Boxes1"]
@@ -179,6 +187,7 @@ position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_box")
 
 [node name="Boxes2" type="StaticBody2D" parent="Furniture"]
+z_index = 1
 position = Vector2(-98, 62)
 
 [node name="Sprite2D" type="Sprite2D" parent="Furniture/Boxes2"]
@@ -189,6 +198,7 @@ position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_box")
 
 [node name="Boxes3" type="StaticBody2D" parent="Furniture"]
+z_index = 1
 position = Vector2(110, 60)
 
 [node name="Sprite2D" type="Sprite2D" parent="Furniture/Boxes3"]

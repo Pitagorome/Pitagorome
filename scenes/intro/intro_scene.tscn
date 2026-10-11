@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://b6m4qf1v9p5z2"]
+[gd_scene load_steps=43 format=3 uid="uid://b6m4qf1v9p5z2"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -16,6 +16,21 @@
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="90_room"]
 [ext_resource type="PackedScene" path="res://scenes/ui/exclamation_marker.tscn" id="91_marker"]
 [ext_resource type="Script" path="res://scripts/interactable_object.gd" id="92_obj"]
+[ext_resource type="PackedScene" path="res://scenes/props/tapete_vermelho.tscn" id="p_tapete_vermelho"]
+[ext_resource type="PackedScene" path="res://scenes/props/janela_cortina.tscn" id="p_janela_cortina"]
+[ext_resource type="PackedScene" path="res://scenes/props/quadro_dourado.tscn" id="p_quadro_dourado"]
+[ext_resource type="PackedScene" path="res://scenes/props/cadeira_madeira.tscn" id="p_cadeira_madeira"]
+[ext_resource type="PackedScene" path="res://scenes/props/balcao.tscn" id="p_balcao"]
+[ext_resource type="PackedScene" path="res://scenes/props/globo.tscn" id="p_globo"]
+[ext_resource type="PackedScene" path="res://scenes/props/estante_madeira.tscn" id="p_estante_madeira"]
+[ext_resource type="PackedScene" path="res://scenes/props/armario_vidro.tscn" id="p_armario_vidro"]
+[ext_resource type="PackedScene" path="res://scenes/props/estante_livros_a.tscn" id="p_estante_livros_a"]
+[ext_resource type="PackedScene" path="res://scenes/props/sofa_vermelho.tscn" id="p_sofa_vermelho"]
+[ext_resource type="PackedScene" path="res://scenes/props/luminaria.tscn" id="p_luminaria"]
+[ext_resource type="PackedScene" path="res://scenes/props/palmeira.tscn" id="p_palmeira"]
+[ext_resource type="PackedScene" path="res://scenes/props/planta_grande.tscn" id="p_planta_grande"]
+[ext_resource type="PackedScene" path="res://scenes/props/planta_pequena.tscn" id="p_planta_pequena"]
+[ext_resource type="Texture2D" path="res://Tilemap-pronto/Modern tiles_Free/Interiors_free/16x16/Interiors_free_16x16.png" id="atlas_interiors"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(340, 20)
@@ -47,6 +62,10 @@ size = Vector2(40, 20)
 [sub_resource type="CircleShape2D" id="CircleShape2D_calendar"]
 radius = 26.0
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_calendario"]
+atlas = ExtResource("atlas_interiors")
+region = Rect2(208, 616, 31, 21)
+
 [node name="IntroScene" type="Node2D"]
 script = ExtResource("90_room")
 location_id = "gabinete"
@@ -61,13 +80,6 @@ offset_top = -90.0
 offset_right = 150.0
 offset_bottom = 100.0
 color = Color(0.84, 0.74, 0.60, 1)
-
-[node name="Carpet" type="ColorRect" parent="RoomBackground"]
-offset_left = -55.0
-offset_top = -35.0
-offset_right = 55.0
-offset_bottom = 40.0
-color = Color(0.68, 0.76, 0.62, 0.9)
 
 [node name="WallTop" type="ColorRect" parent="RoomBackground"]
 offset_left = -150.0
@@ -87,13 +99,20 @@ color = Color(0.28, 0.36, 0.25, 1)
 position = Vector2(0, -95)
 texture = ExtResource("11_clock")
 
-[node name="DiplomaLeft" type="Sprite2D" parent="RoomBackground"]
-position = Vector2(-60, -95)
-texture = ExtResource("12_diploma")
+[node name="Tapetes" type="Node2D" parent="."]
+z_index = 0
 
-[node name="DiplomaRight" type="Sprite2D" parent="RoomBackground"]
-position = Vector2(60, -95)
-texture = ExtResource("12_diploma")
+[node name="TapeteCentral" parent="Tapetes" instance=ExtResource("p_tapete_vermelho")]
+position = Vector2(0, 12)
+
+[node name="Parede" type="Node2D" parent="."]
+z_index = 0
+
+[node name="Janela" parent="Parede" instance=ExtResource("p_janela_cortina")]
+position = Vector2(-50, -96)
+
+[node name="QuadroDourado" parent="Parede" instance=ExtResource("p_quadro_dourado")]
+position = Vector2(45, -96)
 
 [node name="RoomWalls" type="StaticBody2D" parent="."]
 
@@ -120,88 +139,51 @@ shape = SubResource("RectangleShape2D_wall_bottom_r")
 [node name="Furniture" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[node name="DirectorDesk" type="StaticBody2D" parent="Furniture"]
-position = Vector2(0, -40)
-
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/DirectorDesk"]
-texture = ExtResource("7_desk")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/DirectorDesk"]
-position = Vector2(0, 4)
-shape = SubResource("RectangleShape2D_desk")
-
-[node name="BookshelfLeft" type="StaticBody2D" parent="Furniture"]
-position = Vector2(-115, -60)
-
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/BookshelfLeft"]
-texture = ExtResource("8_shelf")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/BookshelfLeft"]
-position = Vector2(0, 10)
-shape = SubResource("RectangleShape2D_shelf")
-
-[node name="BookshelfRight" type="StaticBody2D" parent="Furniture"]
-position = Vector2(115, -60)
-
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/BookshelfRight"]
-texture = ExtResource("8_shelf")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/BookshelfRight"]
-position = Vector2(0, 10)
-shape = SubResource("RectangleShape2D_shelf")
-
-[node name="WaitingSofa" type="StaticBody2D" parent="Furniture"]
-position = Vector2(-115, 20)
-
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/WaitingSofa"]
-texture = ExtResource("9_sofa")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/WaitingSofa"]
-shape = SubResource("RectangleShape2D_sofa")
-
-[node name="PlantLeft" type="Sprite2D" parent="Furniture"]
-position = Vector2(-135, -25)
-texture = ExtResource("10_plant")
-
-[node name="PlantRight" type="Sprite2D" parent="Furniture"]
-position = Vector2(135, -25)
-texture = ExtResource("10_plant")
-
 [node name="SpawnDesk" type="Marker2D" parent="."]
 position = Vector2(0, 0)
 
+[node name="CadeiraDiretor" parent="Furniture" instance=ExtResource("p_cadeira_madeira")]
+position = Vector2(0, -60)
+
+[node name="MesaDiretor" parent="Furniture" instance=ExtResource("p_balcao")]
+position = Vector2(0, -46)
+
+[node name="Globo" parent="Furniture" instance=ExtResource("p_globo")]
+position = Vector2(28, -48)
+
+[node name="EstanteEsq" parent="Furniture" instance=ExtResource("p_estante_madeira")]
+position = Vector2(-128, -81)
+
+[node name="ArmarioVidro" parent="Furniture" instance=ExtResource("p_armario_vidro")]
+position = Vector2(-92, -81)
+
+[node name="EstanteLivros" parent="Furniture" instance=ExtResource("p_estante_livros_a")]
+position = Vector2(128, -81)
+
+[node name="Sofa" parent="Furniture" instance=ExtResource("p_sofa_vermelho")]
+position = Vector2(-112, 22)
+
+[node name="Luminaria" parent="Furniture" instance=ExtResource("p_luminaria")]
+position = Vector2(-142, 22)
+
+[node name="Palmeira" parent="Furniture" instance=ExtResource("p_palmeira")]
+position = Vector2(-135, 78)
+
+[node name="Planta" parent="Furniture" instance=ExtResource("p_planta_grande")]
+position = Vector2(135, 78)
+
+[node name="PlantaMesa" parent="Furniture" instance=ExtResource("p_planta_pequena")]
+position = Vector2(140, 18)
+
 [node name="Calendar" type="StaticBody2D" parent="Furniture"]
-position = Vector2(88, -93)
+position = Vector2(88, -96)
 script = ExtResource("92_obj")
 object_name = "Calendário"
 hint_text = "[E] Calendário"
 flow_event = "calendario"
 
-[node name="Paper" type="ColorRect" parent="Furniture/Calendar"]
-offset_left = -8.0
-offset_top = -9.0
-offset_right = 8.0
-offset_bottom = 9.0
-color = Color(0.97, 0.96, 0.92, 1)
-
-[node name="Header" type="ColorRect" parent="Furniture/Calendar"]
-offset_left = -8.0
-offset_top = -9.0
-offset_right = 8.0
-offset_bottom = -4.0
-color = Color(0.8, 0.25, 0.2, 1)
-
-[node name="Day" type="Label" parent="Furniture/Calendar"]
-offset_left = -8.0
-offset_top = -5.0
-offset_right = 8.0
-offset_bottom = 9.0
-theme_override_colors/font_color = Color(0.25, 0.25, 0.25, 1)
-theme_override_fonts/font = ExtResource("13_font")
-theme_override_font_sizes/font_size = 8
-text = "31"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="Sprite2D" type="Sprite2D" parent="Furniture/Calendar"]
+texture = SubResource("AtlasTexture_calendario")
 
 [node name="InteractionArea" type="Area2D" parent="Furniture/Calendar"]
 

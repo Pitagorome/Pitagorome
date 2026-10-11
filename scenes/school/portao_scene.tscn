@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3]
+[gd_scene load_steps=25 format=3]
 
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="1_room"]
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="2_player"]
@@ -14,6 +14,10 @@
 [ext_resource type="SpriteFrames" path="res://assets/character_frames/adam_frames.tres" id="96_adam"]
 [ext_resource type="SpriteFrames" path="res://assets/character_frames/bob_frames.tres" id="97_bob"]
 [ext_resource type="SpriteFrames" path="res://assets/character_frames/alex_frames.tres" id="98_alex"]
+[ext_resource type="PackedScene" path="res://scenes/props/bandeira.tscn" id="p_bandeira"]
+[ext_resource type="PackedScene" path="res://scenes/props/palmeira.tscn" id="p_palmeira"]
+[ext_resource type="PackedScene" path="res://scenes/props/banco.tscn" id="p_banco"]
+[ext_resource type="PackedScene" path="res://scenes/props/planta_media.tscn" id="p_planta_media"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(180, 20)
@@ -127,25 +131,29 @@ shape = SubResource("RectangleShape2D_wall_bottom")
 [node name="Decor" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[node name="PalmLeft" type="StaticBody2D" parent="Decor"]
-position = Vector2(-185, -55)
+[node name="Bandeira" parent="Decor" instance=ExtResource("p_bandeira")]
+position = Vector2(-150, -62)
 
-[node name="Sprite2D" type="Sprite2D" parent="Decor/PalmLeft"]
-texture = ExtResource("10_palm")
+[node name="PalmeiraEsq" parent="Decor" instance=ExtResource("p_palmeira")]
+position = Vector2(-185, -40)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Decor/PalmLeft"]
-position = Vector2(0, 16)
-shape = SubResource("RectangleShape2D_plant")
+[node name="PalmeiraDir" parent="Decor" instance=ExtResource("p_palmeira")]
+position = Vector2(185, -40)
 
-[node name="PalmRight" type="StaticBody2D" parent="Decor"]
-position = Vector2(185, -55)
+[node name="Banco1" parent="Decor" instance=ExtResource("p_banco")]
+position = Vector2(-100, -55)
 
-[node name="Sprite2D" type="Sprite2D" parent="Decor/PalmRight"]
-texture = ExtResource("10_palm")
+[node name="Banco2" parent="Decor" instance=ExtResource("p_banco")]
+position = Vector2(100, -55)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Decor/PalmRight"]
-position = Vector2(0, 16)
-shape = SubResource("RectangleShape2D_plant")
+[node name="Banco3" parent="Decor" instance=ExtResource("p_banco")]
+position = Vector2(150, -55)
+
+[node name="PlantaPortao1" parent="Decor" instance=ExtResource("p_planta_media")]
+position = Vector2(-32, -70)
+
+[node name="PlantaPortao2" parent="Decor" instance=ExtResource("p_planta_media")]
+position = Vector2(32, -70)
 
 [node name="Vans" type="Node2D" parent="."]
 y_sort_enabled = true
