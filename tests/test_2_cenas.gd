@@ -28,6 +28,8 @@ func get_cases() -> Array:
 		["T2.5 NPCs aparecem nas tarefas certas", _npcs_por_tarefa],
 		["T2.6 Sprites dos personagens têm as 8 animações", _animacoes],
 		["T2.7 Indicadores '!' configurados nas Tasks 3 e 5", _marcadores],
+		["T2.8 Andando pela sala: portas, NPCs e objetos alcançáveis, sem sair do mapa", _alcance_andando],
+		["T2.9 Chão desenhado atrás dos móveis (nada escondido)", _camadas],
 	]
 
 func _instantiate(path: String) -> Node:
@@ -143,6 +145,114 @@ func _animacoes() -> void:
 			continue
 		for anim in needed:
 			check(frames.has_animation(anim), "%s tem '%s'" % [path.get_file(), anim])
+
+# Simula o jogador andando (de 4 em 4 pixels) a partir do ponto inicial da sala, usando a física de verdade.
+# Pega paredes invisíveis, portas bloqueadas por móveis, NPCs inalcançáveis e buracos para fora do mapa.
+const STEP: int = 4
+
+func _rect_of(shape_node: CollisionShape2D) -> Rect2:
+	var r: Rect2 = shape_node.shape.get_rect()
+	return Rect2(shape_node.global_position + r.position, r.size)
+
+func _room_bounds(room: Node) -> Rect2:
+	var bounds: Rect2 = Rect2()
+	var first: bool = true
+	for bg_name in ["MapBackground", "RoomBackground"]:
+		var bg: Node = room.get_node_or_null(bg_name)
+		if bg == null:
+			continue
+		for rect in bg.find_children("*", "ColorRect", true, false):
+			var r: Rect2 = Rect2(rect.global_position, rect.size)
+			bounds = r if first else bounds.merge(r)
+			first = false
+	return bounds.grow(16)
+
+func _flood(room: Node) -> Dictionary:
+	var player: CharacterBody2D = room.find_child("Player", true, false)
+	var bounds: Rect2 = _room_bounds(room)
+	var doors: Array = []
+	for door in _doors_of(room):
+		doors.append({"name": str(door.name), "rect": _rect_of(door.get_node("CollisionShape2D")), "hit": false})
+	var start: Vector2 = player.global_position.snapped(Vector2(STEP, STEP))
+	var seen: Dictionary = {start: true}
+	var queue: Array = [start]
+	var leaked: Vector2 = Vector2.INF
+	while not queue.is_empty() and seen.size() < 40000:
+		var p: Vector2 = queue.pop_front()
+		var foot: Rect2 = Rect2(p.x - 5, p.y + 7, 10, 8)
+		var in_door: bool = false
+		for d in doors:
+			if foot.intersects(d["rect"]):
+				d["hit"] = true
+				in_door = true
+		if in_door:
+			continue # na porta o jogador troca de sala
+		if not bounds.has_point(p):
+			leaked = p
+			continue
+		for dir in [Vector2(STEP, 0), Vector2(-STEP, 0), Vector2(0, STEP), Vector2(0, -STEP)]:
+			var n: Vector2 = p + dir
+			if seen.has(n):
+				continue
+			player.global_position = p
+			if player.move_and_collide(dir, true) == null:
+				seen[n] = true
+				queue.append(n)
+	return {"seen": seen, "doors": doors, "leaked": leaked}
+
+func _reaches(seen: Dictionary, center: Vector2, radius: float) -> bool:
+	for p in seen:
+		if Vector2(p.x, p.y + 11).distance_to(center) <= radius + 6.0:
+			return true
+	return false
+
+func _alcance_andando() -> void:
+	var problems: Array = []
+	var total_targets: int = 0
+	for path in ROOMS:
+		for task in [1, 2, 3, 4, 5]:
+			GameManager.start_task(task)
+			GameManager.intro_dialogue_finished = true
+			var room: Node = _instantiate(path)
+			tree().root.add_child(room)
+			tree().current_scene = room
+			for i in 4:
+				await tree().physics_frame
+			var result: Dictionary = _flood(room)
+			var label: String = "%s (Task %d)" % [path.get_file(), task]
+			if result["leaked"] != Vector2.INF:
+				problems.append("%s: jogador sai do mapa perto de %s" % [label, str(result["leaked"])])
+			for d in result["doors"]:
+				if not d["hit"]:
+					problems.append("%s: porta %s não pode ser alcançada" % [label, d["name"]])
+			for area in room.find_children("InteractionArea", "Area2D", true, false):
+				var owner_node: Node = area.get_parent()
+				if not owner_node.is_visible_in_tree() or owner_node.process_mode == Node.PROCESS_MODE_DISABLED:
+					continue
+				var shape: CollisionShape2D = area.get_node("CollisionShape2D")
+				var radius: float = shape.shape.radius if shape.shape is CircleShape2D else 16.0
+				total_targets += 1
+				if not _reaches(result["seen"], shape.global_position, radius):
+					problems.append("%s: não dá para chegar perto de %s" % [label, owner_node.name])
+			DialogueManager.end_dialogue()
+			DialogueManager.modal_open = false
+			tree().current_scene = null
+			room.queue_free()
+			await tree().process_frame
+	check(problems.is_empty(), "Nenhum bloqueio ou buraco encontrado nas 7 salas × 5 tarefas")
+	for pr in problems:
+		check(false, pr)
+	note("%d NPCs/objetos testados (somando todas as tarefas)" % total_targets)
+	GameManager.reset_progress()
+
+func _camadas() -> void:
+	for path in ROOMS:
+		var room: Node = _instantiate(path)
+		var bg: Node2D = room.get_node_or_null("MapBackground")
+		if bg == null:
+			bg = room.get_node_or_null("RoomBackground")
+		check(bg != null and bg.z_index < 0, "%s: chão (fundo) fica atrás dos móveis" % path.get_file())
+		room.free()
 
 func _marcadores() -> void:
 	var almox: Node = _instantiate("res://scenes/school/almoxarifado_scene.tscn")
