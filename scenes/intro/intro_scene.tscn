@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://b6m4qf1v9p5z2"]
+[gd_scene load_steps=38 format=3 uid="uid://b6m4qf1v9p5z2"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -6,12 +6,6 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/challenge_modal.tscn" id="5_modal"]
 [ext_resource type="Script" path="res://scripts/door.gd" id="6_door"]
-[ext_resource type="Texture2D" path="res://assets/props/teacher_desk.png" id="7_desk"]
-[ext_resource type="Texture2D" path="res://assets/props/bookshelf_wood.png" id="8_shelf"]
-[ext_resource type="Texture2D" path="res://assets/props/red_sofa.png" id="9_sofa"]
-[ext_resource type="Texture2D" path="res://assets/props/plant_ficus.png" id="10_plant"]
-[ext_resource type="Texture2D" path="res://assets/props/wall_clock.png" id="11_clock"]
-[ext_resource type="Texture2D" path="res://assets/props/diploma.png" id="12_diploma"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="13_font"]
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="90_room"]
 [ext_resource type="PackedScene" path="res://scenes/ui/exclamation_marker.tscn" id="91_marker"]
@@ -31,6 +25,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/planta_grande.tscn" id="p_planta_grande"]
 [ext_resource type="PackedScene" path="res://scenes/props/planta_pequena.tscn" id="p_planta_pequena"]
 [ext_resource type="Texture2D" path="res://Tilemap-pronto/Modern tiles_Free/Interiors_free/16x16/Interiors_free_16x16.png" id="atlas_interiors"]
+[ext_resource type="PackedScene" path="res://scenes/props/quadro_paisagem.tscn" id="p_quadro_paisagem"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(340, 20)
@@ -95,10 +90,6 @@ offset_right = 150.0
 offset_bottom = -80.0
 color = Color(0.28, 0.36, 0.25, 1)
 
-[node name="Clock" type="Sprite2D" parent="RoomBackground"]
-position = Vector2(0, -95)
-texture = ExtResource("11_clock")
-
 [node name="Tapetes" type="Node2D" parent="."]
 z_index = 0
 
@@ -113,6 +104,9 @@ position = Vector2(-50, -96)
 
 [node name="QuadroDourado" parent="Parede" instance=ExtResource("p_quadro_dourado")]
 position = Vector2(45, -96)
+
+[node name="QuadroCentro" parent="Parede" instance=ExtResource("p_quadro_paisagem")]
+position = Vector2(0, -97)
 
 [node name="RoomWalls" type="StaticBody2D" parent="."]
 

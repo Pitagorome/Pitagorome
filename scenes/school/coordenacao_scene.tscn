@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://c2c9qf5v8p3x1"]
+[gd_scene load_steps=36 format=3 uid="uid://c2c9qf5v8p3x1"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -7,11 +7,6 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/challenge_modal.tscn" id="5_modal"]
 [ext_resource type="Script" path="res://scripts/door.gd" id="6_door"]
 [ext_resource type="Script" path="res://scripts/interactable_object.gd" id="7_obj"]
-[ext_resource type="Texture2D" path="res://assets/props/teacher_desk.png" id="8_desk"]
-[ext_resource type="Texture2D" path="res://assets/props/wood_cabinet.png" id="9_cab"]
-[ext_resource type="Texture2D" path="res://assets/props/metal_locker.png" id="10_safe"]
-[ext_resource type="Texture2D" path="res://assets/props/red_sofa.png" id="11_sofa"]
-[ext_resource type="Texture2D" path="res://assets/props/plant_ficus.png" id="12_plant"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="13_font"]
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="90_room"]
 [ext_resource type="PackedScene" path="res://scenes/props/tapete_azul.tscn" id="p_tapete_azul"]

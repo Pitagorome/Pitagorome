@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3]
+[gd_scene load_steps=30 format=3]
 
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="1_room"]
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="2_player"]
@@ -10,11 +10,6 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/exclamation_marker.tscn" id="8_marker"]
 [ext_resource type="Script" path="res://scripts/door.gd" id="9_door"]
 [ext_resource type="Script" path="res://scripts/interactable_object.gd" id="10_obj"]
-[ext_resource type="Texture2D" path="res://assets/props/bookshelf_wood.png" id="11_shelf"]
-[ext_resource type="Texture2D" path="res://assets/props/wood_cabinet.png" id="12_cabinet"]
-[ext_resource type="Texture2D" path="res://assets/props/safe_cabinet.png" id="13_safe"]
-[ext_resource type="Texture2D" path="res://assets/props/books_stack.png" id="14_boxes"]
-[ext_resource type="Texture2D" path="res://assets/props/trash_bin.png" id="15_bin"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="16_font"]
 [ext_resource type="PackedScene" path="res://scenes/props/prateleira.tscn" id="p_prateleira"]
 [ext_resource type="PackedScene" path="res://scenes/props/armario_madeira.tscn" id="p_armario_madeira"]
@@ -23,6 +18,8 @@
 [ext_resource type="PackedScene" path="res://scenes/props/comoda.tscn" id="p_comoda"]
 [ext_resource type="PackedScene" path="res://scenes/props/vaso.tscn" id="p_vaso"]
 [ext_resource type="Texture2D" path="res://Tilemap-pronto/Modern tiles_Free/Interiors_free/16x16/Interiors_free_16x16.png" id="atlas_interiors"]
+[ext_resource type="PackedScene" path="res://scenes/props/balcao.tscn" id="p_balcao"]
+[ext_resource type="PackedScene" path="res://scenes/props/armario_vidro.tscn" id="p_armario_vidro"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(140, 20)
@@ -175,42 +172,14 @@ horizontal_alignment = 1
 position = Vector2(0, -32)
 show_in_tasks = Array[int]([3])
 
-[node name="Boxes1" type="StaticBody2D" parent="Furniture"]
-z_index = 1
-position = Vector2(-115, 50)
+[node name="Bancada" parent="Furniture" instance=ExtResource("p_balcao")]
+position = Vector2(-105, 58)
 
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Boxes1"]
-texture = ExtResource("14_boxes")
+[node name="ArmarioVidro" parent="Furniture" instance=ExtResource("p_armario_vidro")]
+position = Vector2(112, 62)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Boxes1"]
-position = Vector2(0, 3)
-shape = SubResource("RectangleShape2D_box")
-
-[node name="Boxes2" type="StaticBody2D" parent="Furniture"]
-z_index = 1
-position = Vector2(-98, 62)
-
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Boxes2"]
-texture = ExtResource("14_boxes")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Boxes2"]
-position = Vector2(0, 3)
-shape = SubResource("RectangleShape2D_box")
-
-[node name="Boxes3" type="StaticBody2D" parent="Furniture"]
-z_index = 1
-position = Vector2(110, 60)
-
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Boxes3"]
-texture = ExtResource("14_boxes")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Boxes3"]
-position = Vector2(0, 3)
-shape = SubResource("RectangleShape2D_box")
-
-[node name="TrashBin" type="Sprite2D" parent="Furniture"]
-position = Vector2(-135, 80)
-texture = ExtResource("15_bin")
+[node name="VasoCanto" parent="Furniture" instance=ExtResource("p_vaso")]
+position = Vector2(-135, 85)
 
 [node name="SupplyNote" type="StaticBody2D" parent="Furniture"]
 position = Vector2(-75, 40)

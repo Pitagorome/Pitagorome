@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://e2m8qf3v4p7x1"]
+[gd_scene load_steps=33 format=3 uid="uid://e2m8qf3v4p7x1"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -7,10 +7,6 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="5_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/challenge_modal.tscn" id="6_modal"]
 [ext_resource type="Script" path="res://scripts/door.gd" id="7_door"]
-[ext_resource type="Texture2D" path="res://assets/props/metal_locker.png" id="8_locker"]
-[ext_resource type="Texture2D" path="res://assets/props/bulletin_board.png" id="9_bulletin"]
-[ext_resource type="Texture2D" path="res://assets/props/plant_palm.png" id="10_palm"]
-[ext_resource type="Texture2D" path="res://assets/props/wall_clock.png" id="11_clock"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="12_font"]
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="90_room"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_aluno.tscn" id="93_aluno"]
@@ -22,7 +18,9 @@
 [ext_resource type="PackedScene" path="res://scenes/props/quadro_paisagem.tscn" id="p_quadro_paisagem"]
 [ext_resource type="PackedScene" path="res://scenes/props/quadro_floresta.tscn" id="p_quadro_floresta"]
 [ext_resource type="PackedScene" path="res://scenes/props/planta_media.tscn" id="p_planta_media"]
-[ext_resource type="PackedScene" path="res://scenes/props/vaso.tscn" id="p_vaso"]
+[ext_resource type="PackedScene" path="res://scenes/props/quadro_avisos.tscn" id="p_quadro_avisos"]
+[ext_resource type="PackedScene" path="res://scenes/props/armario_metal.tscn" id="p_armario_metal"]
+[ext_resource type="PackedScene" path="res://scenes/props/palmeira.tscn" id="p_palmeira"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c_wall_top_l"]
 size = Vector2(160, 20)
@@ -79,25 +77,11 @@ offset_right = 260.0
 offset_bottom = -75.0
 color = Color(0.38, 0.48, 0.35, 1)
 
-[node name="WallDeco" type="Node2D" parent="MapBackground"]
-
-[node name="Bulletin1" type="Sprite2D" parent="MapBackground/WallDeco"]
-position = Vector2(-150, -90)
-texture = ExtResource("9_bulletin")
-
-[node name="Bulletin2" type="Sprite2D" parent="MapBackground/WallDeco"]
-position = Vector2(150, -90)
-texture = ExtResource("9_bulletin")
-
-[node name="Clock" type="Sprite2D" parent="MapBackground/WallDeco"]
-position = Vector2(0, -90)
-texture = ExtResource("11_clock")
-
 [node name="Parede" type="Node2D" parent="."]
 z_index = 0
 
 [node name="Janela1" parent="Parede" instance=ExtResource("p_janela_clara")]
-position = Vector2(-205, -90)
+position = Vector2(-240, -90)
 
 [node name="Janela2" parent="Parede" instance=ExtResource("p_janela_clara")]
 position = Vector2(-100, -90)
@@ -106,13 +90,19 @@ position = Vector2(-100, -90)
 position = Vector2(100, -90)
 
 [node name="Janela4" parent="Parede" instance=ExtResource("p_janela_clara")]
-position = Vector2(205, -90)
+position = Vector2(240, -90)
 
 [node name="Quadro" parent="Parede" instance=ExtResource("p_quadro_paisagem")]
 position = Vector2(-50, -91)
 
 [node name="Quadro2" parent="Parede" instance=ExtResource("p_quadro_floresta")]
 position = Vector2(50, -91)
+
+[node name="AvisosEsq" parent="Parede" instance=ExtResource("p_quadro_avisos")]
+position = Vector2(-150, -91)
+
+[node name="AvisosDir" parent="Parede" instance=ExtResource("p_quadro_avisos")]
+position = Vector2(150, -91)
 
 [node name="MapWalls" type="StaticBody2D" parent="."]
 
@@ -151,69 +141,23 @@ shape = SubResource("RectangleShape2D_c_wall_right")
 [node name="Furniture" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[node name="Locker1" type="StaticBody2D" parent="Furniture"]
-z_index = 1
-position = Vector2(-190, -60)
+[node name="ArmarioEsq" parent="Furniture" instance=ExtResource("p_armario_metal")]
+position = Vector2(-185, -76)
 
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Locker1"]
-texture = ExtResource("8_locker")
+[node name="ArmarioDir" parent="Furniture" instance=ExtResource("p_armario_metal")]
+position = Vector2(185, -76)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Locker1"]
-position = Vector2(0, 6)
-shape = SubResource("RectangleShape2D_locker")
+[node name="PalmeiraEsq" parent="Furniture" instance=ExtResource("p_palmeira")]
+position = Vector2(-246, -55)
 
-[node name="Locker2" type="StaticBody2D" parent="Furniture"]
-z_index = 1
-position = Vector2(-170, -60)
-
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Locker2"]
-texture = ExtResource("8_locker")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Locker2"]
-position = Vector2(0, 6)
-shape = SubResource("RectangleShape2D_locker")
-
-[node name="Locker3" type="StaticBody2D" parent="Furniture"]
-z_index = 1
-position = Vector2(170, -60)
-
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Locker3"]
-texture = ExtResource("8_locker")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Locker3"]
-position = Vector2(0, 6)
-shape = SubResource("RectangleShape2D_locker")
-
-[node name="Locker4" type="StaticBody2D" parent="Furniture"]
-z_index = 1
-position = Vector2(190, -60)
-
-[node name="Sprite2D" type="Sprite2D" parent="Furniture/Locker4"]
-texture = ExtResource("8_locker")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Locker4"]
-position = Vector2(0, 6)
-shape = SubResource("RectangleShape2D_locker")
+[node name="PalmeiraDir" parent="Furniture" instance=ExtResource("p_palmeira")]
+position = Vector2(246, -55)
 
 [node name="PlantaPortaAlmox" parent="Furniture" instance=ExtResource("p_planta_media")]
 position = Vector2(-105, 62)
 
 [node name="PlantaPortaPortao" parent="Furniture" instance=ExtResource("p_planta_media")]
 position = Vector2(105, 62)
-
-[node name="Vaso1" parent="Furniture" instance=ExtResource("p_vaso")]
-position = Vector2(-250, -62)
-
-[node name="Vaso2" parent="Furniture" instance=ExtResource("p_vaso")]
-position = Vector2(250, -62)
-
-[node name="Plant1" type="Sprite2D" parent="Furniture"]
-position = Vector2(-230, -45)
-texture = ExtResource("10_palm")
-
-[node name="Plant2" type="Sprite2D" parent="Furniture"]
-position = Vector2(230, -45)
-texture = ExtResource("10_palm")
 
 [node name="SpawnFromDirector" type="Marker2D" parent="."]
 position = Vector2(0, 45)

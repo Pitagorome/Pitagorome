@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3]
+[gd_scene load_steps=24 format=3]
 
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="1_room"]
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="2_player"]
@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/challenge_modal.tscn" id="7_modal"]
 [ext_resource type="Script" path="res://scripts/door.gd" id="8_door"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="9_font"]
-[ext_resource type="Texture2D" path="res://assets/props/plant_palm.png" id="10_palm"]
 [ext_resource type="SpriteFrames" path="res://assets/character_frames/amelia_frames.tres" id="95_amelia"]
 [ext_resource type="SpriteFrames" path="res://assets/character_frames/adam_frames.tres" id="96_adam"]
 [ext_resource type="SpriteFrames" path="res://assets/character_frames/bob_frames.tres" id="97_bob"]
