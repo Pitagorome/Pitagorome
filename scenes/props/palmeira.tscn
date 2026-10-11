@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Texture2D" path="res://Tilemap-pronto/Modern tiles_Free/Interiors_free/16x16/Interiors_free_16x16.png" id="1_atlas"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_prop"]
+atlas = ExtResource("1_atlas")
+region = Rect2(213, 704, 23, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_base"]
+size = Vector2(21, 6)
+
+[node name="palmeira" type="StaticBody2D" groups=["prop"]]
+z_index = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_prop")
+offset = Vector2(0, -9)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_base")
