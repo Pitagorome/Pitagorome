@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://b8c9qf7v2p1x9"]
+[gd_scene load_steps=32 format=3 uid="uid://b8c9qf7v2p1x9"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="2_dlgbox"]
@@ -21,6 +21,8 @@
 [ext_resource type="PackedScene" path="res://scenes/props/luminaria.tscn" id="p_luminaria"]
 [ext_resource type="PackedScene" path="res://scenes/props/planta_grande.tscn" id="p_planta_grande"]
 [ext_resource type="PackedScene" path="res://scenes/props/palmeira.tscn" id="p_palmeira"]
+[ext_resource type="Texture2D" path="res://assets/tiles/pisos/taco.png" id="piso_taco"]
+[ext_resource type="Texture2D" path="res://assets/tiles/paredes/madeira_escura.png" id="parede_madeira_escura"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(340, 20)
@@ -54,19 +56,25 @@ y_sort_enabled = true
 [node name="MapBackground" type="Node2D" parent="."]
 z_index = -1
 
-[node name="Floor" type="ColorRect" parent="MapBackground"]
+[node name="Floor" type="TextureRect" parent="MapBackground"]
 offset_left = -150.0
 offset_top = -100.0
 offset_right = 150.0
 offset_bottom = 100.0
-color = Color(0.82, 0.72, 0.58, 1)
+texture = ExtResource("piso_taco")
+expand_mode = 1
+stretch_mode = 1
+texture_repeat = 2
 
-[node name="WallTop" type="ColorRect" parent="MapBackground"]
+[node name="WallTop" type="TextureRect" parent="MapBackground"]
 offset_left = -150.0
-offset_top = -120.0
+offset_top = -122.0
 offset_right = 150.0
 offset_bottom = -90.0
-color = Color(0.38, 0.48, 0.35, 1)
+texture = ExtResource("parede_madeira_escura")
+expand_mode = 1
+stretch_mode = 1
+texture_repeat = 2
 
 [node name="Tapetes" type="Node2D" parent="."]
 z_index = 0

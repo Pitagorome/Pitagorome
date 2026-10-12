@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://b6m4qf1v9p5z2"]
+[gd_scene load_steps=40 format=3 uid="uid://b6m4qf1v9p5z2"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -26,6 +26,8 @@
 [ext_resource type="PackedScene" path="res://scenes/props/planta_pequena.tscn" id="p_planta_pequena"]
 [ext_resource type="Texture2D" path="res://Tilemap-pronto/Modern tiles_Free/Interiors_free/16x16/Interiors_free_16x16.png" id="atlas_interiors"]
 [ext_resource type="PackedScene" path="res://scenes/props/quadro_paisagem.tscn" id="p_quadro_paisagem"]
+[ext_resource type="Texture2D" path="res://assets/tiles/pisos/madeira_clara.png" id="piso_madeira_clara"]
+[ext_resource type="Texture2D" path="res://assets/tiles/paredes/madeira_vermelha.png" id="parede_madeira_vermelha"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(340, 20)
@@ -69,26 +71,25 @@ y_sort_enabled = true
 [node name="RoomBackground" type="Node2D" parent="."]
 z_index = -1
 
-[node name="Floor" type="ColorRect" parent="RoomBackground"]
+[node name="Floor" type="TextureRect" parent="RoomBackground"]
 offset_left = -150.0
 offset_top = -90.0
 offset_right = 150.0
 offset_bottom = 100.0
-color = Color(0.84, 0.74, 0.60, 1)
+texture = ExtResource("piso_madeira_clara")
+expand_mode = 1
+stretch_mode = 1
+texture_repeat = 2
 
-[node name="WallTop" type="ColorRect" parent="RoomBackground"]
+[node name="WallTop" type="TextureRect" parent="RoomBackground"]
 offset_left = -150.0
-offset_top = -110.0
+offset_top = -112.0
 offset_right = 150.0
 offset_bottom = -80.0
-color = Color(0.42, 0.52, 0.38, 1)
-
-[node name="WallBorder" type="ColorRect" parent="RoomBackground"]
-offset_left = -150.0
-offset_top = -83.0
-offset_right = 150.0
-offset_bottom = -80.0
-color = Color(0.28, 0.36, 0.25, 1)
+texture = ExtResource("parede_madeira_vermelha")
+expand_mode = 1
+stretch_mode = 1
+texture_repeat = 2
 
 [node name="Tapetes" type="Node2D" parent="."]
 z_index = 0

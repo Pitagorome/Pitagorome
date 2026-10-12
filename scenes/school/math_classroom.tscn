@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://m1c9qf4v8p2x7"]
+[gd_scene load_steps=36 format=3 uid="uid://m1c9qf4v8p2x7"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_professor.tscn" id="2_prof"]
@@ -22,6 +22,8 @@
 [ext_resource type="PackedScene" path="res://scenes/props/planta_media.tscn" id="p_planta_media"]
 [ext_resource type="PackedScene" path="res://scenes/props/planta_grande.tscn" id="p_planta_grande"]
 [ext_resource type="Texture2D" path="res://Tilemap-pronto/Modern tiles_Free/Interiors_free/16x16/Interiors_free_16x16.png" id="atlas_interiors"]
+[ext_resource type="Texture2D" path="res://assets/tiles/pisos/azulejo_amarelo.png" id="piso_azulejo_amarelo"]
+[ext_resource type="Texture2D" path="res://assets/tiles/paredes/azul.png" id="parede_azul"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(320, 20)
@@ -65,19 +67,25 @@ y_sort_enabled = true
 [node name="MapBackground" type="Node2D" parent="."]
 z_index = -1
 
-[node name="Floor" type="ColorRect" parent="MapBackground"]
+[node name="Floor" type="TextureRect" parent="MapBackground"]
 offset_left = -140.0
 offset_top = -100.0
 offset_right = 140.0
 offset_bottom = 100.0
-color = Color(0.83, 0.73, 0.58, 1)
+texture = ExtResource("piso_azulejo_amarelo")
+expand_mode = 1
+stretch_mode = 1
+texture_repeat = 2
 
-[node name="WallTop" type="ColorRect" parent="MapBackground"]
+[node name="WallTop" type="TextureRect" parent="MapBackground"]
 offset_left = -140.0
-offset_top = -120.0
+offset_top = -122.0
 offset_right = 140.0
 offset_bottom = -90.0
-color = Color(0.38, 0.48, 0.35, 1)
+texture = ExtResource("parede_azul")
+expand_mode = 1
+stretch_mode = 1
+texture_repeat = 2
 
 [node name="Parede" type="Node2D" parent="."]
 z_index = 0
