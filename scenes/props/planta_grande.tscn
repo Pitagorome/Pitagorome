@@ -4,7 +4,7 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_prop"]
 atlas = ExtResource("1_atlas")
-region = Rect2(167, 720, 18, 24)
+region = Rect2(167, 713, 18, 31)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_base"]
 size = Vector2(16, 6)
@@ -14,7 +14,7 @@ z_index = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_prop")
-offset = Vector2(0, -1)
+offset = Vector2(0, -4.5)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 8)

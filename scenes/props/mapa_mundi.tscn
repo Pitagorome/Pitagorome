@@ -4,7 +4,7 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_prop"]
 atlas = ExtResource("1_atlas")
-region = Rect2(160, 1066, 32, 18)
+region = Rect2(160, 1065, 32, 19)
 
 [node name="mapa_mundi" type="Node2D" groups=["prop"]]
 
