@@ -1,4 +1,5 @@
 @tool
+class_name ExteriorFundo
 extends Node2D
 
 # Fundo de fora das salas: gramado, calçada e parede externa em volta do prédio,
@@ -33,8 +34,11 @@ func _draw() -> void:
 		draw_rect(sala.grow(espessura_parede), cor_parede)
 
 func _room_rect() -> Rect2:
+	return room_rect_of(get_parent())
+
+# Retângulo da sala (piso + parede), medido pelo nó de fundo. Usado também por PassagemPorta.
+static func room_rect_of(parent: Node) -> Rect2:
 	var sala: Rect2 = Rect2()
-	var parent: Node = get_parent()
 	if parent == null:
 		return sala
 	for bg_name in ["MapBackground", "RoomBackground"]:
