@@ -96,11 +96,13 @@ func _inicio() -> void:
 		box.female_btn.button_pressed = true
 		box.female_btn.pressed.emit()
 		preview["antes"] = box.preview_rect.texture
+		preview["crachá_antes"] = _find("HUD").director_panel.visible
 		box.next_btn.pressed.emit() # troca a aparência para o Visual 2
 		preview["depois"] = box.preview_rect.texture
 		box._save_name_and_continue()
 	)
 	check(preview.get("antes") != null, "Seletor de visual mostra a prévia do personagem")
+	check(preview.get("crachá_antes") == false, "Antes de confirmar o nome, o HUD não mostra o crachá do diretor")
 	check(preview.get("depois") != null and preview.get("depois") != preview.get("antes"), "A prévia muda quando troca o visual")
 	check(lines.size() >= 6, "Introdução tem todas as falas do roteiro (%d)" % lines.size())
 	check_eq(GameManager.player_name, "Ana Teste", "Nome digitado é salvo")

@@ -145,6 +145,12 @@ func _animacoes() -> void:
 			continue
 		for anim in needed:
 			check(frames.has_animation(anim), "%s tem '%s'" % [path.get_file(), anim])
+	# Nenhum visual do jogador pode ser igual ao de um NPC fixo
+	for npc_path in ["res://scenes/characters/npc_coordenadora.tscn", "res://scenes/characters/npc_professor.tscn", "res://scenes/characters/npc_zelador.tscn"]:
+		var npc: Node = _instantiate(npc_path)
+		var npc_frames: String = npc.get_node("AnimatedSprite2D").sprite_frames.resource_path
+		check(not GameManager.APPEARANCES.has(npc_frames), "Visual do jogador diferente de %s" % npc_path.get_file())
+		npc.free()
 
 # Simula o jogador andando (de 4 em 4 pixels) a partir do ponto inicial da sala, usando a física de verdade.
 # Pega paredes invisíveis, portas bloqueadas por móveis, NPCs inalcançáveis e buracos para fora do mapa.
