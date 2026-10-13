@@ -22,6 +22,8 @@ const APPEARANCES: Array = [
 var player_name: String = "Diretor"
 var player_gender: String = "M"
 var player_appearance: int = 0
+# Fica true quando o jogador confirma o nome (antes disso o HUD não mostra o crachá)
+var player_named: bool = false
 var player_speed: float = 110.0
 
 # Estado narrativo
@@ -70,6 +72,7 @@ func reset_progress() -> void:
 	player_name = "Diretor"
 	player_gender = "M"
 	player_appearance = 0
+	player_named = false
 	intro_dialogue_finished = false
 	seen_events.clear()
 	current_phase = 1
@@ -84,6 +87,7 @@ func reset_progress() -> void:
 func set_player_info(new_name: String, new_gender: String = "", new_appearance: int = -1) -> void:
 	if new_name.strip_edges() != "":
 		player_name = new_name.strip_edges()
+		player_named = true
 	if new_gender == "M" or new_gender == "F":
 		player_gender = new_gender
 	if new_appearance >= 0:

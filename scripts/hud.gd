@@ -4,6 +4,7 @@ extends CanvasLayer
 
 @onready var task_label: Label = $Control/MarginContainer/HBoxContainer/PanelTask/Margin/VBox/LabelTask
 @onready var objective_label: Label = $Control/MarginContainer/HBoxContainer/PanelTask/Margin/VBox/LabelObjective
+@onready var director_panel: PanelContainer = $Control/MarginContainer/HBoxContainer/PanelDirector
 @onready var director_label: Label = $Control/MarginContainer/HBoxContainer/PanelDirector/Margin/LabelDirector
 
 func _ready() -> void:
@@ -23,6 +24,8 @@ func _update_display() -> void:
 		objective_label.visible = GameManager.current_objective != ""
 	if director_label:
 		director_label.text = GameManager.get_director_title() + ": " + GameManager.player_name
+		# Só mostra depois que o nome foi confirmado (antes aparecia "Diretora: Diretor")
+		director_panel.visible = GameManager.player_named
 
 func _on_task_updated(_id: int, _name: String) -> void:
 	_update_display()
