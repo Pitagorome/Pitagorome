@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://b8c9qf7v2p1x9"]
+[gd_scene load_steps=33 format=3 uid="uid://b8c9qf7v2p1x9"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="2_dlgbox"]
@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/palmeira.tscn" id="p_palmeira"]
 [ext_resource type="Texture2D" path="res://assets/tiles/pisos/taco.png" id="piso_taco"]
 [ext_resource type="Texture2D" path="res://assets/tiles/paredes/madeira_escura.png" id="parede_madeira_escura"]
+[ext_resource type="PackedScene" path="res://scenes/props/tapete_azul.tscn" id="p_tapete_azul"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(340, 20)
@@ -79,8 +80,8 @@ texture_repeat = 2
 [node name="Tapetes" type="Node2D" parent="."]
 z_index = 0
 
-[node name="TapeteLeitura" parent="Tapetes" instance=ExtResource("p_tapete_comprido")]
-position = Vector2(0, 15)
+[node name="TapeteLeitura" parent="Tapetes" instance=ExtResource("p_tapete_azul")]
+position = Vector2(0, 20)
 
 [node name="Parede" type="Node2D" parent="."]
 z_index = 0
