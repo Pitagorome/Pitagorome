@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene load_steps=26 format=3]
 
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="1_room"]
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="2_player"]
@@ -17,6 +17,8 @@
 [ext_resource type="PackedScene" path="res://scenes/props/palmeira.tscn" id="p_palmeira"]
 [ext_resource type="PackedScene" path="res://scenes/props/banco.tscn" id="p_banco"]
 [ext_resource type="PackedScene" path="res://scenes/props/planta_media.tscn" id="p_planta_media"]
+[ext_resource type="PackedScene" path="res://scenes/school/exterior_fundo.tscn" id="exterior_fundo"]
+[ext_resource type="Texture2D" path="res://assets/tiles/exterior/grama.png" id="grama_ext"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(180, 20)
@@ -41,20 +43,27 @@ y_sort_enabled = true
 script = ExtResource("1_room")
 location_id = "portao"
 
+[node name="ExteriorFundo" parent="." instance=ExtResource("exterior_fundo")]
+largura_calcada = 0.0
+espessura_parede = 0.0
+
 [node name="MapBackground" type="Node2D" parent="."]
 z_index = -1
 
-[node name="Grass" type="ColorRect" parent="MapBackground"]
+[node name="Grass" type="TextureRect" parent="MapBackground"]
 offset_left = -200.0
 offset_top = -100.0
 offset_right = 200.0
 offset_bottom = 100.0
-color = Color(0.56, 0.72, 0.46, 1)
+texture = ExtResource("grama_ext")
+expand_mode = 1
+stretch_mode = 1
+texture_repeat = 2
 
 [node name="Sidewalk" type="ColorRect" parent="MapBackground"]
-offset_left = -200.0
+offset_right = 700.0
+offset_left = -700.0
 offset_top = -100.0
-offset_right = 200.0
 offset_bottom = -60.0
 color = Color(0.82, 0.79, 0.72, 1)
 
@@ -66,23 +75,23 @@ offset_bottom = 34.0
 color = Color(0.82, 0.79, 0.72, 1)
 
 [node name="Street" type="ColorRect" parent="MapBackground"]
-offset_left = -200.0
+offset_right = 700.0
+offset_left = -700.0
 offset_top = 34.0
-offset_right = 200.0
 offset_bottom = 100.0
 color = Color(0.36, 0.36, 0.4, 1)
 
 [node name="StreetLine" type="ColorRect" parent="MapBackground"]
-offset_left = -200.0
+offset_right = 700.0
+offset_left = -700.0
 offset_top = 90.0
-offset_right = 200.0
 offset_bottom = 92.0
 color = Color(0.95, 0.9, 0.6, 1)
 
 [node name="Facade" type="ColorRect" parent="MapBackground"]
-offset_left = -200.0
+offset_right = 700.0
+offset_left = -700.0
 offset_top = -130.0
-offset_right = 200.0
 offset_bottom = -95.0
 color = Color(0.72, 0.42, 0.33, 1)
 

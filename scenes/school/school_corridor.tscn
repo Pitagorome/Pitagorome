@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://e2m8qf3v4p7x1"]
+[gd_scene load_steps=36 format=3 uid="uid://e2m8qf3v4p7x1"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/palmeira.tscn" id="p_palmeira"]
 [ext_resource type="Texture2D" path="res://assets/tiles/pisos/azulejo_azul.png" id="piso_azulejo_azul"]
 [ext_resource type="Texture2D" path="res://assets/tiles/paredes/bege.png" id="parede_bege"]
+[ext_resource type="PackedScene" path="res://scenes/school/exterior_fundo.tscn" id="exterior_fundo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c_wall_top_l"]
 size = Vector2(160, 20)
@@ -61,6 +62,8 @@ size = Vector2(110, 20)
 script = ExtResource("90_room")
 location_id = "corredor"
 y_sort_enabled = true
+
+[node name="ExteriorFundo" parent="." instance=ExtResource("exterior_fundo")]
 
 [node name="MapBackground" type="Node2D" parent="."]
 z_index = -1
