@@ -161,7 +161,8 @@ func _room_bounds(room: Node) -> Rect2:
 		var bg: Node = room.get_node_or_null(bg_name)
 		if bg == null:
 			continue
-		for rect in bg.find_children("*", "ColorRect", true, false):
+		# chão e parede podem ser ColorRect ou TextureRect
+		for rect in bg.find_children("*", "Control", true, false):
 			var r: Rect2 = Rect2(rect.global_position, rect.size)
 			bounds = r if first else bounds.merge(r)
 			first = false
