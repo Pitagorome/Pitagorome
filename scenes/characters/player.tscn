@@ -1,32 +1,31 @@
-[gd_scene load_steps=5 format=3 uid="uid://df7x9k1m3p4a2"]
+[gd_scene format=3 uid="uid://df7yak1m3p4a2"]
 
-[ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
-[ext_resource type="SpriteFrames" path="res://assets/character_frames/adam_frames.tres" id="2_frames"]
+[ext_resource type="Script" uid="uid://dm2aw4vwfl6x2" path="res://scripts/player.gd" id="1_player"]
+[ext_resource type="SpriteFrames" uid="uid://b1dhfdkjqk611" path="res://assets/character_frames/adam_frames.tres" id="2_frames"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_foot"]
 size = Vector2(10, 8)
 
-[node name="Player" type="CharacterBody2D" groups=["player"]]
+[node name="Player" type="CharacterBody2D" unique_id=463800735 groups=["player"]]
 z_index = 1
 y_sort_enabled = true
 script = ExtResource("1_player")
-zoom_camera = 2.0
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1532110638]
 sprite_frames = ExtResource("2_frames")
 animation = &"idle_down"
 autoplay = "idle_down"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=376003205]
 position = Vector2(0, 11)
 shape = SubResource("RectangleShape2D_foot")
 
-[node name="InteractRay" type="RayCast2D" parent="."]
+[node name="InteractRay" type="RayCast2D" parent="." unique_id=1638379408]
 position = Vector2(0, 8)
 target_position = Vector2(0, 18)
 collide_with_areas = true
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(2, 2)
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1385022374]
+zoom = Vector2(3.5, 3.5)
 position_smoothing_enabled = true
 position_smoothing_speed = 8.0

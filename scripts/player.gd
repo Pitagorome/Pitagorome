@@ -2,8 +2,6 @@ extends CharacterBody2D
 
 # Script do Jogador / Diretor
 @export var speed: float = 100.0
-## Zoom da câmera em todas as salas (maior = mais perto, menor = vê mais da sala)
-@export var zoom_camera: float = 2.0
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var interact_ray: RayCast2D = $InteractRay
@@ -20,8 +18,8 @@ func _ready() -> void:
 			print("[Player] Posicionado no spawn point: ", GameManager.target_spawn_id)
 		GameManager.target_spawn_id = ""
 
+	# O zoom é o do próprio Camera2D do player.tscn (maior = mais perto, menor = vê mais da sala)
 	if camera:
-		camera.zoom = Vector2(zoom_camera, zoom_camera)
 		camera.make_current()
 		camera.reset_smoothing() # começa já no lugar do jogador, sem "deslizar" do meio da sala
 	
