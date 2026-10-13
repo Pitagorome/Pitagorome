@@ -8,12 +8,14 @@ signal objective_updated(text: String)
 signal phase_changed(new_phase: int)
 signal player_info_updated(player_name: String, player_gender: String)
 
-# Aparências disponíveis para o jogador (sprites em assets/character_frames)
+# Aparências disponíveis para o jogador (sprites em assets/character_frames).
+# Nenhuma é igual a um NPC: Bob = Professor, Alex = Zelador, Amelia = Coordenadora.
 const APPEARANCES: Array = [
 	"res://assets/character_frames/adam_frames.tres",
-	"res://assets/character_frames/bob_frames.tres",
-	"res://assets/character_frames/alex_frames.tres",
-	"res://assets/character_frames/amelia_frames.tres",
+	"res://assets/character_frames/escoteiro1_frames.tres",
+	"res://assets/character_frames/escoteiro2_frames.tres",
+	"res://assets/character_frames/carteiro1_frames.tres",
+	"res://assets/character_frames/carteiro2_frames.tres",
 ]
 
 # Dados do jogador (UML: Jogador)
