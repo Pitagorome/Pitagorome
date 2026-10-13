@@ -64,6 +64,7 @@ func _estrutura_salas() -> void:
 		for required in ["Player", "HUD", "DialogueBox", "ChallengeModal"]:
 			check(room.find_child(required, true, false) != null, "%s tem %s" % [path.get_file(), required])
 		check(str(room.get("location_id")) != "", "%s tem location_id (school_room.gd)" % path.get_file())
+		check(room.find_children("*", "Camera2D", true, false).size() == 1, "%s tem uma câmera só (a do jogador)" % path.get_file())
 		room.free()
 
 func _doors_of(room: Node) -> Array:
