@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://b6m4qf1v9p5z2"]
+[gd_scene load_steps=42 format=3 uid="uid://b6m4qf1v9p5z2"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -29,6 +29,7 @@
 [ext_resource type="Texture2D" path="res://assets/tiles/pisos/madeira_clara.png" id="piso_madeira_clara"]
 [ext_resource type="Texture2D" path="res://assets/tiles/paredes/madeira_vermelha.png" id="parede_madeira_vermelha"]
 [ext_resource type="PackedScene" path="res://scenes/school/exterior_fundo.tscn" id="exterior_fundo"]
+[ext_resource type="PackedScene" path="res://scenes/school/passagem_porta.tscn" id="passagem_porta"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(340, 20)
@@ -220,6 +221,8 @@ position = Vector2(0, 105)
 script = ExtResource("6_door")
 target_scene = "res://scenes/school/school_corridor.tscn"
 target_spawn_id = "SpawnFromDirector"
+
+[node name="PassagemPorta" parent="DoorToCorridor" instance=ExtResource("passagem_porta")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToCorridor"]
 shape = SubResource("RectangleShape2D_door")

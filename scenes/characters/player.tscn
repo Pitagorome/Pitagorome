@@ -26,6 +26,6 @@ target_position = Vector2(0, 18)
 collide_with_areas = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1385022374]
-zoom = Vector2(3.5, 3.5)
+zoom = Vector2(1.5, 1.5)
 position_smoothing_enabled = true
 position_smoothing_speed = 8.0

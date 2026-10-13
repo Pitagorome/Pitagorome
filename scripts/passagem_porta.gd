@@ -7,12 +7,14 @@ extends Node2D
 # da sala a porta está e desenha a passagem saindo da sala para fora.
 
 ## Quanto a passagem avança para fora da sala (em pixels)
-@export var profundidade: float = 44.0
+@export var profundidade: float = 260.0
 @export var cor_entrada: Color = Color(0.3, 0.24, 0.2)
 @export var cor_fundo: Color = Color(0.06, 0.05, 0.05)
 @export var cor_batente: Color = Color(0.5, 0.36, 0.26)
 
 const FAIXAS: int = 8 # quantas faixas no degradê (do claro na entrada ao escuro no fundo)
+## Que parte do comprimento tem o degradê; o resto é escuro até o fim
+@export_range(0.05, 1.0) var parte_degrade: float = 0.25
 
 func _ready() -> void:
 	queue_redraw()
@@ -51,12 +53,14 @@ func _draw() -> void:
 		inicio = centro.y + tamanho.y / 2.0
 	var fim: float = borda + profundidade * _sinal(fora)
 
-	# Desenha em faixas, clareando na entrada e escurecendo no fundo
+	# Degradê na entrada (claro -> escuro) e depois escuro até o fim, para parecer um corredor que continua
+	var fim_degrade: float = lerpf(inicio, fim, parte_degrade)
 	for i in FAIXAS:
 		var t0: float = float(i) / FAIXAS
 		var t1: float = float(i + 1) / FAIXAS
 		var cor: Color = cor_entrada.lerp(cor_fundo, t0)
-		draw_rect(_faixa(fora, centro, largura, lerpf(inicio, fim, t0), lerpf(inicio, fim, t1)), cor)
+		draw_rect(_faixa(fora, centro, largura, lerpf(inicio, fim_degrade, t0), lerpf(inicio, fim_degrade, t1)), cor)
+	draw_rect(_faixa(fora, centro, largura, fim_degrade, fim), cor_fundo)
 	# Batentes (laterais da passagem)
 	var lado: float = largura / 2.0
 	for s in [-1.0, 1.0]:
