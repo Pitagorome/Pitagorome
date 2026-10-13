@@ -90,13 +90,18 @@ func _inicio() -> void:
 	check(scene() != null and scene().get("location_id") == "gabinete", "Jogo começa no gabinete do diretor")
 	check(DialogueManager.is_active, "A Coordenadora começa a falar sozinha (introdução)")
 
+	var preview: Dictionary = {}
 	var lines: Array = await _read_all(func(box):
 		box.name_line_edit.text = "Ana Teste"
 		box.female_btn.button_pressed = true
 		box.female_btn.pressed.emit()
+		preview["antes"] = box.preview_rect.texture
 		box.next_btn.pressed.emit() # troca a aparência para o Visual 2
+		preview["depois"] = box.preview_rect.texture
 		box._save_name_and_continue()
 	)
+	check(preview.get("antes") != null, "Seletor de visual mostra a prévia do personagem")
+	check(preview.get("depois") != null and preview.get("depois") != preview.get("antes"), "A prévia muda quando troca o visual")
 	check(lines.size() >= 6, "Introdução tem todas as falas do roteiro (%d)" % lines.size())
 	check_eq(GameManager.player_name, "Ana Teste", "Nome digitado é salvo")
 	check_eq(GameManager.player_gender, "F", "Gênero escolhido é salvo")

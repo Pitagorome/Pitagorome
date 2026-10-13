@@ -16,6 +16,13 @@ extends CanvasLayer
 @onready var appearance_label: Label = $Control/NameInputModal/MarginContainer/VBoxContainer/AppearanceRow/AppearanceLabel
 @onready var prev_btn: Button = $Control/NameInputModal/MarginContainer/VBoxContainer/AppearanceRow/PrevButton
 @onready var next_btn: Button = $Control/NameInputModal/MarginContainer/VBoxContainer/AppearanceRow/NextButton
+@onready var preview_rect: TextureRect = $Control/NameInputModal/MarginContainer/VBoxContainer/PreviewPanel/Preview
+
+# Prévia animada do visual escolhido (troca de quadro a cada PREVIEW_FRAME_TIME segundos)
+const PREVIEW_ANIMATION: StringName = &"idle_down"
+const PREVIEW_FRAME_TIME: float = 0.15
+var _preview_frame: int = 0
+var _preview_time: float = 0.0
 
 var waiting_for_name: bool = false
 
@@ -71,6 +78,23 @@ func _on_dialogue_event_triggered(event_name: String) -> void:
 		name_line_edit.grab_focus()
 		name_line_edit.select_all()
 
+func _process(delta: float) -> void:
+	if not name_input_modal.visible:
+		return
+	_preview_time += delta
+	if _preview_time >= PREVIEW_FRAME_TIME:
+		_preview_time = 0.0
+		_preview_frame += 1
+		_update_preview()
+
+func _update_preview() -> void:
+	var frames: SpriteFrames = GameManager.get_appearance_frames()
+	if frames == null or not frames.has_animation(PREVIEW_ANIMATION):
+		return
+	var count: int = frames.get_frame_count(PREVIEW_ANIMATION)
+	if count > 0:
+		preview_rect.texture = frames.get_frame_texture(PREVIEW_ANIMATION, _preview_frame % count)
+
 func _cycle_appearance(step: int) -> void:
 	var total: int = GameManager.APPEARANCES.size()
 	GameManager.set_player_info("", "", (GameManager.player_appearance + step + total) % total)
@@ -78,6 +102,8 @@ func _cycle_appearance(step: int) -> void:
 
 func _update_appearance_label() -> void:
 	appearance_label.text = "Visual %d" % (GameManager.player_appearance + 1)
+	_preview_frame = 0
+	_update_preview()
 
 func _on_confirm_name_pressed() -> void:
 	_save_name_and_continue()
