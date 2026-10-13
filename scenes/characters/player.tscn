@@ -10,6 +10,7 @@ size = Vector2(10, 8)
 z_index = 1
 y_sort_enabled = true
 script = ExtResource("1_player")
+zoom_camera = 2.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2_frames")
@@ -24,3 +25,8 @@ shape = SubResource("RectangleShape2D_foot")
 position = Vector2(0, 8)
 target_position = Vector2(0, 18)
 collide_with_areas = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0

@@ -191,11 +191,6 @@ position = Vector2(150, 38)
 [node name="Player" parent="." instance=ExtResource("1_player")]
 position = Vector2(0, 45)
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
-zoom = Vector2(2.5, 2.5)
-position_smoothing_enabled = true
-position_smoothing_speed = 8.0
-
 [node name="NPCCoordenadora" parent="." instance=ExtResource("2_coord")]
 position = Vector2(35, 45)
 visible_in_tasks = Array[int]([1])

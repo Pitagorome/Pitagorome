@@ -174,11 +174,6 @@ position = Vector2(0, 55)
 [node name="Player" parent="." instance=ExtResource("1_player")]
 position = Vector2(0, 55)
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
-zoom = Vector2(2.5, 2.5)
-position_smoothing_enabled = true
-position_smoothing_speed = 8.0
-
 [node name="DoorToCorridor" type="Area2D" parent="."]
 position = Vector2(0, 105)
 script = ExtResource("5_door")
