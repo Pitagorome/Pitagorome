@@ -118,16 +118,19 @@ func _inicio() -> void:
 func _movimento_e_porta() -> void:
 	var player: CharacterBody2D = _find("Player")
 	var start_x: float = player.global_position.x
-	Input.action_press("ui_left")
-	await _physics_frames(20)
-	Input.action_release("ui_left")
+	await _segurar_tecla(KEY_LEFT, 20)
 	check(player.global_position.x < start_x - 5.0, "Seta para a esquerda move o jogador (%.1f -> %.1f)" % [start_x, player.global_position.x])
+	var x_wasd: float = player.global_position.x
+	await _segurar_tecla(KEY_D, 20)
+	check(player.global_position.x > x_wasd + 5.0, "Tecla D (WASD) move o jogador para a direita (%.1f -> %.1f)" % [x_wasd, player.global_position.x])
+	var y_wasd: float = player.global_position.y
+	await _segurar_tecla(KEY_W, 10)
+	check(player.global_position.y < y_wasd - 2.0, "Tecla W (WASD) move o jogador para cima (%.1f -> %.1f)" % [y_wasd, player.global_position.y])
+	await _segurar_tecla(KEY_S, 10) # volta para onde estava
 
 	DialogueManager.start_dialogue([{"speaker": "Teste", "text": "..."}])
 	var x_before: float = player.global_position.x
-	Input.action_press("ui_right")
-	await _physics_frames(15)
-	Input.action_release("ui_right")
+	await _segurar_tecla(KEY_RIGHT, 15)
 	check(absf(player.global_position.x - x_before) < 0.5, "Jogador fica parado durante um diálogo")
 	await _read_all()
 
@@ -292,3 +295,15 @@ func _fim_fase() -> void:
 	check_eq(GameManager.completed_tasks.size(), 5, "As 5 tarefas da Fase 1 estão concluídas")
 	check_eq(GameManager.current_phase, 2, "Jogo passa para a Fase 2")
 	check(_hud_text().contains("Fase 1 concluída"), "HUD mostra 'Fase 1 concluída!'")
+
+# Simula o aperto de uma tecla física (passa pelo mapa de ações do project.godot)
+func _segurar_tecla(tecla: Key, frames: int) -> void:
+	var ev := InputEventKey.new()
+	ev.physical_keycode = tecla
+	ev.pressed = true
+	Input.parse_input_event(ev)
+	await _physics_frames(frames)
+	var solta := ev.duplicate()
+	solta.pressed = false
+	Input.parse_input_event(solta)
+	await _physics_frames(1)
