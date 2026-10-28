@@ -46,9 +46,10 @@ func _physics_process(_delta: float) -> void:
 		move_and_slide()
 		return
 	
+	# Ações mover_* (project.godot): WASD + setas
 	var input_vector := Vector2(
-		Input.get_axis("ui_left", "ui_right"),
-		Input.get_axis("ui_up", "ui_down")
+		Input.get_axis("mover_esquerda", "mover_direita"),
+		Input.get_axis("mover_cima", "mover_baixo")
 	)
 	
 	if input_vector != Vector2.ZERO:
