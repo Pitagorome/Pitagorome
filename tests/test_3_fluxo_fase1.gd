@@ -172,6 +172,15 @@ func _task2_grade() -> void:
 	check(errors.size() > 0 and puzzle.feedback_label.text.contains("problema"), "Verificar a grade inicial mostra os conflitos")
 	check_eq(GameManager.current_task_id, 2, "Errar não avança a tarefa")
 
+	# Bug do print: a grade não ficava vermelha quando a mesma turma tinha duas aulas no mesmo horário
+	var vermelho := Color(0.75, 0.2, 0.1)
+	puzzle.set_assignment({"mat_1a": 1, "mat_2b": 3, "cie_1a": 2, "cie_2b": 4})
+	check(puzzle.board_cells.values().all(func(c): return c.get_theme_color("font_color") == vermelho), "Turma com duas aulas no mesmo horário fica vermelha na grade")
+	check(puzzle.rules_label.text.contains("uma turma não pode ter duas aulas"), "Regra da turma aparece no texto do desafio")
+	puzzle.set_assignment({"mat_1a": 1, "mat_2b": 3, "cie_1a": 4, "cie_2b": 2})
+	check(puzzle.board_cells.values().all(func(c): return c.get_theme_color("font_color") != vermelho), "Grade certa não tem nada vermelho")
+	puzzle.set_assignment(Fase1Puzzles.SCHEDULE_INITIAL)
+
 	puzzle.set_assignment({"mat_2b": 3})
 	errors = puzzle.check_answer()
 	check(errors.is_empty() and puzzle.is_solved, "Grade corrigida é aceita")
