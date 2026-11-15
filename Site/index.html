@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PITAGOROME | Aprenda matemática administrando sua escola</title>
+<meta name="description" content="PITAGOROME é um jogo educativo de matemática e administração escolar. Você é o novo diretor da escola.">
+<link rel="icon" href="assets/images/logo.png"><!-- INSERIR AQUI (opcional): favicon quadrado em assets/images/favicon.png -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<a class="skip" href="#sobre">Ir para o conteúdo</a>
+
+<header class="nav" id="topo">
+  <a href="#inicio" class="nav__logo"><img src="assets/images/logo.png" alt="PITAGOROME" height="24"></a>
+  <button class="nav__btn" aria-expanded="false" aria-controls="menu">Menu</button>
+  <nav id="menu" class="nav__links" aria-label="Principal">
+    <a href="#sobre">Sobre</a><a href="#universo">Universo</a><a href="#jogo">O jogo</a>
+    <a href="#galeria">Galeria</a><a href="#dev">Desenvolvimento</a><a href="#equipe">Equipe</a>
+  </nav>
+</header>
+
+<main>
+<!-- ============ HERO ============ -->
+<section id="inicio" class="hero">
+  <!-- INSERIR AQUI: arte de fundo da tela inicial (background.png). Edite --img-hero em css/style.css -->
+  <div class="hero__art" aria-hidden="true"></div>
+  <svg class="hero__school" viewBox="0 0 160 60" aria-hidden="true" shape-rendering="crispEdges">
+    <rect x="0" y="52" width="160" height="8" fill="#3f7a3a"/>
+    <rect x="30" y="24" width="100" height="28" fill="#fbf7df"/>
+    <rect x="26" y="20" width="108" height="4" fill="#c9961a"/><rect x="38" y="16" width="84" height="4" fill="#f3c640"/>
+    <rect x="62" y="8" width="36" height="8" fill="#fbf7df"/><rect x="76" y="10" width="8" height="4" fill="#1c3828"/>
+    <rect x="79" y="0" width="1" height="8" fill="#15291a"/><rect x="80" y="1" width="6" height="3" fill="#c8472b"/>
+    <rect x="72" y="38" width="16" height="14" fill="#254a35"/>
+    <g fill="#3f7a3a"><rect x="38" y="30" width="8" height="8"/><rect x="52" y="30" width="8" height="8"/><rect x="100" y="30" width="8" height="8"/><rect x="114" y="30" width="8" height="8"/><rect x="38" y="42" width="8" height="6"/><rect x="114" y="42" width="8" height="6"/></g>
+  </svg>
+  <div class="hero__inner">
+    <!-- INSERIR AQUI: logo oficial. Arquivo: assets/images/logo.png (já incluído; substitua por versão maior se tiver) -->
+    <img class="hero__logo" src="assets/images/logo.png" alt="PITAGOROME - Aprenda matemática administrando sua escola!" width="600">
+    <h1 class="hero__tag">Um dia de cada vez.<br>Um problema por vez.</h1>
+    <p class="hero__sub">Você é o novo diretor da Escola Pitagorome. Organize a rotina, ouça os conflitos e resolva tudo com matemática.</p>
+    <div class="hero__cta"><a class="btn" href="#jogo">Explorar o jogo</a><a class="btn btn--alt" href="#mecanicas">Ver funcionalidades</a></div>
+  </div>
+</section>
+
+<!-- ============ SOBRE ============ -->
+<section id="sobre" class="sec">
+  <div class="wrap two">
+    <div class="rv">
+      <h2>Matemática que acontece na diretoria</h2>
+      <p>PITAGOROME é um jogo educativo de matemática e administração escolar, feito no Instituto Federal de São Paulo. O jogador assume o papel de diretor(a) e participa de situações do dia a dia da escola: explora ambientes, conversa com personagens e resolve desafios matemáticos.</p>
+      <p>A matemática não vem em lista de exercícios. Ela aparece como problema real: um horário duplicado, um cadeado sem senha, uma máquina de refrigerante que cobra de um jeito estranho.</p>
+      <!-- Captura de tela: assets/images/sobre-jogo.png (para trocar, substitua o arquivo mantendo o nome) -->
+      <figure class="shot"><img src="assets/images/sobre-jogo.png" alt="Tarefa 2 do jogo: o jogador reorganiza a grade de horários respeitando as regras" loading="lazy"></figure>
+    </div>
+    <aside class="boletim rv" aria-labelledby="obj">
+      <h3 id="obj">Objetivos do projeto</h3>
+      <ul class="check">
+        <li>Criar um jogo educativo voltado ao Ensino Médio.</li>
+        <li>Integrar conteúdos matemáticos a situações contextualizadas.</li>
+        <li>Usar elementos de gamificação para estimular o interesse.</li>
+        <li>Incentivar o raciocínio lógico e a resolução de problemas.</li>
+        <li>Criar uma experiência de aprendizagem por exploração, interação e progressão.</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ UNIVERSO ============ -->
+<div class="edge" aria-hidden="true"></div>
+<section id="universo" class="sec sec--dark">
+  <div class="wrap">
+    <h2 class="rv">A Escola Pitagorome</h2>
+    <div class="two rv">
+      <div>
+        <p>O diretor nunca parou em um emprego. Foi vendedor, monitor de museu e animador de festa vestido de triângulo. Ganhou fama na cidade resolvendo problemas pequenos, até que uma carta chegou: a Escola Pitagorome procurava um novo diretor. O anterior havia desistido após três dias.</p>
+        <p>Ele aceitou pelo café grátis. No portão, dois alunos se acusavam de colar na prova de matemática. Foi quando percebeu que talvez o antigo diretor tivesse um ponto.</p>
+        <p>O ano tem três trimestres. Em cada um, novos problemas pedem decisão, e a Coordenadora está sempre por perto para ajudar.</p>
+      </div>
+      <!-- Imagem da escola: assets/images/escola-conceito.png (troque por arte conceitual quando houver) -->
+      <figure class="shot"><img src="assets/images/escola-conceito.png" alt="Sala do diretor na Escola Pitagorome, com a Coordenadora conversando com o jogador" loading="lazy"></figure>
+    </div>
+    <h3 class="rv">Quem você encontra</h3>
+    <!-- INSERIR AQUI: retratos em assets/images/personagens/ (já existe professor.png; faltam coordenadora.png, zelador.png, cantineira.png, secretaria.png, inspetor.png). Troque o bloco .face por <img class="face" src="..." alt="..."> -->
+    <ul class="roll rv">
+      <li><span class="face">Co</span><b>Coordenadora</b><p>Apresenta a escola, acompanha o tour e está sempre disponível quando você se sentir perdido.</p></li>
+      <li><span class="face">Za</span><b>Zelador</b><p>Guarda as coisas em segurança, e depois esquece onde. Deixa pistas.</p></li>
+      <li><img class="face" src="assets/images/personagens/professor.png" alt=""><b>Professor de matemática</b><p>Oferece ajuda, mas avisa que terá um preço.</p></li>
+      <li><span class="face">Ca</span><b>Cantineira</b><p>Dona da cantina e do refeitório, garante que contou tudo direitinho.</p></li>
+      <li><span class="face">Se</span><b>Secretária</b><p>Lida com formulários e documentos da escola.</p></li>
+      <li><span class="face">In</span><b>Inspetor</b><p>Vigia os corredores e confisca o que voa.</p></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ O JOGO ============ -->
+<section id="jogo" class="sec">
+  <div class="wrap">
+    <h2 class="rv">Como se joga</h2>
+    <div class="how rv">
+      <p>Você escolhe nome e aparência, percorre a escola em visão de cima e conversa com quem aparece. Quando surge um problema, ele vira um desafio: um armário para abrir, uma turma para organizar, um preço para descobrir.</p>
+      <p>O jogo se divide em <b>três fases</b>, uma por trimestre, com <b>15 tarefas</b> no roteiro.</p>
+    </div>
+
+    <figure class="looks rv">
+      <!-- Sprites do diretor(a): assets/images/personagens/diretor-visual-1.png, -2.png e -3.png -->
+      <img src="assets/images/personagens/diretor-visual-1.png" alt="Aparência do diretor: cabelo verde e suéter roxo">
+      <img src="assets/images/personagens/diretor-visual-2.png" alt="Aparência da diretora: cabelo castanho longo e blusa rosa">
+      <img src="assets/images/personagens/diretor-visual-3.png" alt="Aparência do diretor: cabelo escuro e roupa cinza">
+      <figcaption>Você escolhe nome, sexo e aparência do(a) diretor(a) antes de começar o tour.</figcaption>
+    </figure>
+
+    <div id="mecanicas" class="phases rv">
+      <div class="tabs" role="tablist" aria-label="Fases do jogo">
+        <button role="tab" id="t1" aria-controls="p1" aria-selected="true">Fase 1</button>
+        <button role="tab" id="t2" aria-controls="p2" aria-selected="false" tabindex="-1">Fase 2</button>
+        <button role="tab" id="t3" aria-controls="p3" aria-selected="false" tabindex="-1">Fase 3</button>
+      </div>
+      <div role="tabpanel" id="p1" aria-labelledby="t1">
+        <h3>Lógica e Organização</h3>
+        <ol class="tasks">
+          <li><b>Tour na Escola</b><span>conhecer os ambientes</span></li>
+          <li><b>Conflito no Horário</b><span>lógica organizacional</span></li>
+          <li><b>O Cofre da Escola</b><span>lógica e combinatória</span></li>
+          <li><b>Quem Está Matando Aula?</b><span>raciocínio lógico</span></li>
+          <li><b>O Ônibus da Excursão</b><span>distribuição com restrições</span></li>
+        </ol>
+      </div>
+      <div role="tabpanel" id="p2" aria-labelledby="t2" hidden>
+        <h3>Equações, Proporções e Probabilidade</h3>
+        <ol class="tasks" start="6">
+          <li><b>O Troféu Desaparecido</b><span>equação de 1º grau</span></li>
+          <li><b>Figurinhas</b><span>proporções</span></li>
+          <li><b>O Gerador de Emergência</b><span>equações</span></li>
+          <li><b>As Mesas do Refeitório</b><span>equação simples</span></li>
+          <li><b>O Cartaz da Feira</b><span>proporção</span></li>
+        </ol>
+      </div>
+      <div role="tabpanel" id="p3" aria-labelledby="t3" hidden>
+        <h3>Funções, Combinatória e Raciocínio Algébrico</h3>
+        <ol class="tasks" start="11">
+          <li><b>A Máquina de Refrigerante</b><span>função afim</span></li>
+          <li><b>As Equipes da Gincana</b><span>combinatória</span></li>
+          <li><b>As Luzes do Corredor</b><span>raciocínio algébrico</span></li>
+          <li><b>O Lugar da Foto Oficial</b><span>combinatória</span></li>
+          <li><b>A Decoração do Pátio</b><span>combinatória</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="two rv">
+      <div>
+        <h3>Funcionalidades</h3>
+        <p class="note">Conforme o README do repositório. O README não separa o que já está pronto do que está planejado; confirme o estado de cada item com a equipe.</p>
+        <ul class="feat">
+          <li>Movimentação do personagem</li><li>Exploração das áreas da escola</li><li>Interação com NPCs</li><li>Diálogos e narrativa</li>
+          <li>Desafios matemáticos na gameplay</li><li>Progressão por fases</li><li>Missões e objetivos</li><li>Salvamento do progresso</li>
+        </ul>
+      </div>
+      <form class="try" id="try" aria-labelledby="try-h">
+        <h3 id="try-h">Teste um desafio</h3>
+        <p>O zelador deixou um bilhete: resolva <b>2x + 6 = 36</b>, diminua 3 do valor de x e procure o armário com esse número.</p>
+        <label for="arm">Número do armário</label>
+        <div class="try__row"><input id="arm" type="number" inputmode="numeric" min="0" max="99"><button class="btn" type="submit">Abrir</button></div>
+        <p id="try-out" class="try__out" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALERIA ============ -->
+<div class="edge" aria-hidden="true"></div>
+<section id="galeria" class="sec sec--dark">
+  <div class="wrap">
+    <h2 class="rv">Galeria</h2>
+    <p class="rv">As capturas de tela chegam com o desenvolvimento. Clique em um quadro para ampliar.</p>
+    <!-- Cada <button class="slot"> tem um <img>. Se o arquivo não existir, o espaço reservado aparece sozinho. -->
+    <div class="gal rv">
+      <!-- INSERIR AQUI: screenshot principal do gameplay -->
+      <button class="slot slot--a"><span class="ph-label">Gameplay principal</span><img src="assets/images/gameplay-principal.png" alt="Gameplay do PITAGOROME" loading="lazy" onerror="this.remove()"></button>
+      <!-- INSERIR AQUI: screenshot de uma fase / desafio -->
+      <button class="slot"><span class="ph-label">Fase do jogo</span><img src="assets/images/fase-jogo.png" alt="Fase do PITAGOROME" loading="lazy" onerror="this.remove()"></button>
+      <!-- INSERIR AQUI: personagens (arte ou captura) -->
+      <button class="slot"><span class="ph-label">Personagens</span><img src="assets/images/personagens.png" alt="Personagens do PITAGOROME" loading="lazy" onerror="this.remove()"></button>
+      <!-- INSERIR AQUI: captura da criação do personagem (criacao-personagem.png) -->
+      <button class="slot"><span class="ph-label">Criação do personagem</span><img src="assets/images/criacao-personagem.png" alt="Tela de criação do personagem: nome, sexo e aparência" loading="lazy" onerror="this.remove()"></button>
+      <!-- Corredor da escola (ambientes.png). Troque por outro ambiente quando quiser. -->
+      <button class="slot slot--b"><span class="ph-label">Ambientes da escola</span><img src="assets/images/ambientes.png" alt="Corredor da escola com indicações para a biblioteca, a sala de matemática, o gabinete e o portão" loading="lazy" onerror="this.remove()"></button>
+    </div>
+  </div>
+  <dialog id="lb" aria-label="Imagem ampliada"><form method="dialog"><button class="btn btn--alt">Fechar</button></form><div id="lb-body"></div></dialog>
+</section>
+
+<!-- ============ DESENVOLVIMENTO ============ -->
+<section id="dev" class="sec">
+  <div class="wrap two">
+    <div class="rv">
+      <h2>Como é feito</h2>
+      <p>O projeto é desenvolvido no Godot Engine 4, com versão para navegador exportada em HTML5.</p>
+      <dl class="tech">
+        <div><dt>Engine</dt><dd>Godot Engine 4</dd></div>
+        <div><dt>Linguagem</dt><dd>GDScript</dd></div>
+        <div><dt>Plataforma</dt><dd>HTML5</dd></div>
+        <div><dt>Gráficos</dt><dd>Pixel Art 2D</dd></div>
+        <div><dt>Perspectiva</dt><dd>Top-down</dd></div>
+      </dl>
+      <a class="btn" href="https://github.com/Pitagorome/Pitagorome" target="_blank" rel="noopener">Ver no GitHub</a>
+    </div>
+    <div class="rv">
+      <h3>Estrutura do repositório</h3>
+      <pre class="tree" tabindex="0">scenes/     cenas e ambientes
+scripts/    scripts em GDScript
+assets/     recursos gráficos
+data/       dados do jogo
+tests/      testes
+project.godot</pre>
+      <p>Cena principal atual: <code>scenes/intro/intro_scene.tscn</code></p>
+      <p class="note">Conteúdos matemáticos previstos no README: porcentagem, probabilidade, análise combinatória, funções, equações e raciocínio algébrico.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EQUIPE ============ -->
+<div class="edge" aria-hidden="true"></div>
+<section id="equipe" class="sec sec--dark">
+  <div class="wrap">
+    <h2 class="rv">Quem fez</h2>
+    <ul class="team rv">
+      <li>Ana Julia Cardoso Moser</li><li>Eduardo de Lazzari Oliveira</li><li>Guilherme Pereira de Oliveira</li><li>João Paulo Queiroz Costa</li>
+    </ul>
+    <p class="rv">Projeto Interdisciplinar, 2026. Técnico em Desenvolvimento de Sistemas integrado ao Ensino Médio, Instituto Federal de Educação, Ciência e Tecnologia de São Paulo, Campus São Paulo.</p>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__in">
+    <img src="assets/images/logo.png" alt="PITAGOROME" height="34">
+    <p>Desenvolvido por Ana Julia, Eduardo, Guilherme e João Paulo. IFSP, 2026.</p>
+    <nav aria-label="Rodapé"><a href="#sobre">Sobre</a><a href="#jogo">O jogo</a><a href="#galeria">Galeria</a><a href="https://github.com/Pitagorome/Pitagorome" target="_blank" rel="noopener">GitHub</a><a href="#topo">Voltar ao topo</a></nav>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>
