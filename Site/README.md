@@ -1,5 +1,28 @@
-# Site do PITAGOROME
-Abrir: dê dois cliques em index.html, ou rode `python3 -m http.server 8000` nesta pasta e acesse http://localhost:8000
-Imagens: coloque os arquivos em assets/images/ com os nomes indicados nos comentários "INSERIR AQUI" do index.html.
-Fundos em CSS: edite as variáveis --img-hero e --img-sobre no topo de css/style.css.
-Publicar: GitHub Pages (Settings > Pages > branch main, pasta raiz), Netlify ou Vercel (arraste a pasta).
+# Pitagorome Game World
+
+@connector:github:"GitHub API" com base no repositorio github do meu jogo, https://github.com/Pitagorome/Pitagorome
+faça um site que vise promover o jogo e adicionar informacoes para ele. Utilize como referencia https://www.stardewvalley.net/
+https://cofounder.co/
+
+utilize html, css, js, react e spring boot. Utilize os cenarios do proprio jogo como recurso para assets do site
+
+This project was built with [Lovable](https://lovable.dev).
+
+## Build with Lovable
+
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/65becfff-2feb-4e80-b83f-15968a85bbc0).
+
+- **Ship faster**: describe what you want to build and Lovable handles the code.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+
+## Development
+
+Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+
+```sh
+git clone <this-repository-url>
+cd <repository-name>
+npm i
+npm run dev
+```
