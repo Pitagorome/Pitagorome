@@ -38,13 +38,17 @@ No jogo, você é o novo diretor da Escola Pitagorome e resolve os problemas do 
 
 ## Como rodar
 
-É preciso ter o [Node.js](https://nodejs.org) instalado (versão 20 ou mais nova).
+É preciso ter o [Node.js](https://nodejs.org) **22.12 ou mais novo** (ou 20.19+). Com versões mais antigas o `npm run dev` falha com "Cannot find native binding".
+
+O `npm i` do npm 10 (que vem com o Node 20 e 22) quebra com o erro `Cannot read properties of null (reading 'edgesOut')`, então instale as dependências com o npm 11:
 
 ```sh
 cd Site
-npm i
+npx npm@11 i
 npm run dev
 ```
+
+> O site não tem `index.html`: as páginas são montadas pelo servidor. Não adianta abrir a pasta com Live Server nem clicar duas vezes em arquivo, tem que rodar pelo terminal.
 
 O site abre em `http://localhost:8080` (ou na porta que aparecer no terminal).
 
