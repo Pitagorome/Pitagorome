@@ -205,6 +205,7 @@ position = Vector2(0, 45)
 [node name="NPCCoordenadora" parent="." instance=ExtResource("2_coord")]
 position = Vector2(35, 45)
 visible_in_tasks = Array[int]([1])
+follow_player_in_tasks = Array[int]([1])
 
 [node name="Task4Group" type="Node2D" parent="."]
 y_sort_enabled = true

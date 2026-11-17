@@ -120,6 +120,9 @@ func on_professor_interact() -> void:
 		DialogueManager.start_dialogue(Fase1Dialogues.professor_idle())
 
 func _tour_talk(lines: Array, who: String) -> void:
+	# A Coordenadora acompanha o tour: se ficou para trás, chega perto antes de falar
+	for npc in get_tree().get_nodes_in_group("acompanha_jogador"):
+		npc.come_to_player()
 	DialogueManager.start_dialogue(lines, func():
 		if who == "zelador":
 			GameManager.tour_talked_zelador = true
