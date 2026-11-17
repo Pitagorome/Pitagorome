@@ -303,7 +303,16 @@ func _fim_fase() -> void:
 	await _wait_transition()
 	check_eq(GameManager.completed_tasks.size(), 5, "As 5 tarefas da Fase 1 estão concluídas")
 	check_eq(GameManager.current_phase, 2, "Jogo passa para a Fase 2")
-	check(_hud_text().contains("Fase 1 concluída"), "HUD mostra 'Fase 1 concluída!'")
+	# Depois do cartão "Fase 2" o jogo leva ao gabinete ("No dia seguinte...")
+	var guard2: int = 0
+	while (Transition.is_transitioning or scene() == null or scene().get("location_id") != "gabinete") and guard2 < 1500:
+		guard2 += 1
+		await _frames(1)
+	await _frames(4)
+	check_eq(scene().get("location_id"), "gabinete", "Fase 2 começa no gabinete, no dia seguinte")
+	check_eq(GameManager.current_task_id, 6, "Fase 2 começa na Tarefa 6")
+	check(_hud_text().contains("Fase 2") and _hud_text().contains("Troféu"), "HUD mostra 'Fase 2 · Tarefa 6: O Troféu Desaparecido'")
+	await _read_all()
 
 # Simula o aperto de uma tecla física (passa pelo mapa de ações do project.godot)
 func _segurar_tecla(tecla: Key, frames: int) -> void:

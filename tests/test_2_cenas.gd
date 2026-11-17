@@ -12,6 +12,11 @@ const ROOMS: Array = [
 	"res://scenes/school/biblioteca_scene.tscn",
 	"res://scenes/school/almoxarifado_scene.tscn",
 	"res://scenes/school/portao_scene.tscn",
+	"res://scenes/school/ala_refeitorio_scene.tscn",
+	"res://scenes/school/sala_armarios_scene.tscn",
+	"res://scenes/school/sala_artes_scene.tscn",
+	"res://scenes/school/sala_gerador_scene.tscn",
+	"res://scenes/school/refeitorio_scene.tscn",
 ]
 const START_ROOM: String = "res://scenes/intro/intro_scene.tscn"
 
@@ -27,7 +32,7 @@ func get_cases() -> Array:
 		["T2.4 Todas as salas são alcançáveis a partir do gabinete", _alcance],
 		["T2.5 NPCs aparecem nas tarefas certas", _npcs_por_tarefa],
 		["T2.6 Sprites dos personagens têm as 8 animações", _animacoes],
-		["T2.7 Indicadores '!' configurados nas Tasks 3 e 5", _marcadores],
+		["T2.7 Indicadores '!' configurados (Tasks 3, 5, 7, 8, 9 e 10)", _marcadores],
 		["T2.8 Andando pela sala: portas, NPCs e objetos alcançáveis, sem sair do mapa", _alcance_andando],
 		["T2.9 Chão desenhado atrás dos móveis (nada escondido)", _camadas],
 	]
@@ -133,6 +138,27 @@ func _npcs_por_tarefa() -> void:
 	var portao5: Array = _present_npcs("res://scenes/school/portao_scene.tscn", 5)
 	check_eq(portao5.size(), 9, "Task 5, portão: 6 alunos + 2 monitores + Coordenadora")
 
+	# ---- Fase 2 ----
+	var t6: Array = _present_npcs(corredor, 6)
+	check(t6.has("Coordenadora") and t6.has("Zelador"), "Task 6, corredor: Coordenadora (apressada) e Zelador presentes")
+	check(not _present_npcs(corredor, 8).has("Zelador"), "Task 8: o Zelador sai do corredor (está na sala do gerador)")
+	var ger8: Array = _present_npcs("res://scenes/school/sala_gerador_scene.tscn", 8)
+	check(ger8.has("Zelador") and ger8.has("Coordenadora"), "Task 8, sala do gerador: Zelador e Coordenadora presentes")
+	check(_present_npcs("res://scenes/school/sala_gerador_scene.tscn", 7).is_empty(), "Antes da Task 8 a sala do gerador está vazia")
+	var artes7: Array = _present_npcs("res://scenes/school/sala_artes_scene.tscn", 7)
+	check(artes7.has("Professora") and artes7.has("Aluno"), "Task 7, sala de artes: Professora e Aluno presentes")
+	var ref9: Array = _present_npcs("res://scenes/school/refeitorio_scene.tscn", 9)
+	check(ref9.has("Cantineira") and ref9.has("Coordenadora"), "Task 9, refeitório: Cantineira e Coordenadora presentes")
+	var bib10: Array = _present_npcs("res://scenes/school/biblioteca_scene.tscn", 10)
+	check(bib10.has("Professor de Matemática"), "Task 10, biblioteca: Professor de Matemática presente")
+	check(not _present_npcs("res://scenes/school/math_classroom.tscn", 10).has("Professor de Matemática"), "Task 10: o professor sai da sala de matemática (está na biblioteca)")
+	GameManager.seen_events.erase("t6_briefing")
+	check(not _present_npcs("res://scenes/school/sala_armarios_scene.tscn", 6).has("Coordenadora"), "Task 6: a Coordenadora só vai à Sala dos Armários depois de entregar o bilhete")
+	GameManager.seen_events["t6_briefing"] = true
+	check(_present_npcs("res://scenes/school/sala_armarios_scene.tscn", 6).has("Coordenadora"), "Task 6: depois do bilhete a Coordenadora espera na Sala dos Armários")
+	check(not _present_npcs(corredor, 6).has("Coordenadora"), "Task 6: depois do bilhete a Coordenadora não fica mais no corredor")
+	GameManager.seen_events.clear()
+
 	var gab2: Array = _present_npcs("res://scenes/intro/intro_scene.tscn", 2)
 	var gab5: Array = _present_npcs("res://scenes/intro/intro_scene.tscn", 5)
 	check(gab2.has("Coordenadora"), "Task 2: a Coordenadora aparece no gabinete")
@@ -218,10 +244,16 @@ func _alcance_andando() -> void:
 	var problems: Array = []
 	var total_targets: int = 0
 	for path in ROOMS:
-		for task in [1, 2, 3, 4, 5]:
+		for task in range(1, 11):
+			GameManager.current_phase = GameManager.TASK_PHASE[task]
 			GameManager.start_task(task)
 			GameManager.intro_dialogue_finished = true
+			GameManager.seen_events.clear()
+			if task >= 6:
+				GameManager.seen_events["t6_briefing"] = true
 			var room: Node = _instantiate(path)
+			if not check(room != null, "Sala carrega: " + path):
+				continue
 			tree().root.add_child(room)
 			tree().current_scene = room
 			for i in 4:
@@ -247,7 +279,7 @@ func _alcance_andando() -> void:
 			tree().current_scene = null
 			room.queue_free()
 			await tree().process_frame
-	check(problems.is_empty(), "Nenhum bloqueio ou buraco encontrado nas 7 salas × 5 tarefas")
+	check(problems.is_empty(), "Nenhum bloqueio ou buraco encontrado nas %d salas × 10 tarefas" % ROOMS.size())
 	for pr in problems:
 		check(false, pr)
 	note("%d NPCs/objetos testados (somando todas as tarefas)" % total_targets)
@@ -256,6 +288,8 @@ func _alcance_andando() -> void:
 func _camadas() -> void:
 	for path in ROOMS:
 		var room: Node = _instantiate(path)
+		if not check(room != null, "Sala carrega: " + path):
+			continue
 		var bg: Node2D = room.get_node_or_null("MapBackground")
 		if bg == null:
 			bg = room.get_node_or_null("RoomBackground")
@@ -273,3 +307,23 @@ func _marcadores() -> void:
 	var m5: Node = gab.find_child("ExclamationMarker", true, false)
 	check(m5 != null and m5.show_in_tasks.has(5), "Calendário do gabinete tem '!' na Task 5")
 	gab.free()
+	# Fase 2: o "!" mostra onde está o desafio de cada tarefa
+	for item in [
+		["res://scenes/school/sala_artes_scene.tscn", "CaixaB", 7],
+		["res://scenes/school/sala_gerador_scene.tscn", "Gerador", 8],
+		["res://scenes/school/refeitorio_scene.tscn", "MesaFinal", 9],
+		["res://scenes/school/biblioteca_scene.tscn", "NPCProfessorTask10", 10],
+	]:
+		var room: Node = _instantiate(item[0])
+		var owner_node: Node = room.find_child(item[1], true, false)
+		var mk: Node = owner_node.find_child("ExclamationMarker", true, false) if owner_node else null
+		check(mk != null and mk.show_in_tasks.has(item[2]), "%s/%s tem '!' na Task %d" % [item[0].get_file(), item[1], item[2]])
+		room.free()
+	var arm: Node = _instantiate("res://scenes/school/sala_armarios_scene.tscn")
+	var numeros: Array = []
+	for n in arm.find_children("Armario*", "StaticBody2D", false, false) + arm.get_node("Furniture").get_children():
+		if n.get("numero") != null and not numeros.has(n.numero):
+			numeros.append(n.numero)
+	numeros.sort()
+	check_eq(numeros, range(1, Fase2Puzzles.TOTAL_ARMARIOS + 1), "Sala dos Armários tem os armários de 1 a 15 (sem repetir)")
+	arm.free()

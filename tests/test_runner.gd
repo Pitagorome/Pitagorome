@@ -12,6 +12,8 @@ const SUITES: Array = [
 	preload("res://tests/test_1_logica_desafios.gd"),
 	preload("res://tests/test_2_cenas.gd"),
 	preload("res://tests/test_3_fluxo_fase1.gd"),
+	preload("res://tests/test_4_logica_fase2.gd"),
+	preload("res://tests/test_5_fluxo_fase2.gd"),
 ]
 
 func _ready() -> void:
@@ -23,7 +25,7 @@ func _run() -> void:
 	var results: Array = []
 	var all_passed: bool = true
 	var started: String = Time.get_datetime_string_from_system(false, true)
-	print("\n===== TESTES AUTOMATIZADOS — PITAGOROME (Fase 1) =====")
+	print("\n===== TESTES AUTOMATIZADOS — PITAGOROME (Fases 1 e 2) =====")
 	for suite_script in SUITES:
 		var suite = suite_script.new()
 		suite.runner = self
