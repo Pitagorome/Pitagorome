@@ -1,6 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://d9v1x3k5m7p8a"]
 
 [ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
+[ext_resource type="Script" path="res://scripts/minimapa.gd" id="4_minimapa"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="2_font_bold"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Regular.ttf" id="3_font_reg"]
 
@@ -96,3 +97,16 @@ theme_override_colors/font_color = Color(0.99, 0.75, 0.35, 1)
 theme_override_fonts/font = ExtResource("2_font_bold")
 theme_override_font_sizes/font_size = 11
 text = "Diretor: Diretor"
+
+[node name="Minimapa" type="Control" parent="Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -84.0
+offset_top = 40.0
+offset_right = -12.0
+offset_bottom = 112.0
+grow_horizontal = 0
+mouse_filter = 2
+script = ExtResource("4_minimapa")

@@ -16,18 +16,18 @@ extends CanvasLayer
 var botao: Button
 
 func _ready() -> void:
-	layer = 120 # por cima do HUD, dos desafios e da transição
+	layer = 9 # por cima do HUD (5), mas embaixo do diálogo (10) e dos desafios (12)
 	botao = Button.new()
 	botao.text = "⏭ Pular p/ Fase 2 (TESTE)"
 	botao.focus_mode = Control.FOCUS_NONE # não "rouba" o Espaço/Enter dos diálogos
-	# Canto superior direito, embaixo do nome do(a) diretor(a) (não cobre a caixa de diálogo)
+	# Canto superior direito, embaixo do minimapa (não cobre a caixa de diálogo)
 	botao.anchor_left = 1.0
 	botao.anchor_right = 1.0
-	botao.offset_left = -300
-	botao.offset_top = 84
-	botao.offset_right = -24
-	botao.offset_bottom = 120
-	botao.add_theme_font_size_override("font_size", 18)
+	botao.offset_left = -170
+	botao.offset_top = 118
+	botao.offset_right = -12
+	botao.offset_bottom = 138
+	botao.add_theme_font_size_override("font_size", 10)
 	botao.modulate = Color(1, 0.8, 0.8, 0.85)
 	botao.tooltip_text = "Botão temporário de teste: vai direto para a Fase 2."
 	botao.pressed.connect(_pular)
