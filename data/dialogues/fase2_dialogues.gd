@@ -21,7 +21,7 @@ static func _l(speaker: String, text: String) -> Dictionary:
 
 static func phase_start() -> Array:
 	return [
-		_l(PLAYER, "Novo trimestre, nova sala, mesmo café... O que será que vai dar errado hoje?"),
+		_l(PLAYER, "Novo trimestre, mesmo gabinete, mesmo café... O que será que vai dar errado hoje?"),
 	]
 
 # ---------------- Task 6 — O Troféu Desaparecido ----------------

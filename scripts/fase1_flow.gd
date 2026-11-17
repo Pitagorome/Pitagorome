@@ -237,8 +237,8 @@ func _on_vans_solved() -> void:
 
 func _finish_phase() -> void:
 	GameManager.complete_task(5)
-	await Transition.show_card("Fim da Fase 1", "Lógica e Organização concluída!", 3.0)
 	phase_finished.emit()
+	# O cartão "Fim da Fase 1" faz parte da mesma tela preta que leva ao dia seguinte (ver Fase2Flow.start_phase)
 	Fase2Flow.start_phase()
 
 func _drive_vans_away() -> void:

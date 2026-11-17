@@ -20,12 +20,18 @@ var current_location: String = ""
 # Começo da fase (chamado pelo Fase1Flow depois do cartão "Fim da Fase 1")
 # ------------------------------------------------------------------
 
-func start_phase() -> void:
-	GameManager.current_phase = 2
-	GameManager.set_lights_out(false)
-	GameManager.start_task(6)
-	await Transition.show_card("Fase 2", GameManager.PHASE_NAMES[2], 2.5)
-	Transition.change_scene(SCENE_GABINETE, "SpawnDesk", "No dia seguinte...")
+# Tudo com a tela preta: antes os cartões eram separados e a tela voltava ao portão entre eles.
+func start_phase(com_fim_fase1: bool = true) -> void:
+	var cards: Array = []
+	if com_fim_fase1:
+		cards.append(["Fim da Fase 1", "Lógica e Organização concluída!", 3.0])
+	cards.append(["Fase 2", GameManager.PHASE_NAMES[2], 2.5])
+	cards.append(["No dia seguinte...", "", 1.5])
+	await Transition.change_scene_with_cards(SCENE_GABINETE, "SpawnDesk", cards, func():
+		GameManager.current_phase = 2
+		GameManager.set_lights_out(false)
+		GameManager.start_task(6)
+	)
 
 # ------------------------------------------------------------------
 # Entrada nas salas (eventos automáticos)

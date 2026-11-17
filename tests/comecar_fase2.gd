@@ -7,5 +7,5 @@ extends Node
 func _ready() -> void:
 	GameManager.jump_to_phase(2)
 	get_tree().current_scene = null
-	Fase2Flow.start_phase.call_deferred()
+	Fase2Flow.start_phase.call_deferred(false)
 	queue_free()

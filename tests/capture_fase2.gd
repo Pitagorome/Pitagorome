@@ -28,7 +28,7 @@ func _shot(file_name: String) -> void:
 func _capture_all() -> void:
 	GameManager.jump_to_phase(2)
 	GameManager.set_player_info("Ana", "F", 1)
-	Fase2Flow.start_phase()
+	Fase2Flow.start_phase(false)
 	await get_tree().create_timer(0.8).timeout
 	await _shot("01_inicio_fase2")
 	await sim._wait_transition()

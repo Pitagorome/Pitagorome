@@ -20,12 +20,21 @@ func _ready() -> void:
 
 # Troca de cena com fade. "caption" mostra um texto no meio da tela preta.
 func change_scene(scene_path: String, spawn_id: String = "", caption: String = "", hold_time: float = 1.2) -> void:
+	var cards: Array = [[caption, "", hold_time]] if caption != "" else []
+	await change_scene_with_cards(scene_path, spawn_id, cards)
+
+# Troca de cena mostrando vários cartões seguidos com a tela SEMPRE preta
+# (usado na virada de fase: "Fim da Fase 1" -> "Fase 2" -> "No dia seguinte...").
+# cards: [[título, subtítulo, segundos], ...]. before_change roda com a tela preta, antes de trocar a cena.
+func change_scene_with_cards(scene_path: String, spawn_id: String, cards: Array, before_change: Callable = Callable()) -> void:
 	if is_transitioning:
 		return
 	is_transitioning = true
 	await _fade_to(1.0)
-	if caption != "":
-		await _show_caption(caption, "", hold_time)
+	for card in cards:
+		await _show_caption(str(card[0]), str(card[1]) if card.size() > 1 else "", float(card[2]) if card.size() > 2 else 1.2)
+	if before_change.is_valid():
+		before_change.call()
 	GameManager.target_spawn_id = spawn_id
 	get_tree().change_scene_to_file(scene_path)
 	await get_tree().process_frame
