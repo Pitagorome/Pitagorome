@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Texture2D" path="res://Tilemap-pronto/Modern tiles_Free/Interiors_free/16x16/Interiors_free_16x16.png" id="1_atlas"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mesa"]
+atlas = ExtResource("1_atlas")
+region = Rect2(16, 580, 64, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cadeira"]
+atlas = ExtResource("1_atlas")
+region = Rect2(16, 614, 16, 19)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_base"]
+size = Vector2(62, 10)
+
+[node name="mesa_artes" type="StaticBody2D" groups=["prop"]]
+z_index = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_mesa")
+
+[node name="Cadeira1" type="Sprite2D" parent="."]
+position = Vector2(-20, 12)
+texture = SubResource("AtlasTexture_cadeira")
+
+[node name="Cadeira2" type="Sprite2D" parent="."]
+position = Vector2(0, 12)
+texture = SubResource("AtlasTexture_cadeira")
+
+[node name="Cadeira3" type="Sprite2D" parent="."]
+position = Vector2(20, 12)
+texture = SubResource("AtlasTexture_cadeira")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 9)
+shape = SubResource("RectangleShape2D_base")
