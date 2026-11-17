@@ -1,13 +1,14 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene load_steps=25 format=3]
 
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="room"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="font"]
-[ext_resource type="Texture2D" path="res://assets/tiles/pisos/taco.png" id="piso"]
+[ext_resource type="Texture2D" path="res://assets/tiles/pisos/ceramica_cinza.png" id="piso"]
 [ext_resource type="Texture2D" path="res://assets/tiles/paredes/azul.png" id="parede"]
 [ext_resource type="PackedScene" path="res://scenes/school/exterior_fundo.tscn" id="exterior_fundo"]
 [ext_resource type="PackedScene" path="res://scenes/props/janela.tscn" id="p_janela"]
 [ext_resource type="PackedScene" path="res://scenes/props/armario_numerado.tscn" id="armario_numerado"]
 [ext_resource type="PackedScene" path="res://scenes/props/planta_grande.tscn" id="p_planta_grande"]
+[ext_resource type="PackedScene" path="res://scenes/props/banco.tscn" id="p_banco"]
 [ext_resource type="Script" path="res://scripts/interactable_object.gd" id="obj"]
 [ext_resource type="PackedScene" path="res://scenes/ui/exclamation_marker.tscn" id="marker"]
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="player"]
@@ -55,6 +56,7 @@ texture = ExtResource("piso")
 expand_mode = 1
 stretch_mode = 1
 texture_repeat = 2
+modulate = Color(0.85, 0.95, 1.05, 1)
 
 [node name="WallTop" type="TextureRect" parent="MapBackground"]
 offset_left = -150.0
@@ -167,6 +169,18 @@ position = Vector2(-138, 82)
 [node name="PlantaDir" parent="Furniture" instance=ExtResource("p_planta_grande")]
 position = Vector2(138, 82)
 
+[node name="Banco1" parent="Furniture" instance=ExtResource("p_banco")]
+position = Vector2(-72, -50)
+
+[node name="Banco2" parent="Furniture" instance=ExtResource("p_banco")]
+position = Vector2(72, -50)
+
+[node name="Banco3" parent="Furniture" instance=ExtResource("p_banco")]
+position = Vector2(-72, 15)
+
+[node name="Banco4" parent="Furniture" instance=ExtResource("p_banco")]
+position = Vector2(72, 15)
+
 [node name="Bilhete" type="StaticBody2D" parent="Furniture"]
 z_index = 1
 position = Vector2(-135, -60)
@@ -175,21 +189,45 @@ object_name = "Bilhete do Zelador"
 hint_text = "[E] Ler bilhete"
 flow_event = "bilhete"
 
-[node name="Papel" type="ColorRect" parent="Furniture/Bilhete"]
-offset_left = -8.0
-offset_top = -6.0
-offset_right = 8.0
+[node name="Folha" type="ColorRect" parent="Furniture/Bilhete"]
+offset_left = -6.0
+offset_top = -8.0
+offset_right = 6.0
 offset_bottom = 6.0
 mouse_filter = 2
-color = Color(0.85, 0.7, 0.45, 1)
-
-[node name="Folha" type="ColorRect" parent="Furniture/Bilhete"]
-offset_left = -5.0
-offset_top = -4.0
-offset_right = 5.0
-offset_bottom = 4.0
-mouse_filter = 2
 color = Color(0.97, 0.95, 0.85, 1)
+
+[node name="Linha1" type="ColorRect" parent="Furniture/Bilhete"]
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = -3.0
+mouse_filter = 2
+color = Color(0.4, 0.4, 0.5, 1)
+
+[node name="Linha2" type="ColorRect" parent="Furniture/Bilhete"]
+offset_left = -4.0
+offset_top = -1.0
+offset_right = 4.0
+offset_bottom = 0.0
+mouse_filter = 2
+color = Color(0.4, 0.4, 0.5, 1)
+
+[node name="Linha3" type="ColorRect" parent="Furniture/Bilhete"]
+offset_left = -4.0
+offset_top = 2.0
+offset_right = 2.0
+offset_bottom = 3.0
+mouse_filter = 2
+color = Color(0.4, 0.4, 0.5, 1)
+
+[node name="Tachinha" type="ColorRect" parent="Furniture/Bilhete"]
+offset_left = -1.0
+offset_top = -10.0
+offset_right = 1.0
+offset_bottom = -7.0
+mouse_filter = 2
+color = Color(0.85, 0.2, 0.2, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Bilhete"]
 position = Vector2(0, 2)
