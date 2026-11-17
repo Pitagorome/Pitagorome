@@ -120,7 +120,11 @@ func on_npc_event(flow_id: String, npc: Node = null) -> bool:
 	match flow_id:
 		"professora":
 			if task == 7:
-				DialogueManager.start_dialogue(Fase2Dialogues.task7_reminder(), open_caixas)
+				var faltam: Array[String] = caixas_nao_vistas()
+				if faltam.is_empty():
+					DialogueManager.start_dialogue(Fase2Dialogues.task7_reminder(), open_caixas)
+				else:
+					DialogueManager.start_dialogue(Fase2Dialogues.task7_falta_caixa(faltam))
 			else:
 				DialogueManager.start_dialogue(Fase2Dialogues.professora_idle())
 			return true
@@ -153,7 +157,15 @@ func on_object_event(event_id: String, source: Node = null) -> void:
 			var id: String = str(source.get("flow_value")) if source else ""
 			for c in Fase2Puzzles.CAIXAS:
 				if c["id"] == id:
-					_say("Caixa " + id, Fase2Puzzles.caixa_texto(c) + ".")
+					var texto: String = Fase2Puzzles.caixa_texto(c) + "."
+					if task == 7:
+						GameManager.seen_events["t7_caixa_" + id] = true
+						var faltam: Array[String] = caixas_nao_vistas()
+						if faltam.is_empty():
+							texto += "\n(Você já viu as 3 caixas. Fale com a Professora.)"
+						else:
+							texto += "\n(Falta olhar: Caixa " + " e Caixa ".join(faltam) + ".)"
+					_say("Caixa " + id, texto)
 		"bilhete":
 			if task == 6 and GameManager.seen_events.has("t6_briefing"):
 				DialogueManager.start_dialogue([{"speaker": "", "text": "(Uma cópia do bilhete do Zelador, presa na parede.)"}] + Fase2Dialogues.bilhete())
@@ -215,15 +227,24 @@ func open_locker(numero: int) -> void:
 # Task 7 — caixas de figurinhas
 # ------------------------------------------------------------------
 
+# Letras das caixas que o jogador ainda não examinou na Task 7
+func caixas_nao_vistas() -> Array[String]:
+	var faltam: Array[String] = []
+	for c in Fase2Puzzles.CAIXAS:
+		if not GameManager.seen_events.has("t7_caixa_" + str(c["id"])):
+			faltam.append(str(c["id"]))
+	return faltam
+
+# A pergunta NÃO mostra o que tem em cada caixa: o jogador precisa ter examinado as caixas
+# (a Professora só abre a pergunta depois das 3) e lembrar/anotar o que viu.
 func open_caixas() -> Node:
 	var modal: Node = _get_challenge_modal()
-	var context: String = "Regra do mural: para cada %d figurinhas douradas, %d normais.\n" % [Fase2Puzzles.MURAL_DOURADAS, Fase2Puzzles.MURAL_NORMAIS]
+	var context: String = "Regra do mural: para cada %d figurinhas douradas, %d normais.\nLembre do que você viu dentro de cada caixa (dá para fechar com Esc e olhar de novo)." % [Fase2Puzzles.MURAL_DOURADAS, Fase2Puzzles.MURAL_NORMAIS]
 	var options: Array[String] = []
 	var correct: int = 0
 	for i in Fase2Puzzles.CAIXAS.size():
 		var c: Dictionary = Fase2Puzzles.CAIXAS[i]
-		context += "• " + Fase2Puzzles.caixa_texto(c) + "\n"
-		options.append("Caixa %s (%d : %d)" % [c["id"], c["douradas"], c["normais"]])
+		options.append("Caixa %s" % c["id"])
 		if c["id"] == Fase2Puzzles.CAIXA_CERTA:
 			correct = i
 	modal.show_multiple_choice_challenge(
@@ -296,7 +317,11 @@ func open_cartaz_altura() -> Node:
 		str(Fase2Puzzles.cartaz_nova_altura()),
 		"Isso! 45 ÷ 18 = 2,5 (a largura ficou 2,5 vezes maior). Então a altura também: 24 × 2,5 = 60 cm.",
 		"Essa altura muda a proporção. Descubra quantas vezes 45 é maior que 18 e aumente a altura 24 na mesma quantidade.",
-		func(): DialogueManager.start_dialogue(Fase2Dialogues.task10_height_ok(), open_cartaz_escolha)
+		func():
+			GameManager.mark_event("t10_altura")
+			DialogueManager.start_dialogue(Fase2Dialogues.task10_height_ok(), func():
+				GameManager.set_objective("Olhe as medidas dos 3 cartazes nos cavaletes e diga ao Professor qual é o certo.")
+			)
 	)
 	modal.code_input.placeholder_text = "Altura em cm"
 	puzzle_opened.emit(modal)
@@ -305,12 +330,13 @@ func open_cartaz_altura() -> Node:
 func open_cartaz_escolha() -> Node:
 	GameManager.mark_event("t10_altura")
 	var modal: Node = _get_challenge_modal()
-	var context: String = "Tamanho certo: %d x %d cm. Cartazes impressos pelos alunos:\n" % [Fase2Puzzles.NOVA_LARGURA, Fase2Puzzles.cartaz_nova_altura()]
+	# Sem as medidas nas opções: elas estão escritas nos cavaletes da biblioteca
+	var context: String = "Você calculou o tamanho certo do cartaz. Agora compare com as medidas escritas nos cavaletes (dá para fechar com Esc e olhar de novo)."
 	var options: Array[String] = []
 	var correct: int = 0
 	for i in Fase2Puzzles.CARTAZES.size():
 		var c: Dictionary = Fase2Puzzles.CARTAZES[i]
-		options.append(Fase2Puzzles.cartaz_texto(c))
+		options.append("Cartaz %s" % c["id"])
 		if c["id"] == Fase2Puzzles.CARTAZ_CERTO:
 			correct = i
 	modal.show_multiple_choice_challenge(

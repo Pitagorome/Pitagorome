@@ -84,6 +84,12 @@ static func task7_briefing() -> Array:
 static func task7_reminder() -> Array:
 	return [_l(PROFESSORA, "Lembre: 3 douradas para 6 normais. Qual caixa tem essa mesma proporção?")]
 
+static func task7_falta_caixa(faltam: Array) -> Array:
+	var quais: String = "a caixa " + str(faltam[0])
+	if faltam.size() > 1:
+		quais = "as caixas " + ", ".join(faltam.slice(0, faltam.size() - 1)) + " e " + str(faltam[-1])
+	return [_l(PROFESSORA, "Calma, {diretor}! Antes de responder, examine %s. Precisamos saber o que tem dentro de cada uma." % quais)]
+
 static func task7_done() -> Array:
 	return [
 		_l(ALUNO, "Obrigado, {diretor}! Agora a gente vai conseguir montar nosso mural."),
@@ -160,7 +166,7 @@ static func task10_reminder() -> Array:
 	return [_l(PROF, "Modelo: 18 x 24. Nova largura: 45. Qual a altura, e qual cartaz tem essas medidas?")]
 
 static func task10_height_ok() -> Array:
-	return [_l(PROF, "Isso! Agora olhe os cartazes que os alunos imprimiram. Qual deles é o certo?")]
+	return [_l(PROF, "Isso! Agora olhe os cartazes que os alunos imprimiram, ali nos cavaletes. Veja as medidas de cada um e depois me diga qual é o certo.")]
 
 static func task10_done() -> Array:
 	return [
