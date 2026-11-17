@@ -159,16 +159,21 @@ static func find_consistent_liars() -> Array[String]:
 # ------------------------------------------------------------------
 
 const VAN_CAPACITY: int = 4
+# A ordem da lista é embaralhada de propósito: antes a resposta alternava Van 1 / Van 2
+# na ordem em que os nomes apareciam, e dava para acertar sem pensar.
 const VAN_PARTICIPANTS: Array = [
-	{"id": "joao", "nome": "João", "monitor": false},
-	{"id": "pedro", "nome": "Pedro", "monitor": false},
-	{"id": "ana", "nome": "Ana", "monitor": false},
-	{"id": "lucas", "nome": "Lucas", "monitor": false},
 	{"id": "maria", "nome": "Maria", "monitor": false},
 	{"id": "carlos", "nome": "Carlos", "monitor": false},
 	{"id": "rafael", "nome": "Monitor Rafael", "monitor": true},
+	{"id": "joao", "nome": "João", "monitor": false},
 	{"id": "beatriz", "nome": "Monitora Beatriz", "monitor": true},
+	{"id": "lucas", "nome": "Lucas", "monitor": false},
+	{"id": "ana", "nome": "Ana", "monitor": false},
+	{"id": "pedro", "nome": "Pedro", "monitor": false},
 ]
+# As 6 primeiras são do roteiro. As 2 últimas (Pedro na Van 1 e Beatriz longe do Lucas)
+# foram adicionadas para deixar a tarefa mais difícil: agora existe UMA única resposta,
+# e para chegar nela é preciso usar a regra dos 4 passageiros (ver Explicacoes/fase2_implementacao.md).
 const VAN_RULES: Array = [
 	"João e Pedro não podem viajar juntos (brigaram recentemente).",
 	"Ana e Lucas devem ficar em vans diferentes (cada um lidera um grupo).",
@@ -176,10 +181,15 @@ const VAN_RULES: Array = [
 	"Carlos não pode viajar na mesma van que João.",
 	"Cada van deve ter exatamente 1 monitor.",
 	"Nenhuma van pode passar de 4 passageiros.",
+	"Pedro passa mal na estrada: ele precisa ir na Van 1, a que tem ar-condicionado.",
+	"A Monitora Beatriz não pode ir na mesma van que o Lucas (é tia dele e ele não para de pedir lanche).",
 ]
+# Raciocínio: Pedro na Van 1 -> João na Van 2 -> Carlos na Van 1. Se Ana e Maria fossem na Van 1,
+# ela teria Pedro, Carlos, Ana, Maria + monitor = 5. Então Ana e Maria vão na Van 2 e Lucas na Van 1.
+# Beatriz não vai com Lucas -> Beatriz na Van 2 e Rafael na Van 1.
 const VAN_SOLUTION: Dictionary = {
-	"joao": 1, "ana": 1, "maria": 1, "rafael": 1,
-	"pedro": 2, "lucas": 2, "carlos": 2, "beatriz": 2,
+	"pedro": 1, "carlos": 1, "lucas": 1, "rafael": 1,
+	"joao": 2, "ana": 2, "maria": 2, "beatriz": 2,
 }
 
 # assignment: id -> 0 (sem van), 1 ou 2. Lista vazia = distribuição válida.
@@ -212,6 +222,10 @@ static func validate_vans(assignment: Dictionary) -> Array[String]:
 		errors.append("Maria deve viajar com Ana.")
 	if v.call("carlos") != 0 and v.call("carlos") == v.call("joao"):
 		errors.append("Carlos não pode viajar na mesma van que João.")
+	if v.call("pedro") == 2:
+		errors.append("Pedro passa mal na estrada: ele precisa ir na Van 1.")
+	if v.call("beatriz") != 0 and v.call("beatriz") == v.call("lucas"):
+		errors.append("A Monitora Beatriz não pode ir na mesma van que o Lucas.")
 	return errors
 
 # Força bruta das 2^8 distribuições — usada nos testes para provar que existe solução.

@@ -10,7 +10,13 @@ var selectors: Dictionary = {} # id do participante -> OptionButton
 
 func _build() -> void:
 	title_label.text = "Tarefa 5: O Ônibus da Excursão"
-	rules_label.text = "Regras:  " + "  •  ".join(Fase1Puzzles.VAN_RULES)
+	# uma regra por linha, numeradas (8 regras num parágrafo só ficavam difíceis de ler)
+	var regras: PackedStringArray = []
+	for i in Fase1Puzzles.VAN_RULES.size():
+		regras.append("%d. %s" % [i + 1, Fase1Puzzles.VAN_RULES[i]])
+	rules_label.text = "
+".join(regras)
+	rules_label.add_theme_font_size_override("font_size", 8)
 
 	for p in Fase1Puzzles.VAN_PARTICIPANTS:
 		var label: Label = Label.new()
