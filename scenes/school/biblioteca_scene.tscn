@@ -26,6 +26,9 @@
 [ext_resource type="PackedScene" path="res://scenes/props/tapete_azul.tscn" id="p_tapete_azul"]
 [ext_resource type="PackedScene" path="res://scenes/school/exterior_fundo.tscn" id="exterior_fundo"]
 [ext_resource type="PackedScene" path="res://scenes/school/passagem_porta.tscn" id="passagem_porta"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npc_professor.tscn" id="t10_prof"]
+[ext_resource type="Script" path="res://scripts/interactable_object.gd" id="t10_obj"]
+[ext_resource type="PackedScene" path="res://scenes/ui/exclamation_marker.tscn" id="t10_marker"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(340, 20)
@@ -50,6 +53,10 @@ size = Vector2(60, 22)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
 size = Vector2(40, 20)
+
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cartaz"]
+radius = 14.0
 
 [node name="BibliotecaScene" type="Node2D"]
 script = ExtResource("90_room")
@@ -197,6 +204,162 @@ theme_override_fonts/font = ExtResource("11_font")
 theme_override_font_sizes/font_size = 7
 text = "▼ Corredor"
 horizontal_alignment = 1
+
+[node name="Cartazes" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="CartazA" type="StaticBody2D" parent="Cartazes"]
+z_index = 1
+position = Vector2(-70, 62)
+script = ExtResource("t10_obj")
+object_name = "Cartaz A"
+hint_text = "[E] Cartaz A"
+flow_event = "cartaz"
+flow_value = "A"
+
+[node name="Papel" type="ColorRect" parent="Cartazes/CartazA"]
+offset_left = -4.5
+offset_top = -14
+offset_right = 4.5
+offset_bottom = 0.0
+mouse_filter = 2
+color = Color(0.85, 0.4, 0.35, 1)
+
+[node name="Letra" type="Label" parent="Cartazes/CartazA"]
+offset_left = -10.0
+offset_top = -14
+offset_right = 10.0
+offset_bottom = 0.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 8
+text = "A"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InteractionArea" type="Area2D" parent="Cartazes/CartazA"]
+position = Vector2(0, 8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cartazes/CartazA/InteractionArea"]
+shape = SubResource("CircleShape2D_cartaz")
+
+[node name="HintLabel" type="Label" parent="Cartazes/CartazA"]
+offset_left = -40.0
+offset_top = 2.0
+offset_right = 40.0
+offset_bottom = 15.0
+theme_override_colors/font_color = Color(0.98, 0.95, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 7
+text = "[E] Cartaz A"
+horizontal_alignment = 1
+
+[node name="CartazB" type="StaticBody2D" parent="Cartazes"]
+z_index = 1
+position = Vector2(-30, 62)
+script = ExtResource("t10_obj")
+object_name = "Cartaz B"
+hint_text = "[E] Cartaz B"
+flow_event = "cartaz"
+flow_value = "B"
+
+[node name="Papel" type="ColorRect" parent="Cartazes/CartazB"]
+offset_left = -8.0
+offset_top = -21
+offset_right = 8.0
+offset_bottom = 0.0
+mouse_filter = 2
+color = Color(0.3, 0.55, 0.85, 1)
+
+[node name="Letra" type="Label" parent="Cartazes/CartazB"]
+offset_left = -10.0
+offset_top = -21
+offset_right = 10.0
+offset_bottom = 0.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 8
+text = "B"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InteractionArea" type="Area2D" parent="Cartazes/CartazB"]
+position = Vector2(0, 8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cartazes/CartazB/InteractionArea"]
+shape = SubResource("CircleShape2D_cartaz")
+
+[node name="HintLabel" type="Label" parent="Cartazes/CartazB"]
+offset_left = -40.0
+offset_top = 2.0
+offset_right = 40.0
+offset_bottom = 15.0
+theme_override_colors/font_color = Color(0.98, 0.95, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 7
+text = "[E] Cartaz B"
+horizontal_alignment = 1
+
+[node name="CartazC" type="StaticBody2D" parent="Cartazes"]
+z_index = 1
+position = Vector2(30, 62)
+script = ExtResource("t10_obj")
+object_name = "Cartaz C"
+hint_text = "[E] Cartaz C"
+flow_event = "cartaz"
+flow_value = "C"
+
+[node name="Papel" type="ColorRect" parent="Cartazes/CartazC"]
+offset_left = -6.5
+offset_top = -18
+offset_right = 6.5
+offset_bottom = 0.0
+mouse_filter = 2
+color = Color(0.45, 0.7, 0.35, 1)
+
+[node name="Letra" type="Label" parent="Cartazes/CartazC"]
+offset_left = -10.0
+offset_top = -18
+offset_right = 10.0
+offset_bottom = 0.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 8
+text = "C"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InteractionArea" type="Area2D" parent="Cartazes/CartazC"]
+position = Vector2(0, 8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cartazes/CartazC/InteractionArea"]
+shape = SubResource("CircleShape2D_cartaz")
+
+[node name="HintLabel" type="Label" parent="Cartazes/CartazC"]
+offset_left = -40.0
+offset_top = 2.0
+offset_right = 40.0
+offset_bottom = 15.0
+theme_override_colors/font_color = Color(0.98, 0.95, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 7
+text = "[E] Cartaz C"
+horizontal_alignment = 1
+
+[node name="NPCProfessorTask10" parent="." instance=ExtResource("t10_prof")]
+position = Vector2(-20, -40)
+visible_in_tasks = Array[int]([10])
+
+[node name="ExclamationMarker" parent="NPCProfessorTask10" instance=ExtResource("t10_marker")]
+position = Vector2(0, -24)
+show_in_tasks = Array[int]([10])
+hide_after_event = "t10_briefing"
 
 [node name="HUD" parent="." instance=ExtResource("3_hud")]
 

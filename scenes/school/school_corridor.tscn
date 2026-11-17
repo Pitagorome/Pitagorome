@@ -59,6 +59,9 @@ size = Vector2(100, 20)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_110"]
 size = Vector2(110, 20)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_50"]
+size = Vector2(50, 20)
+
 [node name="SchoolCorridor" type="Node2D"]
 script = ExtResource("90_room")
 location_id = "corredor"
@@ -111,16 +114,20 @@ position = Vector2(-50, -91)
 position = Vector2(50, -91)
 
 [node name="AvisosEsq" parent="Parede" instance=ExtResource("p_quadro_avisos")]
-position = Vector2(-150, -91)
+position = Vector2(-150, -97)
 
 [node name="AvisosDir" parent="Parede" instance=ExtResource("p_quadro_avisos")]
 position = Vector2(150, -91)
 
 [node name="MapWalls" type="StaticBody2D" parent="."]
 
-[node name="TopLeft" type="CollisionShape2D" parent="MapWalls"]
-position = Vector2(-145, -85)
-shape = SubResource("RectangleShape2D_wall_250")
+[node name="TopLeftA" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(-245, -85)
+shape = SubResource("RectangleShape2D_wall_50")
+
+[node name="TopLeftB" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(-100, -85)
+shape = SubResource("RectangleShape2D_c_wall_top_l")
 
 [node name="TopRight" type="CollisionShape2D" parent="MapWalls"]
 position = Vector2(145, -85)
@@ -154,7 +161,7 @@ shape = SubResource("RectangleShape2D_c_wall_right")
 y_sort_enabled = true
 
 [node name="ArmarioEsq" parent="Furniture" instance=ExtResource("p_armario_metal")]
-position = Vector2(-185, -76)
+position = Vector2(-150, -76)
 
 [node name="ArmarioDir" parent="Furniture" instance=ExtResource("p_armario_metal")]
 position = Vector2(185, -76)
@@ -188,6 +195,9 @@ position = Vector2(-150, 38)
 
 [node name="SpawnFromPortao" type="Marker2D" parent="."]
 position = Vector2(150, 38)
+
+[node name="SpawnFromAla" type="Marker2D" parent="."]
+position = Vector2(-200, -45)
 
 [node name="Player" parent="." instance=ExtResource("1_player")]
 position = Vector2(0, 45)
@@ -236,8 +246,18 @@ tint = Color(0.9, 1, 0.85, 1)
 testimony_id = "lucas"
 
 
+[node name="Task6Group" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="NPCCoordenadoraTask6" parent="Task6Group" instance=ExtResource("2_coord")]
+position = Vector2(-25, 15)
+default_animation = "idle_left"
+visible_in_tasks = Array[int]([6])
+gone_after_event = "t6_briefing"
+
 [node name="NPCZelador" parent="." instance=ExtResource("3_zelador")]
 position = Vector2(-60, -10)
+hidden_in_tasks = Array[int]([8])
 
 [node name="DoorToDirectorOffice" type="Area2D" parent="."]
 position = Vector2(0, 85)
@@ -375,6 +395,29 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
 theme_override_fonts/font = ExtResource("12_font")
 theme_override_font_sizes/font_size = 7
 text = "▼ Portão"
+horizontal_alignment = 1
+
+[node name="DoorToAla" type="Area2D" parent="."]
+position = Vector2(-200, -85)
+script = ExtResource("7_door")
+target_scene = "res://scenes/school/ala_refeitorio_scene.tscn"
+target_spawn_id = "SpawnFromCorridor"
+
+[node name="PassagemPorta" parent="DoorToAla" instance=ExtResource("passagem_porta")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToAla"]
+shape = SubResource("RectangleShape2D_door")
+
+[node name="DoorLabel" type="Label" parent="DoorToAla"]
+offset_left = -50.0
+offset_top = 10.0
+offset_right = 50.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("12_font")
+theme_override_font_sizes/font_size = 7
+text = "▲ Ala do Refeitório"
 horizontal_alignment = 1
 
 [node name="HUD" parent="." instance=ExtResource("5_hud")]
