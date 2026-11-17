@@ -15,6 +15,8 @@ const TROFEU_C: int = 36
 const TROFEU_MENOS: int = 3
 const TOTAL_ARMARIOS: int = 15
 
+# Linha curta que fica no HUD enquanto a Task 6 não termina (para não precisar decorar o bilhete)
+const BILHETE_HUD: String = "Bilhete do Zelador: 2x + 6 = 36. Pegue o x, diminua 3 e abra o armário com esse número."
 const BILHETE: String = "Primeiro descubra o número escondido nesta equação:\n2x + 6 = 36\nDepois, pegue o resultado de x, diminua 3 e procure o armário com esse número."
 
 @warning_ignore("integer_division")

@@ -154,6 +154,11 @@ func on_object_event(event_id: String, source: Node = null) -> void:
 			for c in Fase2Puzzles.CAIXAS:
 				if c["id"] == id:
 					_say("Caixa " + id, Fase2Puzzles.caixa_texto(c) + ".")
+		"bilhete":
+			if task == 6 and GameManager.seen_events.has("t6_briefing"):
+				DialogueManager.start_dialogue([{"speaker": "", "text": "(Uma cópia do bilhete do Zelador, presa na parede.)"}] + Fase2Dialogues.bilhete())
+			else:
+				_say("Quadro de avisos", "\"Armários numerados de 1 a 15. Não guarde comida aqui.\" — Zelador")
 		"mural":
 			_say("Mural", "Mural da turma: para cada 3 figurinhas douradas, 6 normais.")
 		"gerador":
@@ -185,6 +190,7 @@ func on_object_event(event_id: String, source: Node = null) -> void:
 func _start_task6_briefing() -> void:
 	GameManager.mark_event("t6_briefing")
 	DialogueManager.start_dialogue(Fase2Dialogues.task6_briefing(), func():
+		GameManager.set_note(Fase2Puzzles.BILHETE_HUD)
 		GameManager.set_objective("Resolva a equação do bilhete e abra o armário certo na Sala dos Armários (porta de cima à esquerda → Ala do Refeitório).")
 	)
 
@@ -197,6 +203,7 @@ func open_locker(numero: int) -> void:
 		return
 	if numero == Fase2Puzzles.trofeu_armario():
 		DialogueManager.start_dialogue(Fase2Dialogues.task6_done(), func():
+			GameManager.set_note("")
 			GameManager.complete_task(6)
 		)
 		return

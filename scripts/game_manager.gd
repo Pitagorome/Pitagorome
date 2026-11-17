@@ -8,6 +8,7 @@ signal objective_updated(text: String)
 signal phase_changed(new_phase: int)
 signal player_info_updated(player_name: String, player_gender: String)
 signal lights_changed(lights_out: bool)
+signal note_updated(text: String)
 
 # Aparências disponíveis para o jogador (sprites em assets/character_frames).
 # Nenhuma é igual a um NPC: Bob = Professor, Alex = Zelador, Amelia = Coordenadora.
@@ -36,6 +37,8 @@ var current_phase: int = 1
 var current_task_id: int = 1
 var current_task_name: String = "Tour na Escola"
 var current_objective: String = ""
+# Lembrete fixo no HUD (ex.: o bilhete do Zelador na Task 6). Vazio = não aparece.
+var current_note: String = ""
 var completed_tasks: Array[int] = []
 
 # Estado do Tour na Escola (Task 1)
@@ -106,6 +109,7 @@ func reset_progress() -> void:
 	testimonies_heard.clear()
 	wrong_lockers = 0
 	set_lights_out(false)
+	set_note("")
 	target_spawn_id = ""
 	start_task(1)
 
@@ -131,6 +135,10 @@ func first_task_of_phase(phase: int) -> int:
 		if TASK_PHASE[task] == phase and (first == 0 or task < first):
 			first = task
 	return first
+
+func set_note(text: String) -> void:
+	current_note = text
+	note_updated.emit(text)
 
 func set_lights_out(value: bool) -> void:
 	lights_out = value

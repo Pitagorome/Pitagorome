@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3]
+[gd_scene load_steps=24 format=3]
 
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="room"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="font"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/armario_numerado.tscn" id="armario_numerado"]
 [ext_resource type="PackedScene" path="res://scenes/props/planta_grande.tscn" id="p_planta_grande"]
 [ext_resource type="Script" path="res://scripts/interactable_object.gd" id="obj"]
+[ext_resource type="PackedScene" path="res://scenes/ui/exclamation_marker.tscn" id="marker"]
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="npc_coordenadora"]
 [ext_resource type="Script" path="res://scripts/door.gd" id="door"]
@@ -170,9 +171,9 @@ position = Vector2(138, 82)
 z_index = 1
 position = Vector2(-135, -60)
 script = ExtResource("obj")
-object_name = "Quadro de avisos"
-hint_text = "[E] Ler"
-examine_text = "\"Armários numerados de 1 a 15. Não guarde comida aqui.\" — Zelador"
+object_name = "Bilhete do Zelador"
+hint_text = "[E] Ler bilhete"
+flow_event = "bilhete"
 
 [node name="Papel" type="ColorRect" parent="Furniture/Bilhete"]
 offset_left = -8.0
@@ -209,8 +210,12 @@ theme_override_colors/font_color = Color(0.98, 0.95, 0.8, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
 theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 7
-text = "[E] Ler"
+text = "[E] Ler bilhete"
 horizontal_alignment = 1
+
+[node name="ExclamationMarker" parent="Furniture/Bilhete" instance=ExtResource("marker")]
+position = Vector2(0, -26)
+show_in_tasks = Array[int]([6])
 
 [node name="SpawnFromAla" type="Marker2D" parent="."]
 position = Vector2(0, 75)
