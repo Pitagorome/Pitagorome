@@ -9,6 +9,8 @@ extends StaticBody2D
 @export_multiline var examine_text: String = ""
 # Se preenchido, quem decide o que acontece é o Fase1Flow (ex: "cofre", "calendario")
 @export var flow_event: String = ""
+# Valor extra que vai junto com o flow_event (ex.: a letra da caixa "A", o cartaz "B")
+@export var flow_value: String = ""
 
 # Se estiver vinculado a um desafio
 @export var is_challenge_trigger: bool = false

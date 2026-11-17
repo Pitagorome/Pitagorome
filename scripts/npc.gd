@@ -11,6 +11,10 @@ extends CharacterBody2D
 @export var visible_in_tasks: Array[int] = []
 # Em quais tarefas o NPC NÃO aparece nesta sala
 @export var hidden_in_tasks: Array[int] = []
+# Só aparece depois que esse evento aconteceu (GameManager.seen_events). Ex.: "t6_briefing"
+@export var requires_event: String = ""
+# Some da sala depois que esse evento aconteceu (vale ao entrar de novo na sala)
+@export var gone_after_event: String = ""
 
 @onready var interaction_area: Area2D = $InteractionArea
 @onready var hint_label: Label = $HintLabel
@@ -37,7 +41,13 @@ func _ready() -> void:
 func is_present_in_task(task_id: int) -> bool:
 	if hidden_in_tasks.has(task_id):
 		return false
-	return visible_in_tasks.is_empty() or visible_in_tasks.has(task_id)
+	if not (visible_in_tasks.is_empty() or visible_in_tasks.has(task_id)):
+		return false
+	if requires_event != "" and not GameManager.seen_events.has(requires_event):
+		return false
+	if gone_after_event != "" and GameManager.seen_events.has(gone_after_event):
+		return false
+	return true
 
 # O NPC não está nesta sala na tarefa atual: esconde e desliga colisão/interação.
 func _remove_from_room() -> void:

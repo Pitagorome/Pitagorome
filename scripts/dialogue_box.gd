@@ -60,6 +60,8 @@ func _on_dialogue_started() -> void:
 
 func _on_dialogue_line_changed(speaker: String, text: String) -> void:
 	speaker_label.text = speaker
+	# Narração (o que acontece na cena) vem sem nome de quem fala
+	speaker_label.visible = speaker != ""
 	text_label.text = text
 	panel.visible = true
 

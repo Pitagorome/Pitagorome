@@ -7,6 +7,7 @@ signal task_updated(task_id: int, task_name: String)
 signal objective_updated(text: String)
 signal phase_changed(new_phase: int)
 signal player_info_updated(player_name: String, player_gender: String)
+signal lights_changed(lights_out: bool)
 
 # Aparências disponíveis para o jogador (sprites em assets/character_frames).
 # Nenhuma é igual a um NPC: Bob = Professor, Alex = Zelador, Amelia = Coordenadora.
@@ -45,6 +46,10 @@ var tour_completed: bool = false
 # Depoimentos ouvidos na Task 4 (id do aluno -> true)
 var testimonies_heard: Dictionary = {}
 
+# Fase 2: escola sem luz (Task 8) e quantas vezes o jogador abriu o armário errado (Task 6)
+var lights_out: bool = false
+var wrong_lockers: int = 0
+
 # Sistema de Spawn entre salas
 var target_spawn_id: String = ""
 
@@ -53,7 +58,20 @@ const TASK_NAMES: Dictionary = {
 	2: "Conflito no Horário",
 	3: "O Cofre da Escola",
 	4: "Quem Está Matando Aula?",
-	5: "O Ônibus da Excursão"
+	5: "O Ônibus da Excursão",
+	6: "O Troféu Desaparecido",
+	7: "Figurinhas",
+	8: "O Gerador de Emergência",
+	9: "As Mesas do Refeitório",
+	10: "O Cartaz da Feira",
+}
+
+# Em que fase fica cada tarefa
+const TASK_PHASE: Dictionary = {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 2, 10: 2}
+const PHASE_NAMES: Dictionary = {
+	1: "Lógica e Organização",
+	2: "Equações, Proporções e Probabilidade",
+	3: "Funções, Combinatória e Raciocínio Algébrico",
 }
 
 const TASK_OBJECTIVES: Dictionary = {
@@ -61,7 +79,12 @@ const TASK_OBJECTIVES: Dictionary = {
 	2: "Volte ao gabinete e reorganize a grade de horários.",
 	3: "Vá ao Almoxarifado (corredor, porta de baixo à esquerda) e abra o armário com \"!\".",
 	4: "Ouça João, Pedro e Lucas no corredor e conte à Coordenadora quem mentiu.",
-	5: "Confira o calendário com \"!\" no seu gabinete."
+	5: "Confira o calendário com \"!\" no seu gabinete.",
+	6: "A Coordenadora está te procurando no corredor.",
+	7: "Passe pela Sala de Artes (corredor, porta de cima à esquerda → Ala do Refeitório).",
+	8: "Vá até a Sala do Gerador (Ala do Refeitório, porta da esquerda).",
+	9: "Vá ao Refeitório (Ala do Refeitório, porta da direita).",
+	10: "Encontre o Professor de Matemática na Biblioteca (corredor, porta de cima no meio).",
 }
 
 func _ready() -> void:
@@ -81,8 +104,37 @@ func reset_progress() -> void:
 	tour_talked_professor = false
 	tour_completed = false
 	testimonies_heard.clear()
+	wrong_lockers = 0
+	set_lights_out(false)
 	target_spawn_id = ""
 	start_task(1)
+
+# Pula direto para o começo de uma fase (usado pelo atalho tests/comecar_fase2.tscn e pelos testes).
+func jump_to_phase(phase: int) -> void:
+	reset_progress()
+	intro_dialogue_finished = true
+	tour_talked_zelador = true
+	tour_talked_professor = true
+	tour_completed = true
+	if player_name == "Diretor":
+		set_player_info("Diretor", "M", 0)
+	for task in TASK_PHASE:
+		if TASK_PHASE[task] < phase:
+			completed_tasks.append(task)
+			seen_events["t%d_briefing" % task] = true
+	current_phase = phase
+	start_task(first_task_of_phase(phase))
+
+func first_task_of_phase(phase: int) -> int:
+	var first: int = 0
+	for task in TASK_PHASE:
+		if TASK_PHASE[task] == phase and (first == 0 or task < first):
+			first = task
+	return first
+
+func set_lights_out(value: bool) -> void:
+	lights_out = value
+	lights_changed.emit(value)
 
 func set_player_info(new_name: String, new_gender: String = "", new_appearance: int = -1) -> void:
 	if new_name.strip_edges() != "":
@@ -124,7 +176,9 @@ func complete_task(task_id: int) -> void:
 	print("[GameManager] Tarefa concluída: ", task_id)
 
 	var next_task: int = task_id + 1
-	if TASK_NAMES.has(next_task):
+	# A próxima tarefa só começa sozinha se for da mesma fase.
+	# Na virada de fase o roteiro da fase (Fase1Flow/Fase2Flow) mostra o cartão e chama start_task.
+	if TASK_NAMES.has(next_task) and TASK_PHASE.get(next_task, 0) == current_phase:
 		start_task(next_task)
 	else:
 		advance_phase()
@@ -134,7 +188,10 @@ func advance_phase() -> void:
 	current_task_id = 0
 	current_task_name = "Fase %d concluída!" % (current_phase - 1)
 	task_updated.emit(current_task_id, current_task_name)
-	set_objective("A Fase %d está em desenvolvimento. Obrigado por testar!" % current_phase)
+	if first_task_of_phase(current_phase) == 0:
+		set_objective("A Fase %d está em desenvolvimento. Obrigado por testar!" % current_phase)
+	else:
+		set_objective("")
 	phase_changed.emit(current_phase)
 
 func check_tour_progress() -> bool:

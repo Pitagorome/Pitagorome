@@ -86,6 +86,7 @@ func show_code_challenge(task_id: int, title: String, context: String, question:
 	options_container.visible = false
 	code_container.visible = true
 	code_input.text = ""
+	code_input.placeholder_text = "ex: 1 2 3" # cada desafio pode trocar depois de abrir
 	
 	modal_panel.visible = true
 	feedback_panel.visible = false
@@ -113,7 +114,9 @@ func _show_success_feedback() -> void:
 	feedback_text.text = current_feedback_success
 	feedback_panel.visible = true
 	
-	GameManager.complete_task(current_task_id)
+	# task_id 0 = passo intermediário de uma tarefa com mais de uma pergunta (ex.: Task 10)
+	if current_task_id > 0:
+		GameManager.complete_task(current_task_id)
 	challenge_completed.emit(current_task_id)
 
 func _show_error_feedback(msg: String) -> void:
