@@ -5,6 +5,8 @@ extends Node
 # Cada sala avisa onde o jogador está (scripts/school_room.gd) e os NPCs/objetos
 # chamam as funções daqui. Assim a história inteira da fase fica num lugar só.
 # Falas: data/dialogues/fase1_dialogues.gd | Desafios: data/puzzles/fase1_puzzles.gd
+# A partir da Fase 2 (GameManager.current_phase >= 2) tudo é repassado para o
+# Fase2Flow (scripts/fase2_flow.gd), assim os NPCs e as salas continuam chamando só daqui.
 
 signal puzzle_opened(puzzle: Node)
 signal phase_finished()
@@ -22,14 +24,17 @@ var current_location: String = ""
 
 func on_room_ready(location: String) -> void:
 	current_location = location
+	if location == "portao" and GameManager.current_task_id != 5:
+		_remove_vans() # as vans só aparecem no dia da excursão
+	if _fase2():
+		Fase2Flow.on_room_ready(location)
+		return
 	if Transition.is_transitioning:
 		await Transition.transition_finished
 	if current_location != location or DialogueManager.is_busy():
 		return
 
 	var task: int = GameManager.current_task_id
-	if location == "portao" and task != 5:
-		_remove_vans() # as vans só aparecem no dia da excursão
 	match location:
 		"gabinete":
 			if task == 1 and not GameManager.intro_dialogue_finished:
@@ -58,6 +63,9 @@ func _start_intro() -> void:
 # ------------------------------------------------------------------
 
 func on_coordenadora_interact() -> void:
+	if _fase2():
+		Fase2Flow.on_coordenadora_interact()
+		return
 	var task: int = GameManager.current_task_id
 	match task:
 		1:
@@ -90,6 +98,9 @@ func on_coordenadora_interact() -> void:
 	_say("Coordenadora", Fase1Dialogues.hint_for_task(task))
 
 func on_zelador_interact() -> void:
+	if _fase2():
+		Fase2Flow.on_zelador_interact()
+		return
 	if GameManager.current_task_id == 1 and not GameManager.tour_talked_zelador:
 		_tour_talk(IntroDialogues.get_zelador_sequence(), "zelador")
 	elif GameManager.current_task_id == 3 and current_location == "almoxarifado":
@@ -98,6 +109,9 @@ func on_zelador_interact() -> void:
 		DialogueManager.start_dialogue(Fase1Dialogues.zelador_idle())
 
 func on_professor_interact() -> void:
+	if _fase2():
+		Fase2Flow.on_professor_interact()
+		return
 	if GameManager.current_task_id == 1 and not GameManager.tour_talked_professor:
 		_tour_talk(IntroDialogues.get_professor_matematica_sequence(), "professor")
 	elif GameManager.current_task_id == 4 and current_location == "corredor":
@@ -135,7 +149,10 @@ func hear_testimony(suspect_id: String, speaker: String) -> void:
 # Objetos do cenário (interactable_object.gd com flow_event)
 # ------------------------------------------------------------------
 
-func on_object_event(event_id: String, _source: Node = null) -> void:
+func on_object_event(event_id: String, source: Node = null) -> void:
+	if _fase2() or not event_id in ["cofre", "calendario"]:
+		Fase2Flow.on_object_event(event_id, source)
+		return
 	match event_id:
 		"cofre":
 			if GameManager.current_task_id == 3:
@@ -217,8 +234,9 @@ func _on_vans_solved() -> void:
 
 func _finish_phase() -> void:
 	GameManager.complete_task(5)
-	await Transition.show_card("Fim da Fase 1", "Lógica e Organização concluída!\nObrigado por jogar o protótipo do Pitagorome.", 4.0)
+	await Transition.show_card("Fim da Fase 1", "Lógica e Organização concluída!", 3.0)
 	phase_finished.emit()
+	Fase2Flow.start_phase()
 
 func _drive_vans_away() -> void:
 	var scene: Node = get_tree().current_scene
@@ -262,6 +280,9 @@ func _get_challenge_modal() -> Node:
 func _ui_parent() -> Node:
 	var scene: Node = get_tree().current_scene
 	return scene if scene != null else get_tree().root
+
+func _fase2() -> bool:
+	return GameManager.current_phase >= 2
 
 func _say(speaker: String, text: String) -> void:
 	DialogueManager.start_dialogue([{"speaker": speaker, "text": text}])
