@@ -90,19 +90,29 @@ func _vans_solucao() -> void:
 	check_eq(Fase1Puzzles.validate_vans(Fase1Puzzles.VAN_SOLUTION).size(), 0, "A solução do roteiro é aceita")
 	var solucoes: Array[Dictionary] = Fase1Puzzles.van_all_solutions()
 	check(solucoes.size() > 0, "A força bruta encontra soluções")
-	var sempre_juntos: bool = solucoes.all(func(s): return s["joao"] == s["ana"] and s["ana"] == s["maria"])
-	check(sempre_juntos, "Em toda solução João, Ana e Maria viajam juntos (a solução é única a menos de trocar monitor/número da van)")
+	# Pedido de 17/11: antes havia 4 respostas e a certa alternava Van 1/Van 2 na ordem da lista
+	check_eq(solucoes.size(), 1, "Existe uma única distribuição válida")
+	check(solucoes.size() == 1 and solucoes[0] == Fase1Puzzles.VAN_SOLUTION, "A única solução é a configurada no jogo")
+	var vans_na_ordem: Array = Fase1Puzzles.VAN_PARTICIPANTS.map(func(p): return Fase1Puzzles.VAN_SOLUTION[p["id"]])
+	var alterna: bool = true
+	for i in range(1, vans_na_ordem.size()):
+		if vans_na_ordem[i] == vans_na_ordem[i - 1]:
+			alterna = false
+	var metade: bool = vans_na_ordem.slice(0, 4).all(func(x): return x == vans_na_ordem[0])
+	check(not alterna and not metade, "A resposta não segue a ordem da lista (%s)" % str(vans_na_ordem))
 	note("%d distribuições válidas entre 256 possíveis" % solucoes.size())
 
 func _vans_regras() -> void:
 	var base: Dictionary = Fase1Puzzles.VAN_SOLUTION.duplicate()
 	var casos: Array = [
-		[{"pedro": 1, "joao": 1}, "João e Pedro"],
-		[{"lucas": 1}, "Ana e Lucas"],
-		[{"maria": 2}, "Maria deve viajar com Ana"],
-		[{"carlos": 1}, "Carlos"],
-		[{"beatriz": 1}, "monitor"],
-		[{"pedro": 1}, "passageiros"],
+		[{"joao": 1}, "João e Pedro"],
+		[{"lucas": 2}, "Ana e Lucas"],
+		[{"maria": 1}, "Maria deve viajar com Ana"],
+		[{"carlos": 2}, "Carlos"],
+		[{"rafael": 2}, "monitor"],
+		[{"ana": 1, "maria": 1, "lucas": 2}, "passageiros"],
+		[{"pedro": 2, "joao": 1, "carlos": 2}, "Pedro passa mal"],
+		[{"beatriz": 1, "rafael": 2}, "Beatriz não pode ir na mesma van que o Lucas"],
 		[{"ana": 0}, "ainda não tem van"],
 	]
 	for caso in casos:

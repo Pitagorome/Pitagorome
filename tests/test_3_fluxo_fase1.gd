@@ -294,8 +294,8 @@ func _task5_vans() -> void:
 	check(errors.any(func(e): return e.contains("não tem van")), "Sem ninguém nas vans aparece erro")
 
 	var errada: Dictionary = Fase1Puzzles.VAN_SOLUTION.duplicate()
-	errada["pedro"] = 1
-	errada["joao"] = 2
+	errada["pedro"] = 2 # troca Pedro e João de van
+	errada["joao"] = 1
 	puzzle.set_assignment(errada)
 	errors = puzzle.check_answer()
 	check(errors.size() > 0, "Distribuição errada é recusada (%s)" % " / ".join(errors))
