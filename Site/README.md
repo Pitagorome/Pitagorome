@@ -52,7 +52,7 @@ npm run dev
 
 O site abre em `http://localhost:8080` (ou na porta que aparecer no terminal).
 
-> As páginas Início e Novidades buscam os commits pelo conector do GitHub do Lovable, que precisa da chave `LOVABLE_API_KEY`. Sem ela (por exemplo, rodando só no seu computador), essas áreas mostram um aviso no lugar dos commits e o resto do site funciona normalmente.
+> As páginas Início e Novidades buscam os commits direto na API pública do GitHub, sem precisar de chave. Sem chave o GitHub libera 60 pedidos por hora, então o site guarda a resposta por 5 minutos. Se quiser aumentar esse limite, defina a variável `GITHUB_TOKEN` com um token do GitHub.
 
 ### Comandos
 
