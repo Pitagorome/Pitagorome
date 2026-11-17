@@ -18,6 +18,11 @@ const APPEARANCES: Array = [
 	"res://assets/character_frames/escoteiro2_frames.tres",
 	"res://assets/character_frames/carteiro1_frames.tres",
 	"res://assets/character_frames/carteiro2_frames.tres",
+	# Personagens da arte "Obrigado!" do grupo (gerados por tools/gerar_personagens.py)
+	"res://assets/character_frames/grupo1_frames.tres",
+	"res://assets/character_frames/grupo2_frames.tres",
+	"res://assets/character_frames/grupo3_frames.tres",
+	"res://assets/character_frames/grupo4_frames.tres",
 ]
 
 # Dados do jogador (UML: Jogador)
