@@ -62,6 +62,14 @@ func _capture_all() -> void:
 	await _shot("07_task7_sala_artes")
 	await sim._read_all()
 	sim._find("NPCProfessora").interact()
+	await _shot("08a_task7_examine_antes")
+	await sim._read_all()
+	for cx in ["CaixaA", "CaixaB", "CaixaC"]:
+		sim._find(cx).interact()
+		if cx == "CaixaB":
+			await _shot("08b_task7_caixa_b")
+		await sim._read_all()
+	sim._find("NPCProfessora").interact()
 	await sim._read_all()
 	await _shot("08_task7_caixas")
 	sim._modal()._on_option_selected(0)
@@ -109,6 +117,8 @@ func _capture_all() -> void:
 	await _shot("17_task10_altura")
 	sim._modal()._on_code_submitted()
 	sim._modal()._on_feedback_closed()
+	await sim._read_all()
+	sim._find("NPCProfessorTask10").interact()
 	await sim._read_all()
 	await _shot("18_task10_cartazes")
 	sim._modal()._on_option_selected(1)
