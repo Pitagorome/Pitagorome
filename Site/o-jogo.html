@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>O Jogo · Pitagorome</title>
+  <meta name="description" content="Três fases, 15 tarefas e uma escola inteira para administrar. Veja como se joga o Pitagorome.">
+  <link rel="icon" href="assets/img/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Inter:wght@400;500;600;700&family=Pixelify+Sans:wght@500;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+  <div data-cabecalho></div>
+
+  <main>
+    <section class="topo-pagina">
+      <img class="pixel" src="assets/img/hero-escola.jpg" alt="" width="1920" height="1080">
+      <div class="topo-pagina-sombra"></div>
+      <div class="conteudo topo-pagina-texto">
+        <p class="chapeu">O jogo</p>
+        <h1>Três trimestres para salvar a escola</h1>
+        <p>Escolha nome e aparência, percorra a escola em visão de cima e converse com quem aparece. Quando surge um problema, ele vira um desafio.</p>
+      </div>
+      <div class="faixa-grama piso" style="background-image:url(assets/tiles/grama.png)"></div>
+    </section>
+
+    <!-- Primeiros passos -->
+    <section class="secao conteudo duas-colunas surgir">
+      <div>
+        <div class="titulo-secao">
+          <p class="chapeu">Primeiros passos</p>
+          <h2>Crie seu diretor ou diretora</h2>
+          <p>Antes do tour, a Coordenadora pergunta seu nome. Você escolhe se é diretor ou diretora e uma das aparências disponíveis.</p>
+        </div>
+        <div class="controles">
+          <p class="chapeu">Controles</p>
+          <div class="controle"><div class="teclas"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></div><small>ou setas</small><span>Andar pela escola</span></div>
+          <div class="controle"><div class="teclas"><kbd>E</kbd></div><span>Interagir com pessoas e objetos</span></div>
+          <div class="controle"><div class="teclas"><kbd>Espaço</kbd><kbd>Enter</kbd></div><span>Avançar os diálogos</span></div>
+        </div>
+      </div>
+      <figure class="moldura"><img class="pixel" src="assets/img/criacao-personagem.png" alt="Tela de criação de personagem com nome, diretor ou diretora e aparência" width="1228" height="675"></figure>
+    </section>
+
+    <!-- Fases -->
+    <section class="secao escuro" id="fases">
+      <div class="conteudo">
+        <div class="titulo-secao">
+          <p class="chapeu">Roteiro</p>
+          <h2>Quinze tarefas, três fases</h2>
+          <p>Cada trimestre traz um tipo de problema. Escolha uma fase para ver as tarefas e testar um desafio.</p>
+        </div>
+        <div class="abas-fases" role="tablist" aria-label="Fases"></div>
+        <div id="painel-fase" role="tabpanel"></div>
+
+        <!-- Um desafio por fase -->
+        <div class="desafio-fase">
+          <div id="desafio-fase-1" class="painel desafio" style="flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between">
+            <div><p class="chapeu">Teste um desafio</p><h3>O Cofre da Escola</h3></div>
+            <a class="botao botao-jogo" href="#cofre">Abrir o cadeado ↓</a>
+          </div>
+
+          <div id="desafio-fase-2" hidden><form id="armario-form" class="painel desafio">
+            <div class="desafio-topo">
+              <div><p class="chapeu">Teste um desafio</p><h3>O Troféu Desaparecido</h3></div>
+              <img class="pixel" src="assets/props/lockers_metal.png" width="64" height="96" alt="">
+            </div>
+            <p>O Zelador deixou um bilhete: resolva <b>2x + 6 = 36</b>, diminua 3 do valor de x e procure o armário com esse número.</p>
+            <label for="armario">Número do armário</label>
+            <div class="desafio-linha">
+              <input id="armario" class="campo-numero" type="number" inputmode="numeric" min="0" max="99">
+              <button type="submit" class="botao botao-jogo">Abrir</button>
+            </div>
+            <p id="armario-resultado" class="resultado" aria-live="polite"></p>
+          </form></div>
+
+          <div id="desafio-fase-3" class="painel desafio" hidden>
+            <div class="desafio-topo">
+              <div><p class="chapeu">Teste um desafio</p><h3>A Máquina de Refrigerante</h3></div>
+              <img class="pixel" src="assets/props/metal_locker.png" width="48" height="96" alt="">
+            </div>
+            <p>A máquina cobra de um jeito estranho. Os registros do técnico:</p>
+            <table class="tabela-maquina">
+              <tr><td>2 refrigerantes</td><td>R$ 9</td></tr>
+              <tr><td>4 refrigerantes</td><td>R$ 15</td></tr>
+              <tr><td>6 refrigerantes</td><td id="maquina-preco">?</td></tr>
+            </table>
+            <div><button type="button" id="maquina-botao" class="botao botao-jogo" aria-expanded="false">Descobrir o preço de 6</button></div>
+            <p id="maquina-resultado" class="resultado certo" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ambientes -->
+    <section class="secao conteudo">
+      <div class="titulo-secao surgir">
+        <p class="chapeu">Ambientes</p>
+        <h2>Conheça a escola</h2>
+        <p>Cada sala usa os mesmos pisos e paredes do jogo.</p>
+      </div>
+      <div class="salas surgir em-sequencia">
+        <article class="painel sala"><div class="sala-cena"><div class="sala-parede piso" style="background-image:url(assets/tiles/parede_bege.png)"></div><div class="sala-piso piso" style="background-image:url(assets/tiles/azulejo_azul.png);background-size:144px 96px"></div><img class="pixel" src="assets/props/plant_palm.png" width="84" height="120" alt=""></div><div class="sala-texto"><h3>Corredor</h3><p>O centro da escola. Daqui saem todas as portas.</p></div></article>
+        <article class="painel sala"><div class="sala-cena"><div class="sala-parede piso" style="background-image:url(assets/tiles/parede_azul.png)"></div><div class="sala-piso piso" style="background-image:url(assets/tiles/azulejo_amarelo.png);background-size:144px 96px"></div><img class="pixel" src="assets/props/blackboard.png" width="128" height="64" alt="" style="bottom:4.5rem"></div><div class="sala-texto"><h3>Sala de Matemática</h3><p>Território do Professor de Matemática.</p></div></article>
+        <article class="painel sala"><div class="sala-cena"><div class="sala-parede piso" style="background-image:url(assets/tiles/parede_madeira_escura.png)"></div><div class="sala-piso piso" style="background-image:url(assets/tiles/taco.png);background-size:144px 96px"></div><img class="pixel" src="assets/props/library_shelf.png" width="80" height="120" alt=""></div><div class="sala-texto"><h3>Biblioteca</h3><p>Estantes cheias e silêncio quase garantido.</p></div></article>
+        <article class="painel sala"><div class="sala-cena"><div class="sala-parede piso" style="background-image:url(assets/tiles/parede_rosa.png)"></div><div class="sala-piso piso" style="background-image:url(assets/tiles/madeira_escura.png);background-size:48px 48px"></div><img class="pixel" src="assets/props/desk_wooden.png" width="144" height="96" alt=""></div><div class="sala-texto"><h3>Coordenação</h3><p>Onde a Coordenadora resolve (quase) tudo.</p></div></article>
+        <article class="painel sala"><div class="sala-cena"><div class="sala-parede piso" style="background-image:url(assets/tiles/parede_cinza_azul.png)"></div><div class="sala-piso piso" style="background-image:url(assets/tiles/tijolo.png);background-size:144px 96px"></div><img class="pixel" src="assets/props/lockers_metal.png" width="80" height="120" alt=""></div><div class="sala-texto"><h3>Almoxarifado</h3><p>Materiais novos trancados por um cadeado de 3 dígitos.</p></div></article>
+        <article class="painel sala"><div class="sala-cena"><div class="sala-parede piso" style="background-image:url(assets/tiles/calcada.png);background-size:48px 48px"></div><div class="sala-piso piso" style="background-image:url(assets/tiles/grama.png);background-size:48px 48px"></div><img class="pixel" src="assets/props/plant_ficus.png" width="72" height="120" alt=""></div><div class="sala-texto"><h3>Portão</h3><p>Saída da excursão e chegada de cada novo dia.</p></div></article>
+      </div>
+    </section>
+
+    <!-- O Cofre da Escola -->
+    <section id="cofre" class="piso" style="background-image:url(assets/tiles/tijolo.png);background-size:144px 96px;scroll-margin-top:5rem">
+      <div class="conteudo secao">
+        <div class="painel surgir" style="padding:clamp(1.5rem,4vw,2.5rem)">
+          <div class="duas-colunas" style="align-items:center">
+            <div>
+              <p class="chapeu">Fase 1 · Tarefa 3</p>
+              <h2 style="margin-top:.5rem;font-size:clamp(1.875rem,4vw,2.5rem)">O Cofre da Escola</h2>
+              <p style="margin-top:1rem;color:var(--apagado)">O Zelador esqueceu a senha do cadeado do almoxarifado. Ele só lembra de algumas pistas:</p>
+              <div class="pistas" style="margin-top:1rem">
+                <p>“O cadeado tem 3 dígitos. O primeiro número é par e a soma dos três dá 12.”</p>
+                <p>“Nenhum dígito se repete e eles estão em ordem crescente.”</p>
+                <p>“Ah... e todos eram pares. Nenhum era zero, disso eu tenho certeza.”</p>
+              </div>
+            </div>
+            <form id="cofre-form" class="desafio" style="padding:0">
+              <div class="desafio-topo"><label>Digite a senha</label><img class="pixel" src="assets/props/safe_cabinet.png" width="64" height="96" alt=""></div>
+              <div class="desafio-linha">
+                <input class="campo-numero digito" inputmode="numeric" maxlength="1" aria-label="Primeiro dígito">
+                <input class="campo-numero digito" inputmode="numeric" maxlength="1" aria-label="Segundo dígito">
+                <input class="campo-numero digito" inputmode="numeric" maxlength="1" aria-label="Terceiro dígito">
+                <button type="submit" class="botao botao-jogo">Abrir</button>
+              </div>
+              <div id="cofre-resultado" class="resultado" aria-live="polite"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div data-rodape></div>
+  <script src="js/dados.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

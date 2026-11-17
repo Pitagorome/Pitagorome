@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Personagens · Pitagorome</title>
+  <meta name="description" content="Conheça a Coordenadora, o Zelador, o Professor de Matemática e quem mais você encontra na Escola Pitagorome.">
+  <link rel="icon" href="assets/img/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Inter:wght@400;500;600;700&family=Pixelify+Sans:wght@500;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+  <div data-cabecalho></div>
+
+  <main>
+    <section class="topo-pagina">
+      <img class="pixel" src="assets/img/hero-escola.jpg" alt="" width="1920" height="1080">
+      <div class="topo-pagina-sombra"></div>
+      <div class="conteudo topo-pagina-texto">
+        <p class="chapeu">Personagens</p>
+        <h1>Quem você encontra na escola</h1>
+        <p>O diretor nunca parou em um emprego. Foi vendedor, monitor de museu e animador de festa vestido de triângulo, até que uma carta chegou: a Escola Pitagorome procurava um novo diretor.</p>
+      </div>
+      <div class="faixa-grama piso" style="background-image:url(assets/tiles/grama.png)"></div>
+    </section>
+
+    <section class="secao conteudo duas-colunas surgir" style="align-items:center">
+      <div class="titulo-secao">
+        <p class="chapeu">A história</p>
+        <h2>O anterior desistiu após três dias</h2>
+        <p>Ele aceitou pelo café grátis. No portão, dois alunos se acusavam de colar na prova de matemática. Foi quando percebeu que talvez o antigo diretor tivesse um ponto.</p>
+      </div>
+      <figure class="moldura"><img class="pixel" src="assets/img/escola-conceito.png" alt="A Coordenadora recebe o novo diretor no gabinete" width="1227" height="679"></figure>
+    </section>
+
+    <section class="piso" style="background-image:url(assets/tiles/azulejo_azul.png);background-size:144px 96px">
+      <div class="conteudo secao">
+        <div class="grade-personagens surgir em-sequencia" id="grade-personagens"></div>
+      </div>
+    </section>
+
+    <section class="secao conteudo">
+      <div class="titulo-secao surgir">
+        <p class="chapeu">Você</p>
+        <h2>Escolha sua aparência</h2>
+        <p>Antes do tour, escolha nome, se é diretor ou diretora e um dos visuais.</p>
+      </div>
+      <div class="visuais surgir em-sequencia">
+        <figure class="painel"><img class="pixel" src="assets/personagens/diretor-visual-1.png" alt="Aparência do diretor: visual 1" loading="lazy"><figcaption>Visual 1</figcaption></figure>
+        <figure class="painel"><img class="pixel" src="assets/personagens/diretor-visual-2.png" alt="Aparência do diretor: visual 2" loading="lazy"><figcaption>Visual 2</figcaption></figure>
+        <figure class="painel"><img class="pixel" src="assets/personagens/diretor-visual-3.png" alt="Aparência do diretor: visual 3" loading="lazy"><figcaption>Visual 3</figcaption></figure>
+      </div>
+    </section>
+  </main>
+
+  <div data-rodape></div>
+  <script src="js/dados.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
