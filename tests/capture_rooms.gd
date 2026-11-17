@@ -12,6 +12,11 @@ const ROOMS: Array = [
 	"res://scenes/school/biblioteca_scene.tscn",
 	"res://scenes/school/almoxarifado_scene.tscn",
 	"res://scenes/school/portao_scene.tscn",
+	"res://scenes/school/ala_refeitorio_scene.tscn",
+	"res://scenes/school/sala_armarios_scene.tscn",
+	"res://scenes/school/sala_artes_scene.tscn",
+	"res://scenes/school/sala_gerador_scene.tscn",
+	"res://scenes/school/refeitorio_scene.tscn",
 ]
 
 var out_dir: String = "user://salas"
@@ -24,8 +29,10 @@ func _ready() -> void:
 		elif arg.begins_with("--task="):
 			task = int(arg.trim_prefix("--task="))
 	DirAccess.make_dir_recursive_absolute(out_dir)
+	GameManager.current_phase = GameManager.TASK_PHASE.get(task, 1)
 	GameManager.start_task(task)
 	GameManager.intro_dialogue_finished = true
+	GameManager.set_lights_out(task == 8)
 	for t in range(1, task):
 		GameManager.seen_events["t%d_briefing" % t] = true
 	get_tree().current_scene = null
