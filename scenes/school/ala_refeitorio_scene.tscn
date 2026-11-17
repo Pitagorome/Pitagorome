@@ -1,0 +1,303 @@
+[gd_scene load_steps=30 format=3]
+
+[ext_resource type="Script" path="res://scripts/school_room.gd" id="room"]
+[ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="font"]
+[ext_resource type="Texture2D" path="res://assets/tiles/pisos/madeira_vermelha.png" id="piso"]
+[ext_resource type="Texture2D" path="res://assets/tiles/paredes/amarela.png" id="parede"]
+[ext_resource type="PackedScene" path="res://scenes/school/exterior_fundo.tscn" id="exterior_fundo"]
+[ext_resource type="PackedScene" path="res://scenes/props/janela_clara.tscn" id="p_janela_clara"]
+[ext_resource type="PackedScene" path="res://scenes/props/quadro_avisos.tscn" id="p_quadro_avisos"]
+[ext_resource type="PackedScene" path="res://scenes/props/quadro_peixe.tscn" id="p_quadro_peixe"]
+[ext_resource type="PackedScene" path="res://scenes/props/tabela_periodica.tscn" id="p_tabela_periodica"]
+[ext_resource type="PackedScene" path="res://scenes/props/quadro_dourado.tscn" id="p_quadro_dourado"]
+[ext_resource type="PackedScene" path="res://scenes/props/quadro_mapa.tscn" id="p_quadro_mapa"]
+[ext_resource type="PackedScene" path="res://scenes/props/planta_grande.tscn" id="p_planta_grande"]
+[ext_resource type="PackedScene" path="res://scenes/props/armario_metal.tscn" id="p_armario_metal"]
+[ext_resource type="PackedScene" path="res://scenes/props/palmeira.tscn" id="p_palmeira"]
+[ext_resource type="PackedScene" path="res://scenes/props/planta_media.tscn" id="p_planta_media"]
+[ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="player"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/bob_frames.tres" id="f_bob"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npc_aluno.tscn" id="npc_aluno"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/amelia_frames.tres" id="f_amelia"]
+[ext_resource type="Script" path="res://scripts/door.gd" id="door"]
+[ext_resource type="PackedScene" path="res://scenes/school/passagem_porta.tscn" id="passagem_porta"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="ui_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="ui_dialogue_box"]
+[ext_resource type="PackedScene" path="res://scenes/ui/challenge_modal.tscn" id="ui_challenge_modal"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_150x20"]
+size = Vector2(150, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_160x20"]
+size = Vector2(160, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_250x20"]
+size = Vector2(250, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_20x200"]
+size = Vector2(20, 200)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_40x20"]
+size = Vector2(40, 20)
+
+[node name="AlaRefeitorio" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("room")
+location_id = "ala_refeitorio"
+
+[node name="ExteriorFundo" parent="." instance=ExtResource("exterior_fundo")]
+
+[node name="MapBackground" type="Node2D" parent="."]
+z_index = -1
+
+[node name="Floor" type="TextureRect" parent="MapBackground"]
+offset_left = -260.0
+offset_top = -80.0
+offset_right = 260.0
+offset_bottom = 80.0
+texture = ExtResource("piso")
+expand_mode = 1
+stretch_mode = 1
+texture_repeat = 2
+
+[node name="WallTop" type="TextureRect" parent="MapBackground"]
+offset_left = -260.0
+offset_top = -107.0
+offset_right = 260.0
+offset_bottom = -70.0
+texture = ExtResource("parede")
+expand_mode = 1
+stretch_mode = 1
+texture_repeat = 2
+
+[node name="Tapetes" type="Node2D" parent="."]
+
+[node name="Parede" type="Node2D" parent="."]
+
+[node name="Janela1" parent="Parede" instance=ExtResource("p_janela_clara")]
+position = Vector2(-230, -90)
+
+[node name="Janela2" parent="Parede" instance=ExtResource("p_janela_clara")]
+position = Vector2(230, -90)
+
+[node name="Avisos" parent="Parede" instance=ExtResource("p_quadro_avisos")]
+position = Vector2(-170, -91)
+
+[node name="Quadro" parent="Parede" instance=ExtResource("p_quadro_peixe")]
+position = Vector2(0, -91)
+
+[node name="Tabela" parent="Parede" instance=ExtResource("p_tabela_periodica")]
+position = Vector2(170, -92)
+
+[node name="QuadroDourado" parent="Parede" instance=ExtResource("p_quadro_dourado")]
+position = Vector2(-40, -92)
+
+[node name="QuadroMapa" parent="Parede" instance=ExtResource("p_quadro_mapa")]
+position = Vector2(40, -92)
+
+[node name="MapWalls" type="StaticBody2D" parent="."]
+
+[node name="TopA" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(-195, -85)
+shape = SubResource("RectangleShape2D_150x20")
+
+[node name="TopB" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(0, -85)
+shape = SubResource("RectangleShape2D_160x20")
+
+[node name="TopC" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(195, -85)
+shape = SubResource("RectangleShape2D_150x20")
+
+[node name="BottomA" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(-145, 85)
+shape = SubResource("RectangleShape2D_250x20")
+
+[node name="BottomB" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(145, 85)
+shape = SubResource("RectangleShape2D_250x20")
+
+[node name="LeftWall" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(-270, 0)
+shape = SubResource("RectangleShape2D_20x200")
+
+[node name="RightWall" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(270, 0)
+shape = SubResource("RectangleShape2D_20x200")
+
+[node name="Furniture" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="PlantaA" parent="Furniture" instance=ExtResource("p_planta_grande")]
+position = Vector2(-150, -62)
+
+[node name="PlantaB" parent="Furniture" instance=ExtResource("p_planta_grande")]
+position = Vector2(150, -62)
+
+[node name="ArmarioMetal" parent="Furniture" instance=ExtResource("p_armario_metal")]
+position = Vector2(-230, -66)
+
+[node name="Palmeira" parent="Furniture" instance=ExtResource("p_palmeira")]
+position = Vector2(245, 55)
+
+[node name="PlantaC" parent="Furniture" instance=ExtResource("p_planta_media")]
+position = Vector2(-60, 60)
+
+[node name="PlantaD" parent="Furniture" instance=ExtResource("p_planta_media")]
+position = Vector2(60, 60)
+
+[node name="SpawnFromCorridor" type="Marker2D" parent="."]
+position = Vector2(0, 45)
+
+[node name="SpawnFromArtes" type="Marker2D" parent="."]
+position = Vector2(-100, -45)
+
+[node name="SpawnFromArmarios" type="Marker2D" parent="."]
+position = Vector2(100, -45)
+
+[node name="SpawnFromGerador" type="Marker2D" parent="."]
+position = Vector2(-215, 0)
+
+[node name="SpawnFromRefeitorio" type="Marker2D" parent="."]
+position = Vector2(215, 0)
+
+[node name="Player" parent="." instance=ExtResource("player")]
+position = Vector2(0, 45)
+
+[node name="AlunoMochila" parent="." instance=ExtResource("npc_aluno")]
+position = Vector2(-170, 30)
+npc_name = "Aluno"
+frames = ExtResource("f_bob")
+tint = Color(1, 0.85, 0.7, 1)
+flow_id = "aluno_aleatorio"
+hidden_in_tasks = Array[int]([8])
+
+[node name="AlunaCorredor" parent="." instance=ExtResource("npc_aluno")]
+position = Vector2(175, 30)
+npc_name = "Aluna"
+frames = ExtResource("f_amelia")
+tint = Color(0.8, 1, 0.85, 1)
+flow_id = "aluno_aleatorio"
+default_animation = "idle_left"
+hidden_in_tasks = Array[int]([8])
+
+[node name="DoorToCorridor" type="Area2D" parent="."]
+position = Vector2(0, 85)
+script = ExtResource("door")
+target_scene = "res://scenes/school/school_corridor.tscn"
+target_spawn_id = "SpawnFromAla"
+
+[node name="PassagemPorta" parent="DoorToCorridor" instance=ExtResource("passagem_porta")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToCorridor"]
+shape = SubResource("RectangleShape2D_40x20")
+
+[node name="DoorLabel" type="Label" parent="DoorToCorridor"]
+offset_left = -50.0
+offset_top = -24.0
+offset_right = 50.0
+offset_bottom = -11.0
+theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 7
+text = "▼ Corredor principal"
+horizontal_alignment = 1
+
+[node name="DoorToArtes" type="Area2D" parent="."]
+position = Vector2(-100, -85)
+script = ExtResource("door")
+target_scene = "res://scenes/school/sala_artes_scene.tscn"
+target_spawn_id = "SpawnFromAla"
+
+[node name="PassagemPorta" parent="DoorToArtes" instance=ExtResource("passagem_porta")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToArtes"]
+shape = SubResource("RectangleShape2D_40x20")
+
+[node name="DoorLabel" type="Label" parent="DoorToArtes"]
+offset_left = -50.0
+offset_top = 12.0
+offset_right = 50.0
+offset_bottom = 25.0
+theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 7
+text = "▲ Sala de Artes"
+horizontal_alignment = 1
+
+[node name="DoorToArmarios" type="Area2D" parent="."]
+position = Vector2(100, -85)
+script = ExtResource("door")
+target_scene = "res://scenes/school/sala_armarios_scene.tscn"
+target_spawn_id = "SpawnFromAla"
+
+[node name="PassagemPorta" parent="DoorToArmarios" instance=ExtResource("passagem_porta")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToArmarios"]
+shape = SubResource("RectangleShape2D_40x20")
+
+[node name="DoorLabel" type="Label" parent="DoorToArmarios"]
+offset_left = -50.0
+offset_top = 12.0
+offset_right = 50.0
+offset_bottom = 25.0
+theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 7
+text = "▲ Sala dos Armários"
+horizontal_alignment = 1
+
+[node name="DoorToGerador" type="Area2D" parent="."]
+position = Vector2(-260, 0)
+script = ExtResource("door")
+target_scene = "res://scenes/school/sala_gerador_scene.tscn"
+target_spawn_id = "SpawnFromAla"
+
+[node name="PassagemPorta" parent="DoorToGerador" instance=ExtResource("passagem_porta")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToGerador"]
+shape = SubResource("RectangleShape2D_40x20")
+
+[node name="DoorLabel" type="Label" parent="DoorToGerador"]
+offset_left = -50.0
+offset_top = -26.0
+offset_right = 50.0
+offset_bottom = -13.0
+theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 7
+text = "◄ Sala do Gerador"
+horizontal_alignment = 1
+
+[node name="DoorToRefeitorio" type="Area2D" parent="."]
+position = Vector2(260, 0)
+script = ExtResource("door")
+target_scene = "res://scenes/school/refeitorio_scene.tscn"
+target_spawn_id = "SpawnFromAla"
+
+[node name="PassagemPorta" parent="DoorToRefeitorio" instance=ExtResource("passagem_porta")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToRefeitorio"]
+shape = SubResource("RectangleShape2D_40x20")
+
+[node name="DoorLabel" type="Label" parent="DoorToRefeitorio"]
+offset_left = -50.0
+offset_top = -26.0
+offset_right = 50.0
+offset_bottom = -13.0
+theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 7
+text = "► Refeitório"
+horizontal_alignment = 1
+
+[node name="HUD" parent="." instance=ExtResource("ui_hud")]
+
+[node name="DialogueBox" parent="." instance=ExtResource("ui_dialogue_box")]
+
+[node name="ChallengeModal" parent="." instance=ExtResource("ui_challenge_modal")]

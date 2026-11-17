@@ -1,0 +1,59 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/armario_numerado.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://Tilemap-pronto/Modern tiles_Free/Interiors_free/16x16/Interiors_free_16x16.png" id="2_atlas"]
+[ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="3_font"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_prop"]
+atlas = ExtResource("2_atlas")
+region = Rect2(13, 423, 38, 25)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_base"]
+size = Vector2(36, 10)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
+radius = 16.0
+
+[node name="ArmarioNumerado" type="StaticBody2D" groups=["prop"]]
+z_index = 1
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_prop")
+offset = Vector2(0, -1.5)
+
+[node name="Numero" type="Label" parent="."]
+offset_left = -7.0
+offset_top = -12.0
+offset_right = 7.0
+offset_bottom = -3.0
+theme_override_colors/font_color = Color(0.15, 0.15, 0.2, 1)
+theme_override_colors/font_outline_color = Color(0.95, 0.85, 0.3, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 7
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 6)
+shape = SubResource("RectangleShape2D_base")
+
+[node name="InteractionArea" type="Area2D" parent="."]
+position = Vector2(0, 18)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+shape = SubResource("CircleShape2D_interact")
+
+[node name="HintLabel" type="Label" parent="."]
+offset_left = -40.0
+offset_top = 14.0
+offset_right = 40.0
+offset_bottom = 27.0
+theme_override_colors/font_color = Color(0.98, 0.95, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 7
+text = "[E] Abrir"
+horizontal_alignment = 1
