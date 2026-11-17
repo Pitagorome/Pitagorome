@@ -145,15 +145,34 @@ func _movimento_e_porta() -> void:
 	check(_find("Player").global_position.distance_to(spawn.global_position) < 2.0, "Jogador aparece no ponto de spawn certo")
 
 func _task1_tour() -> void:
+	var coord: Node2D = _find("NPCCoordenadora")
+	var player: Node2D = _find("Player")
+	# Bug de 17/11: a Coordenadora ficava parada na porta e "falava de longe" com o Zelador
+	player.global_position = Vector2(-60, 20) # jogador vai até o Zelador
+	await _physics_frames(2)
+	check(coord.global_position.distance_to(player.global_position) > 60.0, "(preparação) jogador longe de onde a Coordenadora começou")
 	var zelador: Node = _find("NPCZelador")
 	zelador.interact()
+	await _frames(2)
+	check(coord.global_position.distance_to(player.global_position) < 40.0, "A Coordenadora está ao lado do jogador quando apresenta o Zelador (%.0f px)" % coord.global_position.distance_to(player.global_position))
 	var lines: Array = await _read_all()
 	check(lines.any(func(l): return l.contains("essa é a nova diretora")), "Coordenadora apresenta 'a nova diretora' ao Zelador")
 	check(GameManager.tour_talked_zelador, "Conversa com o Zelador registrada")
 	check(GameManager.current_objective.contains("Matemática"), "Objetivo muda para a Sala de Matemática")
 	check_eq(GameManager.current_task_id, 1, "Tour ainda não acabou só com o Zelador")
 
+	# Andando, a Coordenadora vai atrás do jogador
+	player = _find("Player")
+	coord = _find("NPCCoordenadora")
+	var antes: Vector2 = coord.global_position
+	await _segurar_tecla(KEY_LEFT, 50)
+	await _physics_frames(30)
+	check(coord.global_position.x < antes.x - 40.0 and coord.global_position.distance_to(player.global_position) < 60.0, "A Coordenadora acompanha o jogador pelo corredor")
+
 	await _go(MATEMATICA, "SpawnFromCorridor")
+	await _physics_frames(2)
+	var coord_mat: Node2D = _find("NPCCoordenadora")
+	check(coord_mat.global_position.distance_to(_find("Player").global_position) < 40.0, "Na Sala de Matemática a Coordenadora entra junto com o jogador")
 	_find("NPCProfessor").interact()
 	await _read_all()
 	await _wait_transition()
@@ -300,6 +319,19 @@ func _fim_fase() -> void:
 		guard += 1
 		await _frames(1)
 	check_eq(Transition.title_label.text, "Fim da Fase 1", "Cartão de fim de fase")
+	# Bug de 17/11: entre os cartões a tela voltava a mostrar o portão (com o HUD já na Fase 2)
+	var titulos: Array = []
+	var portao_apareceu: bool = false
+	guard = 0
+	while Transition.is_transitioning and guard < 2000:
+		guard += 1
+		if Transition.caption_box.visible and not titulos.has(Transition.title_label.text):
+			titulos.append(Transition.title_label.text)
+		if scene() and scene().get("location_id") == "portao" and Transition.fade_rect.modulate.a < 0.99:
+			portao_apareceu = true
+		await _frames(1)
+	check(not portao_apareceu, "A tela fica preta entre 'Fim da Fase 1' e o dia seguinte (o portão não reaparece)")
+	check_eq(titulos, ["Fim da Fase 1", "Fase 2", "No dia seguinte..."], "Cartões da virada de fase em ordem")
 	await _wait_transition()
 	check_eq(GameManager.completed_tasks.size(), 5, "As 5 tarefas da Fase 1 estão concluídas")
 	check_eq(GameManager.current_phase, 2, "Jogo passa para a Fase 2")

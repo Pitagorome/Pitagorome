@@ -107,6 +107,9 @@ func _task6() -> void:
 	check(_has(lines, "Eu deixei duas pistas"), "Zelador: 'Eu não esqueci. Eu deixei duas pistas.'")
 	check(_has(lines, "2x + 6 = 36"), "Bilhete mostra a equação 2x + 6 = 36")
 	check(GameManager.current_objective.contains("Armários"), "Objetivo manda ir à Sala dos Armários")
+	# Pergunta de 17/11: "onde tá o bilhete?" -> fica no HUD até achar o troféu
+	var hud: Node = _find("HUD")
+	check(hud.note_label.visible and hud.note_label.text.contains("2x + 6 = 36"), "O bilhete fica escrito no HUD")
 	_find("NPCZelador").interact()
 	lines = await _read_all()
 	check(_has(lines, "2x + 6 = 36"), "Falar com o Zelador de novo mostra o bilhete")
@@ -122,6 +125,10 @@ func _task6() -> void:
 	await _go(ARMARIOS, "SpawnFromAla")
 	lines = await _read_all()
 	check(_has(lines, "15 armários"), "Coordenadora espera na Sala dos Armários")
+	check(_find("HUD").note_label.visible, "O bilhete continua no HUD em outra sala")
+	_find("Bilhete").interact()
+	lines = await _read_all()
+	check(_has(lines, "2x + 6 = 36"), "Tem uma cópia do bilhete na parede da Sala dos Armários")
 	_find("Armario15").interact()
 	lines = await _read_all()
 	check(_has(lines, "Nada de troféu"), "Armário 15 (errado) não tem o troféu")
@@ -136,6 +143,7 @@ func _task6() -> void:
 	check(_has(lines, "O troféu da escola está lá dentro"), "Armário 12 tem o troféu")
 	check(_has(lines, "foi por isso que o diretor anterior desistiu"), "Coordenadora: '...e foi por isso que o diretor anterior desistiu.'")
 	check(GameManager.is_task_completed(6), "Task 6 concluída")
+	check(not _find("HUD").note_label.visible, "Achou o troféu: o bilhete sai do HUD")
 	check_eq(GameManager.current_task_id, 7, "Task 7 começa")
 
 func _task7() -> void:
