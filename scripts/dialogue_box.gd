@@ -18,7 +18,7 @@ const RETRATOS_PADRAO: Dictionary = {
 	"Professor de Matemática": "res://assets/character_frames/bob_frames.tres",
 }
 # Parte de cima do quadro 16x32 que aparece no retrato (cabeça e ombros)
-const RETRATO_RECORTE: Rect2 = Rect2(0, 1, 16, 20)
+const RETRATO_RECORTE: Rect2 = Rect2(0, 7, 16, 18) # a cabeça começa por volta da linha 9 do quadro
 
 @onready var name_input_modal: PanelContainer = $Control/NameInputModal
 @onready var name_line_edit: LineEdit = $Control/NameInputModal/MarginContainer/VBoxContainer/LineEdit
