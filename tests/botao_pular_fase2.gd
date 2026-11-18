@@ -3,8 +3,9 @@ extends CanvasLayer
 # =====================================================================
 # TEMP-PULAR-FASE2  [TEMPORÁRIO - SÓ PARA TESTE] Botão "Pular para a Fase 2"
 # ---------------------------------------------------------------------
-# Botão no canto superior direito que pula direto para o começo da Fase 2
-# (Tarefa 6, no gabinete). Aparece só enquanto o jogo está na Fase 1.
+# Botões no canto superior direito que pulam direto para o começo da Fase 2
+# (Tarefa 6) ou da Fase 3 (Tarefa 11), no gabinete. Cada um some quando o jogo já
+# passou daquela fase.
 #
 # PARA TIRAR antes da entrega (procure por "TEMP-PULAR-FASE2" no projeto):
 #   1. Apague a linha "BotaoPularFase2=..." em project.godot
@@ -14,9 +15,12 @@ extends CanvasLayer
 # =====================================================================
 
 var botao: Button
+var botao3: Button
 
 func _ready() -> void:
 	layer = 9 # por cima do HUD (5), mas embaixo do diálogo (10) e dos desafios (12)
+	botao3 = _criar_botao("⏭ Pular p/ Fase 3 (TESTE)", 196)
+	botao3.pressed.connect(_pular.bind(3))
 	botao = Button.new()
 	botao.text = "⏭ Pular p/ Fase 2 (TESTE)"
 	botao.focus_mode = Control.FOCUS_NONE # não "rouba" o Espaço/Enter dos diálogos
@@ -30,16 +34,36 @@ func _ready() -> void:
 	botao.add_theme_font_size_override("font_size", 10)
 	botao.modulate = Color(1, 0.8, 0.8, 0.85)
 	botao.tooltip_text = "Botão temporário de teste: vai direto para a Fase 2."
-	botao.pressed.connect(_pular)
+	botao.pressed.connect(_pular.bind(2))
 	add_child(botao)
+
+func _criar_botao(texto: String, topo: int) -> Button:
+	var b := Button.new()
+	b.text = texto
+	b.focus_mode = Control.FOCUS_NONE
+	b.anchor_left = 1.0
+	b.anchor_right = 1.0
+	b.offset_left = -170
+	b.offset_top = topo
+	b.offset_right = -12
+	b.offset_bottom = topo + 20
+	b.add_theme_font_size_override("font_size", 10)
+	b.modulate = Color(1, 0.8, 0.8, 0.85)
+	b.tooltip_text = "Botão temporário de teste: vai direto para a Fase 3."
+	add_child(b)
+	return b
 
 func _process(_delta: float) -> void:
 	botao.visible = GameManager.current_phase < 2 and not Transition.is_transitioning
+	botao3.visible = GameManager.current_phase < 3 and not Transition.is_transitioning
+	# quando só sobra o da Fase 3, ele sobe para o lugar do outro
+	botao3.offset_top = 196 if botao.visible else 172
+	botao3.offset_bottom = botao3.offset_top + 20
 
-func _pular() -> void:
+func _pular(fase: int = 2) -> void:
 	if Transition.is_transitioning:
 		return
-	print("[TESTE] Pulando para a Fase 2 pelo botão temporário")
+	print("[TESTE] Pulando para a Fase %d pelo botão temporário" % fase)
 	# Fecha diálogo aberto sem rodar o que viria depois dele
 	DialogueManager.current_on_complete = Callable()
 	if DialogueManager.is_active:
@@ -50,7 +74,10 @@ func _pular() -> void:
 	var genero: String = GameManager.player_gender
 	var visual: int = GameManager.player_appearance
 	var tinha_nome: bool = GameManager.player_named
-	GameManager.jump_to_phase(2)
+	GameManager.jump_to_phase(fase)
 	if tinha_nome:
 		GameManager.set_player_info(nome, genero, visual)
-	Fase2Flow.start_phase(false)
+	if fase == 3:
+		Fase3Flow.start_phase(false)
+	else:
+		Fase2Flow.start_phase(false)
