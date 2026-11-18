@@ -51,7 +51,176 @@ PERSONAGENS = {
     'grupo3': dict(base='Adam', cabelo=(80, 52, 40), pele=(226, 170, 128), camisa=(236, 236, 240),
                    calca=(42, 42, 52), sapato=(30, 30, 38), olho=(50, 34, 28)),
     'grupo4': dict(base='Amelia', cabelo=(78, 50, 44), pele=(255, 214, 190), camisa=(140, 42, 62),
-                   calca=(40, 40, 50), sapato=(30, 30, 38), olho=(50, 34, 28), oculos=(214, 218, 230)),
+                   calca=(40, 40, 50), sapato=(30, 30, 38), olho=(50, 34, 28), oculos_cor=(208, 212, 228)),
+}
+
+# ---------------- cabeças desenhadas à mão (pixel art) ----------------
+# Repintar só a cor do cabelo do sprite base mantinha o FORMATO do cabelo dele (o topete
+# do Adam), e ficava bem diferente da arte do grupo. Por isso cada personagem tem a cabeça
+# desenhada aqui, 16 x 13 pixels, nas visões de frente ('baixo'), de costas ('cima') e de
+# lado ('direita'; a esquerda é o espelho). O script encaixa a cabeça em cada quadro
+# (acompanhando o "pulinho" da animação).
+# Letras: . transparente | o O contorno | H cabelo, L cabelo claro, D cabelo escuro
+#         S pele, s pele sombra, B bochecha | E olho | G óculos
+CABECAS = {
+    'grupo1': {  # João: cabelo curto castanho-claro com franja reta
+        'baixo': [
+            "....oooooooo....",
+            "..ooHHLLLHHHoo..",
+            ".oHHLLLHHHHHHHo.",
+            ".oHLLHHHHHHHHDo.",
+            "oHHHHHHHHHHHHHDo",
+            "oHHHHHHHHHHHHHDo",
+            "oDHHHHHHHHHHHHDo",
+            "oDHHHHHHHHHHHHDo",
+            "oSDDDDDDDDDDDDSo",
+            "oDSSSSSSSSSSSSDo",
+            "OsSSSSSSSSSSSSsO",
+            ".oSSSoSSSSoSSSo.",
+            "..osSESSSSESso..",
+        ],
+        'cima': [
+            "....oooooooo....",
+            "..ooHHLLLHHHoo..",
+            ".oHHLLLHHHHHHHo.",
+            ".oHLLHHHHHHHHDo.",
+            "oHHHHHHHHHHHHHDo",
+            "oHHHHHHHHHHHHHDo",
+            "oHHHHHHHHHHHHHDo",
+            "oDHHHHHHHHHHHHDo",
+            "oDHHHHHHHHHHHDDo",
+            "oDDHHHHHHHHHHDDo",
+            "OSDDDDDDDDDDDDSO",
+            ".oSsssssssssSSo.",
+            "..osSSSSSSSSso..",
+        ],
+        'direita': [
+            ".....oooooooo...",
+            "...ooHHHHLLLLoo.",
+            "..oHHHHHHHLLLHo.",
+            ".oHHHHHHHHHHLHHo",
+            ".oHHHHHHHHHHHHHo",
+            "oDHHHHHHHHHHHHHo",
+            "oDHHHHHHHHHHHHHo",
+            "oDHHHHHHHHHHHHo.",
+            "oDDHHHHHDDDDDDo.",
+            "oDDHHSSSSSSSSSo.",
+            "oDDDSsSSSSSSSo..",
+            ".oDDSSSSSSSoSo..",
+            "..oDsSSSSSSESo..",
+        ],
+    },
+    'grupo2': {  # Edu: cabelo preto curto e crespo
+        'baixo': [
+            "....oooooooo....",
+            "..ooHLHHLHHLoo..",
+            ".oHLHHLHHLHHLHo.",
+            ".oHHLHHLHHLHHHo.",
+            "oHLHHLHHLHHLHHHo",
+            "oHHLHHLHHLHHLHHo",
+            "oDHHHHHHHHHHHHDo",
+            "oDDHDDHDDHDDHDDo",
+            "oSDSSSSSSSSSSDSo",
+            "oSSSSSSSSSSSSSSo",
+            "OsSSSSSSSSSSSSsO",
+            ".oSSSoSSSSoSSSo.",
+            "..osSESSSSESso..",
+        ],
+        'cima': [
+            "....oooooooo....",
+            "..ooHLHHLHHLoo..",
+            ".oHLHHLHHLHHLHo.",
+            ".oHHLHHLHHLHHHo.",
+            "oHLHHLHHLHHLHHHo",
+            "oHHLHHLHHLHHLHHo",
+            "oHLHHLHHLHHLHHHo",
+            "oHHLHHLHHLHHLHDo",
+            "oDHHHHHHHHHHHHDo",
+            "oDDHDDHDDHDDHDDo",
+            "OSSDSSDSSDSSDSSO",
+            ".oSsssssssssSSo.",
+            "..osSSSSSSSSso..",
+        ],
+        'direita': [
+            ".....oooooooo...",
+            "...ooHLHHLHHLoo.",
+            "..oHLHHLHHLHHLo.",
+            ".oHHLHHLHHLHHLHo",
+            ".oHLHHLHHLHHLHHo",
+            "oHHLHHLHHLHHLHHo",
+            "oDHHHHHHHHHHHHHo",
+            "oDDHHLHHDDHDDHo.",
+            "oDDHDSSSSSSSSSo.",
+            "oDDHSSSSSSSSSSo.",
+            "oDDsSsSSSSSSSo..",
+            ".oDSSSSSSSSoSo..",
+            "..oDsSSSSSSESo..",
+        ],
+    },
+    'grupo3': {  # Guigas: cabelo castanho-escuro mais comprido, franja cobrindo a testa
+        'baixo': [
+            "....oooooooo....",
+            "..ooHHLLHHHHoo..",
+            ".oHHLLHHHHHHHHo.",
+            ".oHLLHHHHHHHHDo.",
+            "oHHHHHHHHHHHHHDo",
+            "oHHHHHHHHHHHHHDo",
+            "oHHHHHHHHHHHHHDo",
+            "oHHHHHHHHHHHHHHo",
+            "oHHDHHHDHHHDHHHo",
+            "oHHSDSSDSSDSSHHo",
+            "oHSSSSSSSSSSSSHo",
+            ".oHSSoSSSSoSSHo.",
+            "..oHSESSSSESHo..",
+        ],
+        'cima': [
+            "....oooooooo....",
+            "..ooHHLLHHHHoo..",
+            ".oHHLLHHHHHHHHo.",
+            ".oHLLHHHHHHHHDo.",
+            "oHHHHHHHHHHHHHDo",
+            "oHHHHHHHHHHHHHDo",
+            "oHHHHHHHHHHHHHDo",
+            "oHHHHHHHHHHHHHDo",
+            "oHHHHHHHHHHHHHDo",
+            "oDHHHHHHHHHHHHDo",
+            "oDHHHHHHHHHHHHDo",
+            ".oDDHHHHHHHHDDo.",
+            "..oDDDDDDDDDDo..",
+        ],
+        'direita': [
+            ".....oooooooo...",
+            "...ooHHHHLLHHoo.",
+            "..oHHHHHHHLLHHo.",
+            ".oHHHHHHHHHHLHHo",
+            ".oHHHHHHHHHHHHHo",
+            "oHHHHHHHHHHHHHHo",
+            "oHHHHHHHHHHHHHHo",
+            "oHHHHHHHHHHHHHo.",
+            "oDHHHHHHHDHHDHo.",
+            "oDHHHHHHSDSSDSo.",
+            "oDHHHHHSSSSSSo..",
+            ".oDHHSSSSSSoSo..",
+            "..oDHsSSSSSESo..",
+        ],
+    },
+    'grupo4': {  # Ana: franja reta e óculos (só de frente; de lado/costas fica o cabelo comprido da base)
+        'baixo': [
+            "....oooooooo....",
+            "...oHHLLHHHHo...",
+            "..oHLLHHHHHHHo..",
+            "..oHLHHHHHHHHo..",
+            ".oHHHHHHHHHHHHo.",
+            ".oHHHHHHHHHHHHo.",
+            ".oHHHHHHHHHHHHo.",
+            "oHHDHDDHDDHDDHHo",
+            "oHDSSSSSSSSSSDHo",
+            "oHDSGGGGGGGGSDHo",
+            "oHDSGoGSSGoGSDHo",
+            "oHDsSESSSSESsDHo",
+            "DHHsBSSSSSSBsHHD",
+        ],
+    },
 }
 
 
@@ -149,32 +318,43 @@ def recolor_amelia(im, p):
             elif eh(c, 'sapato'):
                 o[x, y] = tom(rgb, AMELIA_REF['sapato'], p['sapato'])
 
-    # óculos: aro claro em volta de cada olho (só por cima da pele) + ponte entre os dois
-    if p.get('oculos'):
-        cor = p['oculos'] + (255,)
-        por_quadro = {}
-        for (x, y) in olhos:
-            por_quadro.setdefault(x // 16, []).append((x, y))
-        for q, pts in por_quadro.items():
-            # agrupa os pixels de olho por coluna (cada olho tem 1 px de largura e 1-2 de altura)
-            colunas = {}
-            for (x, y) in pts:
-                colunas.setdefault(x, []).append(y)
-            xs_olhos = sorted(colunas)
-            if len(xs_olhos) < 2 or xs_olhos[-1] - xs_olhos[0] <= 2:
-                continue  # de lado/de costas: a 16 px os óculos viram um borrão, então só de frente
-            for x, ys in colunas.items():
-                topo = min(ys)
-                # aro fino: linha em cima do olho + uma lateral de cada lado (não cobre o olho)
-                for nx, ny in [(x - 1, topo - 1), (x, topo - 1), (x + 1, topo - 1), (x - 1, topo), (x + 1, topo)]:
-                    if 0 <= nx < w and 0 <= ny < h and eh(px[nx, ny], 'pele'):
-                        o[nx, ny] = cor
-            xs = sorted(colunas)
-            if len(xs) >= 2 and xs[-1] - xs[0] > 2:  # dois olhos (de frente): ponte entre as lentes
-                ytopo = min(min(v) for v in colunas.values())
-                for nx in range(xs[0] + 2, xs[-1] - 1):
-                    if eh(px[nx, ytopo], 'pele'):
-                        o[nx, ytopo] = cor
+    return out
+
+
+def cores_da_cabeca(p):
+    hair = p['cabelo']
+    clarear = lambda c, k: tuple(min(255, int(v * k + 18)) for v in c)
+    escurecer = lambda c, k: tuple(int(v * k) for v in c)
+    return {
+        'o': (58, 58, 80), 'O': (70, 70, 94),
+        'H': hair, 'L': clarear(hair, 1.3), 'D': escurecer(hair, 0.68),
+        'S': p['pele'], 's': escurecer(p['pele'], 0.9),
+        'B': tuple(int(p['pele'][i] * 0.7 + (235, 120, 120)[i] * 0.3) for i in range(3)),
+        'E': p['olho'], 'G': p.get('oculos_cor', (236, 238, 246)),
+    }
+
+
+def encaixar_cabecas(im, nome, p):
+    """Troca a cabeça de cada quadro pela cabeça desenhada em CABECAS."""
+    if nome not in CABECAS:
+        return im
+    cores = cores_da_cabeca(p)
+    out = im.copy()
+    o = out.load()
+    direcoes = ['direita', 'cima', 'esquerda', 'baixo']  # ordem dos quadros no sprite (6 de cada)
+    for f in range(im.size[0] // 16):
+        direcao = direcoes[(f // 6) % 4]
+        desenho = CABECAS[nome].get('direita' if direcao == 'esquerda' else direcao)
+        if desenho is None:
+            continue  # essa visão fica a do sprite base
+        if direcao == 'esquerda':
+            desenho = [linha[::-1] for linha in desenho]
+        x0 = f * 16
+        topo = next(y for y in range(32) if any(im.getpixel((x0 + x, y))[3] for x in range(16)))
+        for i, linha in enumerate(desenho):
+            y = topo + i
+            for x, ch in enumerate(linha):
+                o[x0 + x, y] = (0, 0, 0, 0) if ch == '.' else cores[ch] + (255,)
     return out
 
 
@@ -195,6 +375,7 @@ def main():
         for tipo, arq in [('idle', '_idle_anim_16x16.png'), ('run', '_run_16x16.png')]:
             im = Image.open(BASE + p['base'] + arq).convert('RGBA')
             novo = recolor_adam(im, p) if p['base'] == 'Adam' else recolor_amelia(im, p)
+            novo = encaixar_cabecas(novo, nome, p)
             novo.save(OUT_PNG + f'{nome}_{tipo}.png')
         gerar_tres(nome)
         print('gerado', nome)
