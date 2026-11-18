@@ -51,7 +51,7 @@ PERSONAGENS = {
     'grupo3': dict(base='Adam', cabelo=(80, 52, 40), pele=(226, 170, 128), camisa=(236, 236, 240),
                    calca=(42, 42, 52), sapato=(30, 30, 38), olho=(50, 34, 28)),
     'grupo4': dict(base='Amelia', cabelo=(78, 50, 44), pele=(255, 214, 190), camisa=(140, 42, 62),
-                   calca=(40, 40, 50), sapato=(30, 30, 38), olho=(50, 34, 28), oculos_cor=(208, 212, 228)),
+                   calca=(40, 40, 50), sapato=(30, 30, 38), olho=(50, 34, 28), oculos_cor=(125, 130, 158)),
 }
 
 # ---------------- cabeças desenhadas à mão (pixel art) ----------------
@@ -215,9 +215,9 @@ CABECAS = {
             ".oHHHHHHHHHHHHo.",
             "oHHDHDDHDDHDDHHo",
             "oHDSSSSSSSSSSDHo",
-            "oHDSGGGGGGGGSDHo",
-            "oHDSGoGSSGoGSDHo",
-            "oHDsSESSSSESsDHo",
+            "oHDSGGGSSGGGSDHo",  # óculos: aro em volta de cada olho
+            "oHDSGEGGGGEGSDHo",  # (o olho fica DENTRO da lente)
+            "oHDsGGGSSGGGsDHo",
             "DHHsBSSSSSSBsHHD",
         ],
     },
