@@ -204,6 +204,15 @@ func _task7() -> void:
 	_find("NPCProfessora").interact()
 	await _read_all()
 	check(modal.modal_panel.visible and modal.options_container.visible, "Pergunta das caixas abre")
+	# image-16 (18/11): passando o mouse na opção o texto sumia (fonte branca no fundo claro)
+	var legivel: bool = true
+	for btn in modal.options_container.get_children():
+		for estado in [["font_color", "normal"], ["font_hover_color", "hover"], ["font_pressed_color", "pressed"], ["font_focus_color", "focus"]]:
+			var cor: Color = btn.get_theme_color(estado[0])
+			var fundo: StyleBox = btn.get_theme_stylebox(estado[1])
+			if fundo is StyleBoxFlat and absf(cor.get_luminance() - (fundo as StyleBoxFlat).bg_color.get_luminance()) < 0.4:
+				legivel = false
+	check(legivel, "Texto das opções legível em todos os estados (normal, mouse em cima, clicado, foco)")
 	var texto_pergunta: String = modal.context_label.text + " " + " ".join(modal.options_container.get_children().map(func(b): return b.text))
 	check(not texto_pergunta.contains("8 normais") and not texto_pergunta.contains("4 : 8") and not texto_pergunta.contains("10"), "A pergunta não mostra o que tem em cada caixa")
 	modal._on_option_selected(1) # caixa B
