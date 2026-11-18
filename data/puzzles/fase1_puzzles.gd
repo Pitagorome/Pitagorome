@@ -7,37 +7,69 @@ extends RefCounted
 # ------------------------------------------------------------------
 # Task 2 — Conflito no Horário
 # ------------------------------------------------------------------
+# Versão mais difícil (17/11): antes eram 4 aulas e bastava mudar UMA para resolver.
+# Agora são 6 aulas (Matemática, Português e Ciências do 1º A e do 2º B), 3 horários,
+# 2 salas + o Laboratório, e dois professores com horário limitado. A grade inicial
+# quebra 4 regras diferentes e precisa de 5 mudanças. Só existem 2 jeitos de distribuir
+# os horários (o resto é escolher Sala 1 ou Sala 2) — ver tests/test_1_logica_desafios.gd.
 
 const SALA_COMUM: String = "Sala 1"
+const SALA_2: String = "Sala 2"
 const LABORATORIO: String = "Laboratório"
+const SCHEDULE_SALAS: Array[String] = [SALA_COMUM, SALA_2, LABORATORIO]
+const SCHEDULE_HORARIOS: int = 3
 
-# Índice 0 = aula cancelada. Os outros índices são [horário, sala].
+# Índice 0 = aula cancelada. Os outros índices são [horário, sala]:
+# 1-3 = 1º horário (Sala 1, Sala 2, Lab.), 4-6 = 2º horário, 7-9 = 3º horário.
 const SCHEDULE_SLOTS: Array = [
 	"— Cancelar aula —",
 	"1º horário · Sala 1",
+	"1º horário · Sala 2",
 	"1º horário · Laboratório",
 	"2º horário · Sala 1",
+	"2º horário · Sala 2",
 	"2º horário · Laboratório",
+	"3º horário · Sala 1",
+	"3º horário · Sala 2",
+	"3º horário · Laboratório",
 ]
 const SLOT_INFO: Dictionary = {
-	1: [1, SALA_COMUM],
-	2: [1, LABORATORIO],
-	3: [2, SALA_COMUM],
-	4: [2, LABORATORIO],
+	1: [1, SALA_COMUM], 2: [1, SALA_2], 3: [1, LABORATORIO],
+	4: [2, SALA_COMUM], 5: [2, SALA_2], 6: [2, LABORATORIO],
+	7: [3, SALA_COMUM], 8: [3, SALA_2], 9: [3, LABORATORIO],
 }
 
 const SCHEDULE_CLASSES: Array = [
 	{"id": "mat_1a", "disciplina": "Matemática", "turma": "1º A", "professor": "Prof. Carlos", "precisa_lab": false},
-	{"id": "mat_2b", "disciplina": "Matemática", "turma": "2º B", "professor": "Prof. Carlos", "precisa_lab": false},
+	{"id": "por_1a", "disciplina": "Português", "turma": "1º A", "professor": "Profa. Rita", "precisa_lab": false},
 	{"id": "cie_1a", "disciplina": "Ciências", "turma": "1º A", "professor": "Profa. Helena", "precisa_lab": true},
+	{"id": "mat_2b", "disciplina": "Matemática", "turma": "2º B", "professor": "Prof. Carlos", "precisa_lab": false},
+	{"id": "por_2b", "disciplina": "Português", "turma": "2º B", "professor": "Profa. Rita", "precisa_lab": false},
 	{"id": "cie_2b", "disciplina": "Ciências", "turma": "2º B", "professor": "Profa. Helena", "precisa_lab": true},
 ]
 
-# Grade com o conflito: as duas aulas de Matemática no 1º horário da Sala 1.
-const SCHEDULE_INITIAL: Dictionary = {"mat_1a": 1, "mat_2b": 1, "cie_1a": 4, "cie_2b": 2}
+# Horários em que cada professor pode dar aula (quem não está aqui pode em todos)
+const SCHEDULE_DISPONIVEL: Dictionary = {
+	"Prof. Carlos": [2, 3], # só chega na escola no 2º horário
+	"Profa. Rita": [1, 2],  # vai embora depois do 2º horário
+}
+const SCHEDULE_DISPONIVEL_TEXTO: Dictionary = {
+	"Prof. Carlos": "só chega no 2º horário",
+	"Profa. Rita": "vai embora depois do 2º horário",
+}
+
+# Grade com os conflitos: as duas Matemáticas no 1º horário da Sala 1 (mesma sala e mesmo
+# professor, e o Prof. Carlos ainda nem chegou) e Português do 2º B no 3º horário (a Profa.
+# Rita já foi embora).
+const SCHEDULE_INITIAL: Dictionary = {"mat_1a": 1, "por_1a": 5, "cie_1a": 9, "mat_2b": 1, "por_2b": 8, "cie_2b": 6}
+# Uma das grades certas (usada pelos testes e pelos prints; o jogo não mostra)
+const SCHEDULE_SOLUTION: Dictionary = {"mat_1a": 4, "por_1a": 1, "cie_1a": 9, "mat_2b": 7, "por_2b": 5, "cie_2b": 3}
 
 static func get_class_label(class_data: Dictionary) -> String:
-	return "%s — %s (%s)" % [class_data["disciplina"], class_data["turma"], class_data["professor"]]
+	return "%s %s (%s)" % [class_data["disciplina"], class_data["turma"], class_data["professor"]]
+
+static func slot_of(horario: int, sala: String) -> int:
+	return 1 + (horario - 1) * SCHEDULE_SALAS.size() + SCHEDULE_SALAS.find(sala)
 
 # Retorna a lista de regras quebradas. Lista vazia = grade válida.
 static func validate_schedule(assignment: Dictionary) -> Array[String]:
@@ -56,9 +88,14 @@ static func validate_schedule(assignment: Dictionary) -> Array[String]:
 		var sala: String = SLOT_INFO[slot][1]
 		if class_data["precisa_lab"] and sala != LABORATORIO:
 			errors.append("A aula de %s do %s precisa acontecer no Laboratório." % [class_data["disciplina"], class_data["turma"]])
+		elif not class_data["precisa_lab"] and sala == LABORATORIO:
+			errors.append("O Laboratório é só para as aulas de Ciências (%s do %s está lá)." % [class_data["disciplina"], class_data["turma"]])
+		var professor: String = class_data["professor"]
+		if SCHEDULE_DISPONIVEL.has(professor) and not SCHEDULE_DISPONIVEL[professor].has(horario):
+			errors.append("%s %s, mas a aula de %s do %s está no %dº horário." % [professor, SCHEDULE_DISPONIVEL_TEXTO[professor], class_data["disciplina"], class_data["turma"], horario])
 
 		_append_to(by_room, "%d|%s" % [horario, sala], class_data)
-		_append_to(by_teacher, "%d|%s" % [horario, class_data["professor"]], class_data)
+		_append_to(by_teacher, "%d|%s" % [horario, professor], class_data)
 		_append_to(by_group, "%d|%s" % [horario, class_data["turma"]], class_data)
 
 	for key in by_room:

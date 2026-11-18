@@ -36,6 +36,7 @@ static func task2_briefing() -> Array:
 	return [
 		_l(COORD, "{diretor}, temos um problema! Marcaram duas aulas no mesmo horário usando a mesma sala."),
 		_l(COORD, "Reorganize a grade respeitando as regras: um professor não pode estar em duas turmas, uma turma não pode ter duas aulas no mesmo horário, nenhuma turma pode perder aula e cada sala, inclusive o laboratório, só comporta uma turma por vez."),
+		_l(COORD, "E não é só isso: o Prof. Carlos só chega no 2º horário, a Profa. Rita vai embora depois do 2º horário e o Laboratório é só para as aulas de Ciências."),
 	]
 
 static func task2_reminder() -> Array:

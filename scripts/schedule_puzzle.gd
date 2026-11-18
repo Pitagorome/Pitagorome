@@ -11,7 +11,7 @@ var board_cells: Dictionary = {} # slot -> Label
 
 func _build() -> void:
 	title_label.text = "Tarefa 2: Conflito no Horário"
-	rules_label.text = "Regras: um professor não pode estar em duas turmas ao mesmo tempo • uma turma não pode ter duas aulas no mesmo horário • nenhuma turma pode perder aula • cada sala (e o laboratório) comporta só uma turma por horário • Ciências acontece no Laboratório."
+	rules_label.text = "Regras: um professor não pode estar em duas turmas ao mesmo tempo • uma turma não pode ter duas aulas no mesmo horário • nenhuma turma pode perder aula • cada sala (e o laboratório) comporta só uma turma por horário • Ciências acontece no Laboratório, e o Laboratório é só para Ciências • o Prof. Carlos só chega no 2º horário • a Profa. Rita vai embora depois do 2º horário."
 
 	for class_data in Fase1Puzzles.SCHEDULE_CLASSES:
 		var label: Label = Label.new()
@@ -26,10 +26,12 @@ func _build() -> void:
 		classes_grid.add_child(selector)
 		selectors[class_data["id"]] = selector
 
-	# Grade visual: cabeçalho + 2 horários x 2 salas
-	for header in ["", Fase1Puzzles.SALA_COMUM, Fase1Puzzles.LABORATORIO]:
-		board_grid.add_child(_make_cell(header, true))
-	for horario in [1, 2]:
+	# Grade visual: cabeçalho + 3 horários x (Sala 1, Sala 2, Laboratório)
+	board_grid.columns = 1 + Fase1Puzzles.SCHEDULE_SALAS.size()
+	board_grid.add_child(_make_cell("", true))
+	for sala in Fase1Puzzles.SCHEDULE_SALAS:
+		board_grid.add_child(_make_cell(sala, true))
+	for horario in range(1, Fase1Puzzles.SCHEDULE_HORARIOS + 1):
 		board_grid.add_child(_make_cell("%dº horário" % horario, true))
 		for slot in Fase1Puzzles.SLOT_INFO:
 			if Fase1Puzzles.SLOT_INFO[slot][0] == horario:
@@ -40,7 +42,7 @@ func _build() -> void:
 func _make_cell(text: String, is_header: bool) -> Label:
 	var cell: Label = Label.new()
 	cell.text = text
-	cell.custom_minimum_size = Vector2(78, 30 if not is_header else 14)
+	cell.custom_minimum_size = Vector2(64, 26 if not is_header else 14)
 	cell.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	cell.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	cell.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -49,7 +51,8 @@ func _make_cell(text: String, is_header: bool) -> Label:
 	return cell
 
 # Mostra na grade quem está em cada horário/sala.
-# Fica vermelho: sala com 2 turmas, ou a mesma turma/professor em duas salas no mesmo horário.
+# Fica vermelho: sala com 2 turmas, a mesma turma/professor em duas salas no mesmo horário,
+# professor fora do horário em que pode, Ciências fora do Laboratório ou outra aula dentro dele.
 func _refresh() -> void:
 	var occupants: Dictionary = {}
 	var per_hour: Dictionary = {} # "horário|turma" ou "horário|professor" -> quantas aulas
@@ -70,6 +73,9 @@ func _refresh() -> void:
 		for class_data in classes:
 			names.append("%s %s" % [class_data["disciplina"].left(3) + ".", class_data["turma"]])
 			if per_hour["%d|%s" % [horario, class_data["turma"]]] > 1 or per_hour["%d|%s" % [horario, class_data["professor"]]] > 1:
+				conflict = true
+			var disponivel: Array = Fase1Puzzles.SCHEDULE_DISPONIVEL.get(class_data["professor"], [horario])
+			if not disponivel.has(horario) or class_data["precisa_lab"] != (Fase1Puzzles.SLOT_INFO[slot][1] == Fase1Puzzles.LABORATORIO):
 				conflict = true
 		var cell: Label = board_cells[slot]
 		cell.text = "\n".join(names) if not names.is_empty() else "livre"
@@ -93,7 +99,7 @@ func _validate() -> Array[String]:
 	return Fase1Puzzles.validate_schedule(get_assignment())
 
 func _success_text() -> String:
-	return "Grade organizada! Cada turma tem suas duas aulas, nenhum professor está em dois lugares e cada sala recebe uma turma por vez."
+	return "Grade organizada! Cada turma tem suas três aulas, nenhum professor está em dois lugares nem fora do seu horário, e cada sala recebe uma turma por vez."
 
 func _set_inputs_enabled(enabled: bool) -> void:
 	for id in selectors:
