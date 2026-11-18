@@ -8,6 +8,11 @@ nas 4 direções:
 Também gera as 3 skins de NPC (17/11): skin_eren, skin_aranha e skin_luffy
 (desenhadas aqui no estilo do jogo, inspiradas nas imagens que o grupo mandou).
 
+E as 4 fardas/roupas do jogador (18/11), por cima dos visuais do grupo:
+  joao_efomm e guigas_efomm (uniforme branco da EFOMM, quepe branco, platinas),
+  edu_tencel (farda verde-oliva de tenente-coronel do Exército, quepe verde)
+  e ana_cientista (jaleco branco, óculos e capacete amarelo de engenheira).
+
 Rodar (na pasta Pitagorome):  python tools/gerar_personagens.py
 Saída: assets/characters/grupoN_idle.png, grupoN_run.png e
        assets/character_frames/grupoN_frames.tres (copiado do adam_frames.tres)
@@ -75,6 +80,89 @@ SKINS = {
                        calca=(52, 82, 140), sapato=(232, 232, 236), olho=(32, 30, 36),
                        extra={'K': (250, 220, 70), 'k': (226, 168, 40), 'R': (214, 56, 48), 'C': (26, 24, 30)}),
 }
+
+# ---------------- fardas / roupas do jogador (18/11) ----------------
+# Mesmas cores de pele/cabelo/olho dos visuais do grupo; muda a roupa e ganha um chapéu.
+# Letras extras: W copa do quepe, Y dourado, K faixa/platina, k pala (aba), A/a capacete
+QUEPE_EFOMM = {'W': (244, 244, 248), 'Y': (222, 182, 60), 'K': (28, 28, 40), 'k': (14, 14, 22)}
+UNIFORMES = {
+    # EFOMM (Marinha Mercante): túnica e calça brancas, sapato preto, botões dourados
+    'joao_efomm': dict(PERSONAGENS['grupo1'], camisa=(238, 238, 242), calca=(228, 228, 234), sapato=(24, 24, 30),
+                       bermuda=False, peito_desenho=["..X", "...", "..X"], peito_cor=(222, 182, 60),
+                       extra=QUEPE_EFOMM, cabeca='grupo1', chapeu='quepe', platina='K'),
+    'guigas_efomm': dict(PERSONAGENS['grupo3'], camisa=(238, 238, 242), calca=(228, 228, 234), sapato=(24, 24, 30),
+                         peito_desenho=["..X", "...", "..X"], peito_cor=(222, 182, 60),
+                         extra=QUEPE_EFOMM, cabeca='grupo3', chapeu='quepe', platina='K'),
+    # Tenente-coronel do Exército: farda verde-oliva, quepe verde com pala preta, platinas com estrelas
+    'edu_tencel': dict(PERSONAGENS['grupo2'], camisa=(98, 108, 64), calca=(84, 94, 54), sapato=(20, 20, 26),
+                       peito_desenho=["....XX"], peito_cor=(196, 60, 52),
+                       extra={'W': (98, 108, 64), 'Y': (232, 196, 70), 'K': (70, 78, 44), 'k': (14, 14, 22)},
+                       cabeca='grupo2', chapeu='quepe', platina='K'),
+    # Cientista/engenheira: jaleco branco comprido (a saia vira a parte de baixo do jaleco),
+    # calça escura, óculos e capacete amarelo de obra
+    'ana_cientista': dict(PERSONAGENS['grupo4'], camisa=(240, 240, 244), calca=(232, 232, 238), sapato=(40, 40, 52),
+                          extra={'A': (250, 204, 40), 'a': (214, 160, 24)}, cabeca='grupo4', chapeu='capacete'),
+}
+
+# Chapéus desenhados POR CIMA da cabeça (começam 2 linhas acima do topo; '.' mantém o que já tem)
+CHAPEUS = {
+    'quepe': {
+        'baixo': [
+            "....oooooooo....",
+            "..ooWWWWWWWWoo..",
+            ".oWWWWWYYWWWWWo.",
+            "oWWWWWWYYWWWWWWo",
+            "oWWWWWWWWWWWWWWo",
+            "oKKKKKKKKKKKKKKo",
+            ".okkkkkkkkkkkko.",
+        ],
+        'cima': [
+            "....oooooooo....",
+            "..ooWWWWWWWWoo..",
+            ".oWWWWWWWWWWWWo.",
+            "oWWWWWWWWWWWWWWo",
+            "oWWWWWWWWWWWWWWo",
+            "oKKKKKKKKKKKKKKo",
+        ],
+        'direita': [
+            ".....oooooooo...",
+            "...ooWWWWWWWWoo.",
+            "..oWWWWWWWWWYYo.",
+            ".oWWWWWWWWWWYYWo",
+            ".oWWWWWWWWWWWWWo",
+            "oKKKKKKKKKKKKKKo",
+            "..........okkkko",
+        ],
+    },
+    'capacete': {
+        'baixo': [
+            "....oooooooo....",
+            "...oAAAAAAAAo...",
+            "..oAAaAAAAAAAo..",
+            "..oAAaAAAAAAAo..",
+            ".oAAAAAAAAAAAAo.",
+            "oaaaaaaaaaaaaaao",
+        ],
+        'cima': [
+            "....oooooooo....",
+            "...oAAAAAAAAo...",
+            "..oAAAAAAAAAAo..",
+            "..oAAAAAAAAAAo..",
+            ".oAAAAAAAAAAAAo.",
+            "oaaaaaaaaaaaaaao",
+        ],
+        'direita': [
+            ".....oooooooo...",
+            "....oAAAAAAAAo..",
+            "...oAAAAAAaAAAo.",
+            "...oAAAAAAaAAAo.",
+            "..oAAAAAAAAAAAAo",
+            ".oaaaaaaaaaaaaao",
+        ],
+    },
+}
+# Platinas nos ombros (vista de frente): 2ª linha abaixo da cabeça
+PLATINA_FRENTE = ["................", "..KYK......KYK.."]
 
 # ---------------- cabeças desenhadas à mão (pixel art) ----------------
 # Repintar só a cor do cabelo do sprite base mantinha o FORMATO do cabelo dele (o topete
@@ -562,6 +650,7 @@ def cores_da_cabeca(p):
 
 def encaixar_cabecas(im, nome, p):
     """Troca a cabeça de cada quadro pela cabeça desenhada em CABECAS."""
+    nome = p.get('cabeca', nome)  # as fardas usam a cabeça do visual do grupo
     if nome not in CABECAS:
         return im
     cores = cores_da_cabeca(p)
@@ -571,12 +660,14 @@ def encaixar_cabecas(im, nome, p):
     for f in range(im.size[0] // 16):
         direcao = direcoes[(f // 6) % 4]
         desenho = CABECAS[nome].get('direita' if direcao == 'esquerda' else direcao)
-        if desenho is None or isinstance(desenho, dict):
-            continue  # essa visão fica a do sprite base
-        if direcao == 'esquerda':
-            desenho = [linha[::-1] for linha in desenho]
         x0 = f * 16
         topo_base = next(y for y in range(32) if any(im.getpixel((x0 + x, y))[3] for x in range(16)))
+        if desenho is None or isinstance(desenho, dict):
+            # essa visão fica a do sprite base (mas o chapéu vai por cima mesmo assim)
+            _desenhar_chapeu(o, p, cores, direcao, x0, topo_base, nome)
+            continue
+        if direcao == 'esquerda':
+            desenho = [linha[::-1] for linha in desenho]
         topo = topo_base - (len(desenho) - 13)  # desenhos mais altos (o chapéu do Luffy) sobem acima da cabeça
         for i, linha in enumerate(desenho):
             assert len(linha) == 16, (nome, direcao, i, linha)
@@ -592,7 +683,25 @@ def encaixar_cabecas(im, nome, p):
             for x, ch in enumerate(linha):
                 if ch != '.':
                     o[x0 + x, topo_base + 13 + i] = cores[ch] + (255,)
+        # platinas (só de frente) e chapéu por cima da cabeça
+        if p.get('platina') and direcao == 'baixo':
+            for i, linha in enumerate(PLATINA_FRENTE):
+                for x, ch in enumerate(linha):
+                    if ch != '.':
+                        o[x0 + x, topo_base + 13 + i] = cores[ch] + (255,)
+        _desenhar_chapeu(o, p, cores, direcao, x0, topo_base, nome)
     return out
+
+
+def _desenhar_chapeu(o, p, cores, direcao, x0, topo_base, nome):
+    chapeu = CHAPEUS.get(p.get('chapeu', ''), {}).get('direita' if direcao == 'esquerda' else direcao)
+    for i, linha in enumerate(chapeu or []):
+        if direcao == 'esquerda':
+            linha = linha[::-1]
+        assert len(linha) == 16, (nome, direcao, 'chapeu', i, linha)
+        for x, ch in enumerate(linha):
+            if ch != '.':
+                o[x0 + x, topo_base - 2 + i] = cores[ch] + (255,)
 
 
 def gerar_tres(nome):
@@ -608,7 +717,7 @@ def gerar_tres(nome):
 
 def main():
     os.makedirs(OUT_PNG, exist_ok=True)
-    for nome, p in {**PERSONAGENS, **SKINS}.items():
+    for nome, p in {**PERSONAGENS, **SKINS, **UNIFORMES}.items():
         for tipo, arq in [('idle', '_idle_anim_16x16.png'), ('run', '_run_16x16.png')]:
             im = Image.open(BASE + p['base'] + arq).convert('RGBA')
             novo = recolor_adam(im, p) if p['base'] == 'Adam' else recolor_amelia(im, p)
