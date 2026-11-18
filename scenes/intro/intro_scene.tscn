@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://b6m4qf1v9p5z2"]
+[gd_scene load_steps=47 format=3 uid="uid://b6m4qf1v9p5z2"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -30,6 +30,11 @@
 [ext_resource type="Texture2D" path="res://assets/tiles/paredes/madeira_vermelha.png" id="parede_madeira_vermelha"]
 [ext_resource type="PackedScene" path="res://scenes/school/exterior_fundo.tscn" id="exterior_fundo"]
 [ext_resource type="PackedScene" path="res://scenes/school/passagem_porta.tscn" id="passagem_porta"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/bob_frames.tres" id="f3_bob"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npc_aluno.tscn" id="f3_npc_aluno"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/amelia_frames.tres" id="f3_amelia"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npc_zelador.tscn" id="f3_npc_zelador"]
+[ext_resource type="PackedScene" path="res://scenes/characters/npc_professor.tscn" id="f3_npc_professor"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(340, 20)
@@ -214,7 +219,7 @@ position = Vector2(0, 15)
 
 [node name="NPCCoordenadora" parent="." instance=ExtResource("2_coord")]
 position = Vector2(50, 15)
-visible_in_tasks = Array[int]([1, 2])
+visible_in_tasks = Array[int]([1, 2, 12])
 
 [node name="DoorToCorridor" type="Area2D" parent="."]
 position = Vector2(0, 105)
@@ -238,6 +243,60 @@ theme_override_fonts/font = ExtResource("13_font")
 theme_override_font_sizes/font_size = 8
 text = "▼ Corredor Principal"
 horizontal_alignment = 1
+
+[node name="AlunoChamado" parent="." instance=ExtResource("f3_npc_aluno")]
+position = Vector2(32, 48)
+npc_name = "Aluno"
+frames = ExtResource("f3_bob")
+tint = Color(1, 0.95, 0.85, 1)
+flow_id = "aluno_chamado"
+default_animation = "idle_up"
+visible_in_tasks = Array[int]([11])
+gone_after_event = "t11_briefing"
+
+[node name="NPCCoordenadoraFinal" parent="." groups=["final_coordenadora"] instance=ExtResource("2_coord")]
+position = Vector2(78, -8)
+default_animation = "idle_left"
+requires_event = "final_porta"
+
+[node name="FinalCantineira" parent="." groups=["final_despedida"] instance=ExtResource("f3_npc_aluno")]
+position = Vector2(-45, 26)
+npc_name = "Cantineira"
+frames = ExtResource("f3_amelia")
+tint = Color(1, 1, 0.7, 1)
+default_animation = "idle_up"
+requires_event = "final_porta"
+gone_after_event = "final_fim"
+
+[node name="FinalSecretaria" parent="." groups=["final_despedida"] instance=ExtResource("f3_npc_aluno")]
+position = Vector2(-18, 32)
+npc_name = "Secretária"
+frames = ExtResource("f3_amelia")
+tint = Color(0.85, 0.95, 1, 1)
+default_animation = "idle_up"
+requires_event = "final_porta"
+gone_after_event = "final_fim"
+
+[node name="FinalAluno" parent="." groups=["final_despedida"] instance=ExtResource("f3_npc_aluno")]
+position = Vector2(66, 20)
+npc_name = "Aluno"
+frames = ExtResource("f3_bob")
+tint = Color(1, 0.95, 0.85, 1)
+default_animation = "idle_up"
+requires_event = "final_porta"
+gone_after_event = "final_fim"
+
+[node name="FinalZelador" parent="." groups=["final_despedida"] instance=ExtResource("f3_npc_zelador")]
+position = Vector2(12, 32)
+default_animation = "idle_up"
+requires_event = "final_porta"
+gone_after_event = "final_fim"
+
+[node name="FinalProfessor" parent="." groups=["final_despedida"] instance=ExtResource("f3_npc_professor")]
+position = Vector2(40, 28)
+default_animation = "idle_up"
+requires_event = "final_porta"
+gone_after_event = "final_fim"
 
 [node name="HUD" parent="." instance=ExtResource("4_hud")]
 

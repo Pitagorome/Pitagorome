@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3]
+[gd_scene load_steps=30 format=3]
 
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="room"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="font"]
@@ -37,6 +37,12 @@ radius = 20.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_40x20"]
 size = Vector2(40, 20)
+
+[sub_resource type="RectangleShape2D" id="RectF3_24x8"]
+size = Vector2(24, 8)
+
+[sub_resource type="CircleShape2D" id="CircleF3_16"]
+radius = 16.0
 
 [node name="Refeitorio" type="Node2D"]
 y_sort_enabled = true
@@ -264,7 +270,7 @@ flow_id = "cantineira"
 
 [node name="NPCCoordenadora" parent="." instance=ExtResource("npc_coordenadora")]
 position = Vector2(-60, 70)
-visible_in_tasks = Array[int]([9])
+visible_in_tasks = Array[int]([9, 11])
 default_animation = "idle_left"
 
 [node name="AlunoLanche" parent="." instance=ExtResource("npc_aluno")]
@@ -273,7 +279,7 @@ npc_name = "Aluno"
 frames = ExtResource("f_bob")
 tint = Color(0.85, 0.85, 1, 1)
 flow_id = "aluno_aleatorio"
-hidden_in_tasks = Array[int]([9])
+hidden_in_tasks = Array[int]([9, 11])
 
 [node name="DoorToAla" type="Area2D" parent="."]
 position = Vector2(-150, 0)
@@ -297,6 +303,165 @@ theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 7
 text = "◄ Ala do Refeitório"
 horizontal_alignment = 1
+
+[node name="MaquinaRefri" type="StaticBody2D" parent="Furniture"]
+z_index = 1
+position = Vector2(0, -78)
+script = ExtResource("obj")
+object_name = "Máquina de refrigerante"
+hint_text = "[E] Máquina"
+flow_event = "maquina_refri"
+
+[node name="Contorno" type="ColorRect" parent="Furniture/MaquinaRefri"]
+offset_left = -12.0
+offset_top = -33.0
+offset_right = 12.0
+offset_bottom = 7.0
+mouse_filter = 2
+color = Color(0.25, 0.08, 0.08, 1)
+
+[node name="Corpo" type="ColorRect" parent="Furniture/MaquinaRefri"]
+offset_left = -11.0
+offset_top = -32.0
+offset_right = 11.0
+offset_bottom = 6.0
+mouse_filter = 2
+color = Color(0.82, 0.16, 0.16, 1)
+
+[node name="Vidro" type="ColorRect" parent="Furniture/MaquinaRefri"]
+offset_left = -9.0
+offset_top = -26.0
+offset_right = 3.0
+offset_bottom = -2.0
+mouse_filter = 2
+color = Color(0.2, 0.3, 0.45, 1)
+
+[node name="Lata00" type="ColorRect" parent="Furniture/MaquinaRefri"]
+offset_left = -8.0
+offset_top = -24.0
+offset_right = -5.0
+offset_bottom = -18.0
+mouse_filter = 2
+color = Color(0.9, 0.2, 0.2, 1)
+
+[node name="Lata01" type="ColorRect" parent="Furniture/MaquinaRefri"]
+offset_left = -8.0
+offset_top = -15.0
+offset_right = -5.0
+offset_bottom = -9.0
+mouse_filter = 2
+color = Color(0.9, 0.2, 0.2, 1)
+
+[node name="Lata10" type="ColorRect" parent="Furniture/MaquinaRefri"]
+offset_left = -4.0
+offset_top = -24.0
+offset_right = -1.0
+offset_bottom = -18.0
+mouse_filter = 2
+color = Color(0.95, 0.75, 0.2, 1)
+
+[node name="Lata11" type="ColorRect" parent="Furniture/MaquinaRefri"]
+offset_left = -4.0
+offset_top = -15.0
+offset_right = -1.0
+offset_bottom = -9.0
+mouse_filter = 2
+color = Color(0.95, 0.75, 0.2, 1)
+
+[node name="Lata20" type="ColorRect" parent="Furniture/MaquinaRefri"]
+offset_left = 0.0
+offset_top = -24.0
+offset_right = 3.0
+offset_bottom = -18.0
+mouse_filter = 2
+color = Color(0.3, 0.7, 0.3, 1)
+
+[node name="Lata21" type="ColorRect" parent="Furniture/MaquinaRefri"]
+offset_left = 0.0
+offset_top = -15.0
+offset_right = 3.0
+offset_bottom = -9.0
+mouse_filter = 2
+color = Color(0.3, 0.7, 0.3, 1)
+
+[node name="Visor" type="ColorRect" parent="Furniture/MaquinaRefri"]
+offset_left = 4.0
+offset_top = -26.0
+offset_right = 10.0
+offset_bottom = -20.0
+mouse_filter = 2
+color = Color(0.05, 0.1, 0.05, 1)
+
+[node name="VisorLuz" type="ColorRect" parent="Furniture/MaquinaRefri"]
+offset_left = 5.0
+offset_top = -25.0
+offset_right = 9.0
+offset_bottom = -21.0
+mouse_filter = 2
+color = Color(0.35, 0.95, 0.45, 1)
+
+[node name="Botoes" type="ColorRect" parent="Furniture/MaquinaRefri"]
+offset_left = 5.0
+offset_top = -17.0
+offset_right = 9.0
+offset_bottom = -9.0
+mouse_filter = 2
+color = Color(0.9, 0.9, 0.9, 1)
+
+[node name="Saida" type="ColorRect" parent="Furniture/MaquinaRefri"]
+offset_left = -8.0
+offset_top = 0.0
+offset_right = 8.0
+offset_bottom = 4.0
+mouse_filter = 2
+color = Color(0.12, 0.05, 0.05, 1)
+
+[node name="Marca" type="Label" parent="Furniture/MaquinaRefri"]
+offset_left = -11.0
+offset_top = -33.0
+offset_right = 11.0
+offset_bottom = -27.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 5
+text = "REFRI"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/MaquinaRefri"]
+position = Vector2(0, 2)
+shape = SubResource("RectF3_24x8")
+
+[node name="InteractionArea" type="Area2D" parent="Furniture/MaquinaRefri"]
+position = Vector2(0, 14)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/MaquinaRefri/InteractionArea"]
+shape = SubResource("CircleF3_16")
+
+[node name="HintLabel" type="Label" parent="Furniture/MaquinaRefri"]
+offset_left = -45.0
+offset_top = 20.0
+offset_right = 45.0
+offset_bottom = 33.0
+theme_override_colors/font_color = Color(0.98, 0.95, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 7
+text = "[E] Máquina"
+horizontal_alignment = 1
+
+[node name="ExclamationMarker" parent="Furniture/MaquinaRefri" instance=ExtResource("marker")]
+position = Vector2(0, -40)
+show_in_tasks = Array[int]([11])
+
+[node name="AlunoRefri" parent="." instance=ExtResource("npc_aluno")]
+position = Vector2(-95, 32)
+npc_name = "Aluno"
+frames = ExtResource("f_bob")
+tint = Color(1, 0.95, 0.85, 1)
+flow_id = "aluno_refri"
+default_animation = "idle_right"
+visible_in_tasks = Array[int]([11])
 
 [node name="HUD" parent="." instance=ExtResource("ui_hud")]
 

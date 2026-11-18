@@ -220,7 +220,7 @@ position = Vector2(-95, 0)
 
 [node name="NPCProfessor" parent="." instance=ExtResource("2_prof")]
 position = Vector2(0, -40)
-hidden_in_tasks = Array[int]([4, 10])
+hidden_in_tasks = Array[int]([4, 10, 13])
 
 [node name="NPCCoordenadora" parent="." instance=ExtResource("95_coord")]
 position = Vector2(-60, -40)
