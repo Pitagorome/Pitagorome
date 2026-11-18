@@ -6,7 +6,8 @@ extends Node
 # chamam as funções daqui. Assim a história inteira da fase fica num lugar só.
 # Falas: data/dialogues/fase1_dialogues.gd | Desafios: data/puzzles/fase1_puzzles.gd
 # A partir da Fase 2 (GameManager.current_phase >= 2) tudo é repassado para o
-# Fase2Flow (scripts/fase2_flow.gd), assim os NPCs e as salas continuam chamando só daqui.
+# Fase2Flow (scripts/fase2_flow.gd), e a partir da Fase 3 para o Fase3Flow
+# (scripts/fase3_flow.gd). Assim os NPCs e as salas continuam chamando só daqui (ver _flow()).
 
 signal puzzle_opened(puzzle: Node)
 signal phase_finished()
@@ -27,7 +28,7 @@ func on_room_ready(location: String) -> void:
 	if location == "portao" and GameManager.current_task_id != 5:
 		_remove_vans() # as vans só aparecem no dia da excursão
 	if _fase2():
-		Fase2Flow.on_room_ready(location)
+		_flow().on_room_ready(location)
 		return
 	if Transition.is_transitioning:
 		await Transition.transition_finished
@@ -64,7 +65,7 @@ func _start_intro() -> void:
 
 func on_coordenadora_interact() -> void:
 	if _fase2():
-		Fase2Flow.on_coordenadora_interact()
+		_flow().on_coordenadora_interact()
 		return
 	var task: int = GameManager.current_task_id
 	match task:
@@ -99,7 +100,7 @@ func on_coordenadora_interact() -> void:
 
 func on_zelador_interact() -> void:
 	if _fase2():
-		Fase2Flow.on_zelador_interact()
+		_flow().on_zelador_interact()
 		return
 	if GameManager.current_task_id == 1 and not GameManager.tour_talked_zelador:
 		_tour_talk(IntroDialogues.get_zelador_sequence(), "zelador")
@@ -110,7 +111,7 @@ func on_zelador_interact() -> void:
 
 func on_professor_interact() -> void:
 	if _fase2():
-		Fase2Flow.on_professor_interact()
+		_flow().on_professor_interact()
 		return
 	if GameManager.current_task_id == 1 and not GameManager.tour_talked_professor:
 		_tour_talk(IntroDialogues.get_professor_matematica_sequence(), "professor")
@@ -154,7 +155,7 @@ func hear_testimony(suspect_id: String, speaker: String) -> void:
 
 func on_object_event(event_id: String, source: Node = null) -> void:
 	if _fase2() or not event_id in ["cofre", "calendario"]:
-		Fase2Flow.on_object_event(event_id, source)
+		_flow().on_object_event(event_id, source)
 		return
 	match event_id:
 		"cofre":
@@ -198,6 +199,7 @@ func open_cofre() -> Node:
 		"Essa senha não serve. Confira cada pista: teste os números pares possíveis para o primeiro dígito e veja quais somam 12.",
 		func(): DialogueManager.start_dialogue(Fase1Dialogues.task3_done())
 	)
+	modal.code_submit_btn.text = "Abrir Cadeado"
 	puzzle_opened.emit(modal)
 	return modal
 
@@ -286,6 +288,10 @@ func _ui_parent() -> Node:
 
 func _fase2() -> bool:
 	return GameManager.current_phase >= 2
+
+# Roteiro da fase atual (Fase 2 ou Fase 3) para onde as chamadas são repassadas
+func _flow() -> Node:
+	return Fase3Flow if GameManager.current_phase >= 3 else Fase2Flow
 
 func _say(speaker: String, text: String) -> void:
 	DialogueManager.start_dialogue([{"speaker": speaker, "text": text}])

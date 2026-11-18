@@ -3,7 +3,7 @@ extends Node
 # Autoload: Fase2Flow
 # Roteiro jogável da Fase 2 — Equações, Proporções e Probabilidade (Tasks 6 a 10).
 # Segue o mesmo modelo do Fase1Flow: as salas e os NPCs chamam o Fase1Flow, que repassa
-# para cá quando GameManager.current_phase >= 2.
+# para cá quando GameManager.current_phase == 2 (a partir da 3, para o Fase3Flow).
 # Falas: data/dialogues/fase2_dialogues.gd | Desafios: data/puzzles/fase2_puzzles.gd
 
 signal puzzle_opened(puzzle: Node)
@@ -361,8 +361,9 @@ func _reopen_cartaz() -> void:
 
 func _finish_phase() -> void:
 	GameManager.complete_task(10)
-	await Transition.show_card("Fim da Fase 2", "Equações, Proporções e Probabilidade concluída!\nA feira foi um sucesso e o 2º trimestre acabou.", 4.0)
 	phase_finished.emit()
+	# O cartão "Fim da Fase 2" faz parte da mesma tela preta que leva à Fase 3 (ver Fase3Flow.start_phase)
+	Fase3Flow.start_phase()
 
 # ------------------------------------------------------------------
 # Utilitários

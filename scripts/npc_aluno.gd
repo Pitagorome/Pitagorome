@@ -3,7 +3,7 @@ extends "res://scripts/npc.gd"
 # NPC Aluno genérico (também usado para os monitores da excursão).
 # Com testimony_id preenchido, dá o depoimento da Task 4 (Quem Está Matando Aula?).
 # Com flow_id preenchido (ex.: "professora", "cantineira"), o Fase2Flow decide o que
-# ele fala na tarefa atual; se não tiver nada da história, usa as falas de "lines".
+# ele fala na tarefa atual (Fase3Flow a partir da Fase 3); se não tiver nada da história, usa as falas de "lines".
 
 @export var frames: SpriteFrames
 @export var tint: Color = Color.WHITE
@@ -22,7 +22,7 @@ func interact() -> void:
 	super.interact()
 	if testimony_id != "" and GameManager.current_task_id == 4:
 		Fase1Flow.hear_testimony(testimony_id, npc_name)
-	elif flow_id != "" and Fase2Flow.on_npc_event(flow_id, self):
+	elif flow_id != "" and (Fase3Flow if GameManager.current_phase >= 3 else Fase2Flow).on_npc_event(flow_id, self):
 		pass
 	elif not lines.is_empty():
 		DialogueManager.start_dialogue([{"speaker": npc_name, "text": lines.pick_random()}])
