@@ -24,6 +24,15 @@ const APPEARANCES: Array = [
 	"res://assets/character_frames/grupo3_frames.tres",
 	"res://assets/character_frames/grupo4_frames.tres",
 ]
+# Nome mostrado no seletor "Crie seu personagem" (mesma ordem de APPEARANCES)
+const APPEARANCE_NAMES: Array[String] = [
+	"Visual 1", "Visual 2", "Visual 3", "Visual 4", "Visual 5",
+	"João", "Edu", "Guigas", "Ana",
+]
+
+func get_appearance_name(index: int = -1) -> String:
+	var i: int = player_appearance if index < 0 else index
+	return APPEARANCE_NAMES[i] if i < APPEARANCE_NAMES.size() else "Visual %d" % (i + 1)
 
 # Dados do jogador (UML: Jogador)
 var player_name: String = "Diretor"

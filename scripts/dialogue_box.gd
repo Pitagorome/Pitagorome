@@ -103,7 +103,7 @@ func _cycle_appearance(step: int) -> void:
 	_update_appearance_label()
 
 func _update_appearance_label() -> void:
-	appearance_label.text = "Visual %d" % (GameManager.player_appearance + 1)
+	appearance_label.text = GameManager.get_appearance_name()
 	_preview_frame = 0
 	_update_preview()
 
