@@ -210,6 +210,8 @@ func _task7() -> void:
 	check(not modal.last_answer_correct, "Caixa B está errada")
 	check_eq(GameManager.current_task_id, 7, "Errar não avança")
 	modal._on_feedback_closed()
+	# "Cadê a fase do gerador?" (18/11): o caminho até o gerador com a espera de entrada de verdade
+	Fase1Flow.atraso_entrada = 1.2
 	modal._on_option_selected(0) # caixa A
 	check(modal.last_answer_correct, "Caixa A está certa")
 	modal._on_feedback_closed()
@@ -221,6 +223,9 @@ func _task7() -> void:
 	await _wait_transition()
 	check_eq(scene().get("location_id"), "sala_gerador", "Todos vão até a sala do gerador")
 	check(_dark(), "A sala do gerador está escura")
+	await tree().create_timer(1.5).timeout
+	Fase1Flow.atraso_entrada = 0.0
+	check(DialogueManager.is_active and GameManager.seen_events.has("t8_briefing"), "Na sala do gerador o Zelador explica o painel (com a espera de 1,2 s ligada)")
 
 func _task8() -> void:
 	var lines: Array = await _read_all()
