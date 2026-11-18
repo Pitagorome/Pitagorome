@@ -24,9 +24,9 @@ func _ready() -> void:
 	botao.anchor_left = 1.0
 	botao.anchor_right = 1.0
 	botao.offset_left = -170
-	botao.offset_top = 118
+	botao.offset_top = 172
 	botao.offset_right = -12
-	botao.offset_bottom = 138
+	botao.offset_bottom = 192
 	botao.add_theme_font_size_override("font_size", 10)
 	botao.modulate = Color(1, 0.8, 0.8, 0.85)
 	botao.tooltip_text = "Botão temporário de teste: vai direto para a Fase 2."
