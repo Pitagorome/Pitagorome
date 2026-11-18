@@ -250,7 +250,7 @@ func _task9() -> void:
 	check(_has(lines, "Cantineira discutindo"), "Na Ala dá para ouvir a discussão no refeitório")
 	await _go(REFEITORIO, "SpawnFromAla")
 	lines = await _read_all()
-	check(_has(lines, "56 lugares"), "Coordenadora explica: 56 lugares")
+	check(_has(lines, "4 turmas, cada uma com 28 alunos") and _has(lines, "2 turnos iguais"), "Cantineira explica: 4 turmas de 28 em 2 turnos (o total não é dado)")
 	check(_has(lines, "Quer dizer... quase"), "Cantineira: 'Eu contei tudo direitinho! Quer dizer... quase.'")
 	var modal: Node = _modal()
 	check(modal.modal_panel.visible and modal.code_container.visible, "Pergunta das cadeiras abre")
@@ -258,6 +258,10 @@ func _task9() -> void:
 	modal.code_input.text = "20"
 	modal._on_code_submitted()
 	check(not modal.last_answer_correct, "20 cadeiras está errado")
+	modal._on_feedback_closed()
+	modal.code_input.text = "68"
+	modal._on_code_submitted()
+	check(not modal.last_answer_correct and modal.feedback_text.text.contains("turnos"), "68 (esqueceu os turnos) dá a dica de dividir pelos turnos")
 	check_eq(GameManager.current_task_id, 9, "Errar não avança")
 	modal._on_feedback_closed()
 	modal.code_input.text = "12"

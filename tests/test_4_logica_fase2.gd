@@ -71,7 +71,12 @@ func _gerador() -> void:
 
 func _refeitorio() -> void:
 	check_eq(Fase2Puzzles.cadeiras_ja_montadas(), 44, "4 × 8 + 2 × 6 = 44 cadeiras já montadas")
+	check_eq(Fase2Puzzles.REFEITORIO_LUGARES, 56, "4 turmas × 28 alunos ÷ 2 turnos = 56 lugares por turno")
 	check_eq(Fase2Puzzles.cadeiras_mesa_final(), 12, "56 − 44 = 12 cadeiras na mesa final")
+	var dicas: Dictionary = Fase2Puzzles.mesas_dicas_erro()
+	check(dicas.has("68") and dicas["68"].contains("turnos"), "Quem esquece de dividir pelos turnos (68) recebe dica dos turnos")
+	check(dicas.has("56") and dicas.has("44"), "Dicas para 56 (só o total) e 44 (só as prontas)")
+	check(not dicas.has("12"), "A resposta certa não tem dica de erro")
 
 func _cartaz() -> void:
 	check_eq(Fase2Puzzles.cartaz_nova_altura(), 60, "18/24 = 45/h → h = 60")
