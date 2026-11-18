@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://c8m3qf9v1p0d1"]
+[gd_scene load_steps=9 format=3 uid="uid://c8m3qf9v1p0d1"]
 
 [ext_resource type="Script" path="res://scripts/dialogue_box.gd" id="1_dlgbox"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="2_font_bold"]
@@ -45,6 +45,18 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_retrato"]
+bg_color = Color(0.88, 0.92, 0.82, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.45, 0.58, 0.4, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [node name="DialogueBox" type="CanvasLayer"]
 layer = 10
 script = ExtResource("1_dlgbox")
@@ -79,18 +91,36 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/DialoguePanel/MarginContainer"]
+[node name="Linha" type="HBoxContainer" parent="Control/DialoguePanel/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="RetratoMoldura" type="PanelContainer" parent="Control/DialoguePanel/MarginContainer/Linha"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_retrato")
+
+[node name="Retrato" type="TextureRect" parent="Control/DialoguePanel/MarginContainer/Linha/RetratoMoldura"]
+texture_filter = 1
+custom_minimum_size = Vector2(54, 54)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/DialoguePanel/MarginContainer/Linha"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="SpeakerLabel" type="Label" parent="Control/DialoguePanel/MarginContainer/VBoxContainer"]
+[node name="SpeakerLabel" type="Label" parent="Control/DialoguePanel/MarginContainer/Linha/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.45, 0.05, 1)
 theme_override_fonts/font = ExtResource("2_font_bold")
 theme_override_font_sizes/font_size = 14
 text = "Coordenadora"
 
-[node name="TextLabel" type="Label" parent="Control/DialoguePanel/MarginContainer/VBoxContainer"]
+[node name="TextLabel" type="Label" parent="Control/DialoguePanel/MarginContainer/Linha/VBoxContainer"]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 size_flags_vertical = 3
@@ -100,7 +130,7 @@ theme_override_font_sizes/font_size = 12
 text = "Texto do diálogo aqui..."
 autowrap_mode = 3
 
-[node name="PromptLabel" type="Label" parent="Control/DialoguePanel/MarginContainer/VBoxContainer"]
+[node name="PromptLabel" type="Label" parent="Control/DialoguePanel/MarginContainer/Linha/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
 theme_override_fonts/font = ExtResource("3_font_reg")

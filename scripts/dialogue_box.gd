@@ -4,9 +4,21 @@ extends CanvasLayer
 # Estilo aconchegante com a paleta oficial: #F2E8D0 (fundo), #4A6741 (bordas), #FDA123 (nome), #545454 (texto)
 
 @onready var panel: PanelContainer = $Control/DialoguePanel
-@onready var speaker_label: Label = $Control/DialoguePanel/MarginContainer/VBoxContainer/SpeakerLabel
-@onready var text_label: Label = $Control/DialoguePanel/MarginContainer/VBoxContainer/TextLabel
-@onready var prompt_label: Label = $Control/DialoguePanel/MarginContainer/VBoxContainer/PromptLabel
+@onready var speaker_label: Label = $Control/DialoguePanel/MarginContainer/Linha/VBoxContainer/SpeakerLabel
+@onready var text_label: Label = $Control/DialoguePanel/MarginContainer/Linha/VBoxContainer/TextLabel
+@onready var prompt_label: Label = $Control/DialoguePanel/MarginContainer/Linha/VBoxContainer/PromptLabel
+# Retrato de quem está falando, no canto esquerdo do balão (apontamento do grupo, 18/11)
+@onready var retrato_moldura: PanelContainer = $Control/DialoguePanel/MarginContainer/Linha/RetratoMoldura
+@onready var retrato: TextureRect = $Control/DialoguePanel/MarginContainer/Linha/RetratoMoldura/Retrato
+
+# Quem fala e não está na sala (ou fala de longe): visual padrão de cada um
+const RETRATOS_PADRAO: Dictionary = {
+	"Coordenadora": "res://assets/character_frames/amelia_frames.tres",
+	"Zelador": "res://assets/character_frames/alex_frames.tres",
+	"Professor de Matemática": "res://assets/character_frames/bob_frames.tres",
+}
+# Parte de cima do quadro 16x32 que aparece no retrato (cabeça e ombros)
+const RETRATO_RECORTE: Rect2 = Rect2(0, 1, 16, 20)
 
 @onready var name_input_modal: PanelContainer = $Control/NameInputModal
 @onready var name_line_edit: LineEdit = $Control/NameInputModal/MarginContainer/VBoxContainer/LineEdit
@@ -63,7 +75,42 @@ func _on_dialogue_line_changed(speaker: String, text: String) -> void:
 	# Narração (o que acontece na cena) vem sem nome de quem fala
 	speaker_label.visible = speaker != ""
 	text_label.text = text
+	_mostrar_retrato(speaker)
 	panel.visible = true
+
+# Acha o sprite de quem fala: o jogador, um NPC da sala com esse nome ou o visual padrão.
+# Narração, bilhetes, painéis e objetos ficam sem retrato.
+func frames_de(speaker: String) -> SpriteFrames:
+	if speaker == "":
+		return null
+	if speaker == GameManager.player_name or speaker == GameManager.get_director_title():
+		return GameManager.get_appearance_frames()
+	var cena: Node = get_tree().current_scene
+	if cena:
+		for npc in cena.find_children("*", "CharacterBody2D", true, false):
+			if npc.get("npc_name") == speaker and npc.is_inside_tree() and (npc as CanvasItem).is_visible_in_tree():
+				var sprite: AnimatedSprite2D = npc.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+				if sprite and sprite.sprite_frames:
+					return sprite.sprite_frames
+	if RETRATOS_PADRAO.has(speaker):
+		return load(RETRATOS_PADRAO[speaker]) as SpriteFrames
+	return null
+
+func _mostrar_retrato(speaker: String) -> void:
+	var frames: SpriteFrames = frames_de(speaker)
+	if frames == null or not frames.has_animation(PREVIEW_ANIMATION) or frames.get_frame_count(PREVIEW_ANIMATION) == 0:
+		retrato_moldura.visible = false
+		return
+	var quadro: Texture2D = frames.get_frame_texture(PREVIEW_ANIMATION, 0)
+	var recorte := AtlasTexture.new()
+	if quadro is AtlasTexture:
+		recorte.atlas = (quadro as AtlasTexture).atlas
+		recorte.region = Rect2((quadro as AtlasTexture).region.position + RETRATO_RECORTE.position, RETRATO_RECORTE.size)
+	else:
+		recorte.atlas = quadro
+		recorte.region = RETRATO_RECORTE
+	retrato.texture = recorte
+	retrato_moldura.visible = true
 
 func _on_dialogue_ended() -> void:
 	panel.visible = false
