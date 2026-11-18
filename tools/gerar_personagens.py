@@ -5,6 +5,9 @@ nas 4 direções:
   - grupo1..grupo3: base Adam (cabelo curto)
   - grupo4:         base Amelia (cabelo comprido) + óculos desenhados por cima
 
+Também gera as 3 skins de NPC (17/11): skin_eren, skin_aranha e skin_luffy
+(desenhadas aqui no estilo do jogo, inspiradas nas imagens que o grupo mandou).
+
 Rodar (na pasta Pitagorome):  python tools/gerar_personagens.py
 Saída: assets/characters/grupoN_idle.png, grupoN_run.png e
        assets/character_frames/grupoN_frames.tres (copiado do adam_frames.tres)
@@ -52,6 +55,20 @@ PERSONAGENS = {
                    calca=(42, 42, 52), sapato=(30, 30, 38), olho=(50, 34, 28)),
     'grupo4': dict(base='Amelia', cabelo=(78, 50, 44), pele=(255, 214, 190), camisa=(140, 42, 62),
                    calca=(40, 40, 50), sapato=(30, 30, 38), olho=(50, 34, 28), oculos_cor=(125, 130, 158)),
+}
+
+# ---------------- skins de NPC (Eren, Homem-Aranha, Luffy) ----------------
+# 'peito': cor das 2 colunas do meio da camisa vista de frente (jaqueta/colete aberto).
+# 'extra': cores das letras a mais usadas nos desenhos das cabeças.
+SKINS = {
+    'skin_eren': dict(base='Adam', cabelo=(62, 44, 36), pele=(240, 198, 160), camisa=(52, 50, 58),
+                      peito=(196, 196, 200), calca=(34, 34, 42), sapato=(24, 24, 30), olho=(70, 150, 135)),
+    'skin_aranha': dict(base='Adam', cabelo=(206, 34, 40), pele=(206, 34, 40), camisa=(206, 34, 40),
+                        peito=(206, 34, 40), peito_marca=(30, 10, 14), calca=(28, 62, 128), sapato=(190, 30, 36),
+                        olho=(120, 20, 26), extra={'W': (246, 246, 250), 'X': (40, 12, 16)}),
+    'skin_luffy': dict(base='Adam', cabelo=(32, 30, 36), pele=(250, 206, 160), camisa=(214, 56, 48),
+                       peito=(250, 206, 160), calca=(56, 136, 206), sapato=(196, 150, 96), olho=(32, 30, 36),
+                       bermuda=True, extra={'K': (250, 220, 70), 'k': (226, 168, 40), 'R': (214, 56, 48)}),
 }
 
 # ---------------- cabeças desenhadas à mão (pixel art) ----------------
@@ -221,6 +238,152 @@ CABECAS = {
             "DHHsBSSSSSSBsHHD",
         ],
     },
+
+    # ---- skins de NPC ----
+    'skin_eren': {  # cabelo castanho-escuro até o queixo, repartido no meio; olhos verdes
+        'baixo': [
+            "....oooooooo....",
+            "..ooHHHHHHHHoo..",
+            ".oHHHLHHHHLHHHo.",
+            ".oHHLHHHHHHLHHo.",
+            "oHHHHHHHHHHHHHHo",
+            "oHHHHHHDDHHHHHHo",
+            "oHHHHHHDDHHHHHHo",
+            "oHHHHHDSSDHHHHHo",
+            "oHHHHDSSSSDHHHHo",
+            "oHHHDSSSSSSDHHHo",
+            "oHHDSSSSSSSSDHHo",
+            "oHHSSoSSSSoSSHHo",
+            "oHDsSESSSSESsDHo",
+        ],
+        'cima': [
+            "....oooooooo....",
+            "..ooHHHHHHHHoo..",
+            ".oHHHLHHHHLHHHo.",
+            ".oHHLHHHHHHLHHo.",
+            "oHHHHHHHHHHHHHHo",
+            "oHHHHHHHHHHHHHHo",
+            "oHHHHHHHHHHHHHHo",
+            "oHHHHHHHHHHHHHHo",
+            "oDHHHHHHHHHHHHDo",
+            "oDHHHHHHHHHHHHDo",
+            "oDDHHHHHHHHHHDDo",
+            "oDDDHHHHHHHHDDDo",
+            ".oDDDDDDDDDDDDo.",
+        ],
+        'direita': [
+            ".....oooooooo...",
+            "...ooHHHHHLLHoo.",
+            "..oHHHHHHHHHLHo.",
+            ".oHHHHHHHHHHHHHo",
+            ".oHHHHHHHHHHHHHo",
+            "oHHHHHHHHHHHHHHo",
+            "oHHHHHHHHHHDHHHo",
+            "oHHHHHHHHHDSSSHo",
+            "oHHHHHHHHDSSSSo.",
+            "oHHHHHHDSSSSSSo.",
+            "oDHHHHSsSSSSSo..",
+            "oDHHHSSSSSSoSo..",
+            ".oDHHsSSSSSESo..",
+        ],
+    },
+    'skin_aranha': {  # máscara vermelha com os olhos brancos grandes e as linhas da teia
+        'baixo': [
+            "....oooooooo....",
+            "..ooSSSSXSSSoo..",
+            ".oSSSSSSXSSSSSo.",
+            ".oSXSSSSXSSSSXo.",
+            "oSSSXSSSXSSSXSSo",
+            "oSXXXSSSXSSXXXSo",
+            "oXWWWXSSXSXWWWXo",
+            "oXWWWWXSXXWWWWXo",
+            "oXWWWWXSSXWWWWXo",
+            "osXWWXSSSSXWWXso",
+            "OssXXSSXSSSXXssO",
+            ".osSSSSXSSSSSso.",
+            "..osSSSXSSSSso..",
+        ],
+        'cima': [
+            "....oooooooo....",
+            "..ooSSSSXSSSoo..",
+            ".oSSSSSSXSSSSSo.",
+            ".oSXSSSSXSSSSXo.",
+            "oSSSXSSSXSSSXSSo",
+            "oSSSSXSSXSSXSSSo",
+            "oXXXXXXXXXXXXXXo",
+            "oSSSSXSSXSSXSSSo",
+            "oSSSXSSSXSSSXSSo",
+            "osSXSSSSXSSSSXso",
+            "OssSSSSSXSSSSssO",
+            ".osSSSSSXSSSSso.",
+            "..osSSSSXSSSso..",
+        ],
+        'direita': [
+            ".....oooooooo...",
+            "...ooSSSSXSSSoo.",
+            "..oSSSSSSXSSSSo.",
+            ".oSSXSSSSXSSSXSo",
+            ".oSSSXSSSXSSXSSo",
+            "oSSSSSXSSXSXXXSo",
+            "oXXXXXXXXXXWWWXo",
+            "oSSSSSXSSXWWWWXo",
+            "oSSSSXSSSXWWWXo.",
+            "osSSXSSSSSXXXSo.",
+            "ossXSSSSSSSSSo..",
+            ".osSSSSSSSSoSo..",
+            "..osSSSSSSSSSo..",
+        ],
+    },
+    'skin_luffy': {  # chapéu de palha (com a faixa vermelha) por cima do cabelo preto
+        'baixo': [
+            "....oooooooo....",
+            "...oKKKKKKKKo...",
+            "..oKKKKKKKKKko..",
+            "..oRRRRRRRRRRo..",
+            "..okKKKKKKKKko..",
+            "ooKKKKKKKKKKKKoo",
+            "okkkkkkkkkkkkkko",
+            "oHHHHHHHHHHHHHHo",
+            "oHHHHHHHHHHHHHHo",
+            "oHHSHHHSHHHHSHHo",
+            "oHSSSSSSSSSSSSHo",
+            "OHSSSSSSSSSSSSHO",
+            ".oSSSoSSSSoSSSo.",
+            "..osSESSSSESso..",
+        ],
+        'cima': [
+            "....oooooooo....",
+            "...oKKKKKKKKo...",
+            "..oKKKKKKKKKko..",
+            "..oRRRRRRRRRRo..",
+            "..okKKKKKKKKko..",
+            "ooKKKKKKKKKKKKoo",
+            "okkkkkkkkkkkkkko",
+            "oHHHHHHHHHHHHHHo",
+            "oHHHHHHHHHHHHHHo",
+            "oHHHHHHHHHHHHHHo",
+            "oDHHHHHHHHHHHHDo",
+            "ODHHHHHHHHHHHHDO",
+            ".oSsssssssssSSo.",
+            "..osSSSSSSSSso..",
+        ],
+        'direita': [
+            "......oooooooo..",
+            ".....oKKKKKKKKo.",
+            "....oKKKKKKKKKo.",
+            "....oRRRRRRRRRo.",
+            "....okKKKKKKKKo.",
+            "ooKKKKKKKKKKKKKo",
+            "okkkkkkkkkkkkkko",
+            ".oHHHHHHHHHHHHHo",
+            "oHHHHHHHHHHHHHHo",
+            "oHHHHHHHHSHHSHo.",
+            "oDHHHHSSSSSSSSo.",
+            "oDHHHSsSSSSSSSo.",
+            ".oDHSSSSSSSoSo..",
+            "..oDsSSSSSSESo..",
+        ],
+    },
 }
 
 
@@ -248,6 +411,10 @@ def recolor_adam(im, p):
     def eh(c, grupo):
         return c[3] > 0 and c[:3] in ADAM[grupo]
 
+    def peito(x, y):
+        # colunas do meio do tronco, só nos quadros de frente (os 6 últimos de cada 24)
+        return 'peito' in p and (x // 16 // 6) % 4 == 3 and x % 16 in (7, 8) and 22 <= y <= 27
+
     for x in range(w):
         for y in range(h):
             c = px[x, y]
@@ -273,7 +440,11 @@ def recolor_adam(im, p):
             elif eh(c, 'pele'):
                 o[x, y] = tom(rgb, ADAM_REF['pele'], p['pele'])
             elif eh(c, 'roxo'):
-                o[x, y] = tom(rgb, ADAM_REF['roxo'], p['sapato'] if y >= 29 else p['camisa'])
+                if y < 29 and peito(x, y):
+                    marca = p.get('peito_marca')
+                    o[x, y] = (marca + (255,)) if marca and y in (23, 24) else tom(rgb, ADAM_REF['roxo'], p['peito'])
+                else:
+                    o[x, y] = tom(rgb, ADAM_REF['roxo'], p['sapato'] if y >= 29 else p['camisa'])
     return out
 
 
@@ -331,6 +502,7 @@ def cores_da_cabeca(p):
         'S': p['pele'], 's': escurecer(p['pele'], 0.9),
         'B': tuple(int(p['pele'][i] * 0.7 + (235, 120, 120)[i] * 0.3) for i in range(3)),
         'E': p['olho'], 'G': p.get('oculos_cor', (236, 238, 246)),
+        **p.get('extra', {}),
     }
 
 
@@ -351,7 +523,9 @@ def encaixar_cabecas(im, nome, p):
             desenho = [linha[::-1] for linha in desenho]
         x0 = f * 16
         topo = next(y for y in range(32) if any(im.getpixel((x0 + x, y))[3] for x in range(16)))
+        topo -= len(desenho) - 13  # desenhos mais altos (o chapéu do Luffy) sobem acima da cabeça
         for i, linha in enumerate(desenho):
+            assert len(linha) == 16, (nome, direcao, i, linha)
             y = topo + i
             for x, ch in enumerate(linha):
                 o[x0 + x, y] = (0, 0, 0, 0) if ch == '.' else cores[ch] + (255,)
@@ -371,7 +545,7 @@ def gerar_tres(nome):
 
 def main():
     os.makedirs(OUT_PNG, exist_ok=True)
-    for nome, p in PERSONAGENS.items():
+    for nome, p in {**PERSONAGENS, **SKINS}.items():
         for tipo, arq in [('idle', '_idle_anim_16x16.png'), ('run', '_run_16x16.png')]:
             im = Image.open(BASE + p['base'] + arq).convert('RGBA')
             novo = recolor_adam(im, p) if p['base'] == 'Adam' else recolor_amelia(im, p)
