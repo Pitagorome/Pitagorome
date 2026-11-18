@@ -23,6 +23,18 @@ var current_location: String = ""
 # Entrada nas salas (eventos automáticos)
 # ------------------------------------------------------------------
 
+# Apontamento do grupo (18/11): a caixa de texto aparecia junto com a sala e dava vontade de
+# pular tudo para ver onde estava. Agora as falas automáticas de quem entra numa sala esperam
+# um pouco depois do fade, para dar tempo de olhar a sala (o jogador já pode andar).
+# Os testes automatizados zeram esse tempo (tests/test_runner.gd) para rodar rápido.
+var atraso_entrada: float = 1.2
+
+func esperar_para_ver_sala() -> void:
+	if Transition.is_transitioning:
+		await Transition.transition_finished
+	if atraso_entrada > 0.0:
+		await get_tree().create_timer(atraso_entrada).timeout
+
 func on_room_ready(location: String) -> void:
 	current_location = location
 	if location == "portao" and GameManager.current_task_id != 5:
@@ -30,8 +42,7 @@ func on_room_ready(location: String) -> void:
 	if _fase2():
 		_flow().on_room_ready(location)
 		return
-	if Transition.is_transitioning:
-		await Transition.transition_finished
+	await Fase1Flow.esperar_para_ver_sala()
 	if current_location != location or DialogueManager.is_busy():
 		return
 

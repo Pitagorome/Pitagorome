@@ -55,8 +55,7 @@ func sync_task_state() -> void:
 func on_room_ready(location: String) -> void:
 	current_location = location
 	sync_task_state()
-	if Transition.is_transitioning:
-		await Transition.transition_finished
+	await Fase1Flow.esperar_para_ver_sala()
 	if current_location != location or DialogueManager.is_busy():
 		return
 

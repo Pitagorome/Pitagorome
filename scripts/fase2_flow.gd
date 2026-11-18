@@ -39,8 +39,7 @@ func start_phase(com_fim_fase1: bool = true) -> void:
 
 func on_room_ready(location: String) -> void:
 	current_location = location
-	if Transition.is_transitioning:
-		await Transition.transition_finished
+	await Fase1Flow.esperar_para_ver_sala()
 	if current_location != location or DialogueManager.is_busy():
 		return
 
