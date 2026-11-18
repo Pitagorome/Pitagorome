@@ -138,12 +138,40 @@ func _rect_tela(r: Rect2) -> Rect2:
 func _posicao_jogador(sala: String) -> Vector2:
 	var r: Rect2 = _rect_tela(SALAS[sala]["rect"])
 	var player: Node2D = get_tree().get_first_node_in_group("player") as Node2D
-	var piso: Control = get_tree().current_scene.find_child("Floor", true, false) as Control
-	if player == null or piso == null:
+	var area: Rect2 = _area_da_sala()
+	if player == null or area.size == Vector2.ZERO:
 		return r.get_center()
-	var area: Rect2 = piso.get_global_rect()
 	var rel: Vector2 = ((player.global_position - area.position) / area.size).clamp(Vector2(0.1, 0.12), Vector2(0.9, 0.88))
 	return r.position + rel * r.size
+
+# Área de chão da sala atual (guardada por cena). Antes só usava o nó "Floor", e o
+# Corredor/Saguão e o Portão não têm esse nó: o ponto branco ficava parado no meio.
+var _area_cena: Node = null
+var _area_cache := Rect2()
+
+func _area_da_sala() -> Rect2:
+	var cena: Node = get_tree().current_scene
+	if cena == _area_cena:
+		return _area_cache
+	_area_cena = cena
+	_area_cache = Rect2()
+	for nome in ["Floor", "CorridorFloor"]:
+		var piso: Control = cena.find_child(nome, true, false) as Control
+		if piso:
+			_area_cache = piso.get_global_rect()
+			return _area_cache
+	# sem um nó de chão: junta tudo o que é desenhado no fundo da sala
+	var primeiro := true
+	for fundo_nome in ["MapBackground", "RoomBackground"]:
+		var fundo: Node = cena.get_node_or_null(fundo_nome)
+		if fundo == null:
+			continue
+		for c in fundo.get_children():
+			if c is Control and (c as Control).size != Vector2.ZERO:
+				var rc: Rect2 = (c as Control).get_global_rect()
+				_area_cache = rc if primeiro else _area_cache.merge(rc)
+				primeiro = false
+	return _area_cache
 
 func _draw() -> void:
 	var c := Vector2(size.x / 2.0, DIAMETRO / 2.0)
