@@ -126,6 +126,10 @@ func _task6() -> void:
 	lines = await _read_all()
 	check(_has(lines, "15 armários"), "Coordenadora espera na Sala dos Armários")
 	check(_has(lines, "Leia primeiro"), "Coordenadora pede para ler o bilhete primeiro")
+	# image-14 (18/11): o bilhete estava no chão e passava por cima do personagem
+	var bilhete: Node2D = _find("Bilhete")
+	check(bilhete.global_position.y <= -100.0, "O bilhete fica no quadro de avisos da parede (não no chão)")
+	check(bilhete.z_index == 0, "O bilhete não é desenhado por cima de quem passa")
 	_find("Armario12").interact()
 	lines = await _read_all()
 	check(_has(lines, "leia o bilhete"), "Antes de ler o bilhete os armários não abrem (nem o certo)")

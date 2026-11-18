@@ -38,6 +38,7 @@ func get_cases() -> Array:
 		["T2.9 Chão desenhado atrás dos móveis (nada escondido)", _camadas],
 		["T2.10 Ninguém nasce em cima de uma porta (bug da porta que não funcionava)", _spawn_fora_da_porta],
 		["T2.11 Minimapa acompanha o jogador em todas as salas (inclusive o saguão)", _minimapa_acompanha],
+		["T2.12 Nenhum objeto do cenário é desenhado POR CIMA de um personagem", _nada_por_cima_dos_personagens],
 	]
 
 func _instantiate(path: String) -> Node:
@@ -451,3 +452,179 @@ func _minimapa_acompanha() -> void:
 		room.queue_free()
 		await tree().process_frame
 	GameManager.reset_progress()
+
+# Pedido de 18/11 (image-14 e "as placas sobrepõem o aluno, você tá errando muito nisso"):
+# objetos com z_index = 1 (bilhete, placas, quadros) eram desenhados por cima de quem passava
+# perto. Este teste abre cada sala em cada tarefa, pega o corpo de cada personagem visível e
+# procura qualquer desenho do cenário que encoste nele E que seja desenhado DEPOIS dele
+# (z maior, ou mesmo z e mais para baixo na tela, pelo y-sort).
+func _nada_por_cima_dos_personagens() -> void:
+	var problemas: Dictionary = {} # texto -> true (sem repetir o mesmo problema em várias tarefas)
+	for path in ROOMS:
+		for task in range(1, 16):
+			_preparar_tarefa(task)
+			var room: Node = _instantiate(path)
+			tree().root.add_child(room)
+			tree().current_scene = room
+			for i in 3:
+				await tree().physics_frame
+			for p in _sobreposicoes(room):
+				problemas["%s: %s" % [path.get_file(), p]] = true
+			# O jogador andando pela sala inteira (uma vez por fase basta: os móveis não mudam)
+			if task in [1, 6, 11]:
+				for p in _cobre_jogador_andando(room):
+					problemas["%s: %s" % [path.get_file(), p]] = true
+			DialogueManager.end_dialogue()
+			DialogueManager.modal_open = false
+			tree().current_scene = null
+			room.queue_free()
+			await tree().process_frame
+	check(problemas.is_empty(), "Nenhum objeto desenhado por cima de personagem nas %d salas × 15 tarefas" % ROOMS.size())
+	for pr in problemas:
+		check(false, pr)
+	GameManager.reset_progress()
+
+func _preparar_tarefa(task: int) -> void:
+	GameManager.current_phase = GameManager.TASK_PHASE[task]
+	GameManager.start_task(task)
+	GameManager.intro_dialogue_finished = true
+	GameManager.seen_events.clear()
+	if task >= 6:
+		GameManager.seen_events["t6_briefing"] = true
+	if task >= 11:
+		for ev in ["t11_chamado", "t12_gabinete", "t12_briefing", "t13_briefing", "t14_briefing", "t15_briefing"]:
+			GameManager.seen_events[ev] = true
+
+# z final de um CanvasItem (somando os z relativos dos pais)
+func _z_final(ci: CanvasItem) -> int:
+	var z: int = 0
+	var n: Node = ci
+	while n != null and n is CanvasItem:
+		z += (n as CanvasItem).z_index
+		if not (n as CanvasItem).z_as_relative:
+			break
+		n = n.get_parent()
+	return z
+
+# y usado no y-sort: o do nó mais próximo (ele mesmo ou um pai) cujo pai tem y-sort ligado.
+# Nos personagens é o AnimatedSprite2D, que fica nos PÉS (desde 18/11); nos móveis é o próprio móvel.
+func _y_ordenacao(ci: Node2D) -> float:
+	var n: Node = ci
+	while n != null and n.get_parent() is CanvasItem:
+		if (n.get_parent() as CanvasItem).y_sort_enabled and n is Node2D:
+			return (n as Node2D).global_position.y
+		n = n.get_parent()
+	return ci.global_position.y
+
+func _retangulo_desenho(ci: CanvasItem) -> Rect2:
+	if ci is Control:
+		return (ci as Control).get_global_rect()
+	if ci is Sprite2D:
+		var sp: Sprite2D = ci
+		var r: Rect2 = sp.get_rect()
+		var t: Transform2D = sp.get_global_transform()
+		return Rect2(t * r.position, r.size * t.get_scale().abs())
+	return Rect2()
+
+func _sobreposicoes(room: Node) -> Array:
+	var achados: Array = []
+	var personagens: Array = []
+	for body in room.find_children("*", "CharacterBody2D", true, false):
+		if body.is_visible_in_tree() and body.process_mode != Node.PROCESS_MODE_DISABLED and body.get_node_or_null("AnimatedSprite2D"):
+			personagens.append(body)
+	var desenhos: Array = []
+	for ci in room.find_children("*", "CanvasItem", true, false):
+		if not (ci is Sprite2D or ci is ColorRect or ci is TextureRect):
+			continue
+		if not ci.is_visible_in_tree() or ci is Control and (ci as Control).get_parent() is Container:
+			continue
+		# só o cenário: fora de personagens, da interface e do fundo
+		var dentro_de_ui: bool = false
+		var n: Node = ci
+		while n != room:
+			if n is CharacterBody2D or n is CanvasLayer or n.name in ["MapBackground", "RoomBackground", "ExteriorFundo", "Tapetes"]:
+				dentro_de_ui = true
+				break
+			n = n.get_parent()
+		if dentro_de_ui:
+			continue
+		var r: Rect2 = _retangulo_desenho(ci)
+		if r.size.x < 1 or r.size.y < 1:
+			continue
+		desenhos.append({"ci": ci, "rect": r})
+	for pers in personagens:
+		var corpo: Rect2 = Rect2(pers.global_position + Vector2(-6, -7), Vector2(12, 23))
+		var z_p: int = _z_final(pers)
+		var y_p: float = _y_ordenacao(pers.get_node("AnimatedSprite2D"))
+		for d in desenhos:
+			var ci: CanvasItem = d["ci"]
+			if not corpo.intersects(d["rect"]):
+				continue
+			var z_d: int = _z_final(ci)
+			var y_d: float = _y_ordenacao(ci as Node2D) if ci is Node2D else _y_ordenacao(_primeiro_node2d(ci))
+			if z_d > z_p or (z_d == z_p and y_d > y_p):
+				achados.append("%s fica por cima de %s" % [room.get_path_to(ci), pers.name])
+	return achados
+
+func _primeiro_node2d(n: Node) -> Node2D:
+	while n != null and not (n is Node2D):
+		n = n.get_parent()
+	return n
+
+# Um objeto pode ficar na frente do jogador quando ele passa ATRÁS (ex.: atrás de uma mesa):
+# aí o objeto vai até o chão, mais baixo que os pés do jogador. O erro é quando algo que
+# "flutua" (quadro, bilhete, mural na parede) cobre o corpo do jogador e termina acima dos pés.
+func _cobre_jogador_andando(room: Node) -> Array:
+	var achados: Dictionary = {}
+	var player: CharacterBody2D = room.find_child("Player", true, false)
+	var inicio: Vector2 = player.global_position
+	var andou: Dictionary = _flood(room)["seen"]
+	player.global_position = inicio
+	var desenhos: Array = []
+	for ci in room.find_children("*", "CanvasItem", true, false):
+		if not (ci is Sprite2D or ci is ColorRect or ci is TextureRect) or not ci.is_visible_in_tree():
+			continue
+		var fora: bool = false
+		var n: Node = ci
+		while n != room:
+			if n is CharacterBody2D or n is CanvasLayer or n.name in ["MapBackground", "RoomBackground", "ExteriorFundo", "Tapetes"]:
+				fora = true
+				break
+			n = n.get_parent()
+		if fora:
+			continue
+		var r: Rect2 = _retangulo_desenho(ci)
+		if r.size.x >= 1 and r.size.y >= 1:
+			var dono_ci: Node = _dono(room, ci)
+			var base: float = r.end.y
+			for outro in dono_ci.find_children("*", "CanvasItem", true, false) + [dono_ci]:
+				if (outro is Sprite2D or outro is ColorRect or outro is TextureRect) and outro.is_visible_in_tree():
+					base = maxf(base, _retangulo_desenho(outro).end.y)
+			desenhos.append({"ci": ci, "rect": r, "base": base, "z": _z_final(ci), "y": _y_ordenacao(_primeiro_node2d(ci))})
+	var z_j: int = _z_final(player)
+	var sprite_dy: float = (player.get_node("AnimatedSprite2D") as Node2D).position.y # o jogador é ordenado pelos pés
+	for pos in andou:
+		var corpo: Rect2 = Rect2(pos + Vector2(-6, -7), Vector2(12, 23))
+		var pes: float = pos.y + 16.0
+		for d in desenhos:
+			if d["z"] < z_j or (d["z"] == z_j and d["y"] <= pos.y + sprite_dy):
+				continue # desenhado antes (atrás) do jogador
+			var r: Rect2 = d["rect"]
+			# a base do objeto INTEIRO (ex.: o painel do gerador está em cima, mas o gerador vai até o chão)
+			if r.intersects(corpo) and d["base"] < pes - 3.0:
+				var dono: Node = _dono(room, d["ci"])
+				achados["%s cobre o jogador quando ele passa perto (%d, %d)" % [dono.name, int(pos.x), int(pos.y)]] = true
+	# um aviso por objeto basta
+	var por_objeto: Dictionary = {}
+	for txt in achados:
+		var nome: String = txt.split(" cobre")[0]
+		if not por_objeto.has(nome):
+			por_objeto[nome] = txt
+	return por_objeto.values()
+
+# O objeto do cenário a que um desenho pertence (filho direto de Furniture/Decor/Parede/Cartazes ou da sala)
+func _dono(room: Node, ci: Node) -> Node:
+	var dono: Node = ci
+	while dono.get_parent() != null and not (dono.get_parent().name in ["Furniture", "Decor", "Parede", "Cartazes"]) and dono.get_parent() != room:
+		dono = dono.get_parent()
+	return dono
