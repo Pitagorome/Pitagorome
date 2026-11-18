@@ -167,10 +167,10 @@ position = Vector2(0, 45)
 
 [node name="AlunoMochila" parent="." instance=ExtResource("npc_aluno")]
 position = Vector2(-170, 30)
-npc_name = "Homem-Aranha"
+npc_name = "Rafa"
 frames = ExtResource("skin_aranha")
 hidden_in_tasks = Array[int]([8])
-lines = Array[String](["Shh! Ninguém pode saber quem está por trás da máscara.", "Meu sentido aranha tá formigando... deve ser prova de matemática.", "Com grandes poderes vêm grandes lições de casa."])
+lines = Array[String](["Gostou do moletom? A aranha do peito brilha no escuro!", "Eu queria ser picado por uma aranha radioativa... mas só fui picado por pernilongo.", "Tô treinando pra subir na corda da aula de Educação Física."])
 
 [node name="AlunaCorredor" parent="." instance=ExtResource("npc_aluno")]
 position = Vector2(175, 30)
