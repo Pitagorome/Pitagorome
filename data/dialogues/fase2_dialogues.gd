@@ -126,11 +126,12 @@ static func task8_briefing() -> Array:
 		_l(ZELADOR, "O sistema trava sozinho quando a carga fica baixa."),
 		_l("Painel do gerador", "\"Para reiniciar, atinja exatamente 30 unidades de carga.\""),
 		_l(ZELADOR, "A carga atual é 8. Cada alavanca soma um valor... mas o fabricante escreveu tudo em potência e raiz."),
-		_l(ZELADOR, "Puxa as certas. Se passar de 30, ele reinicia e eu finjo que não vi."),
+		_l(ZELADOR, "Só que o painel é velho: aguenta no máximo 3 alavancas ligadas ao mesmo tempo."),
+		_l(ZELADOR, "E ele só mostra a carga quando você aperta Verificar. Errou 3 vezes, ele trava um pouco para esfriar. Então faz a conta antes de puxar!"),
 	]
 
 static func task8_reminder() -> Array:
-	return [_l(ZELADOR, "Ainda está escuro. Precisa dar exatamente 30, começando do 8.")]
+	return [_l(ZELADOR, "Ainda está escuro. Precisa dar exatamente 30, começando do 8, com no máximo 3 alavancas.")]
 
 static func task8_done() -> Array:
 	return [

@@ -86,6 +86,13 @@ static func caixa_texto(caixa: Dictionary) -> String:
 
 const GERADOR_INICIAL: int = 8
 const GERADOR_ALVO: int = 30
+# Apontamento do grupo (18/11): ligando tudo na tentativa e erro dava 30 em menos de 2 minutos.
+# Agora o painel só aguenta 3 alavancas ligadas ao mesmo tempo (com isso só UMA combinação
+# funciona: √36 + 3² + √49), a carga só aparece depois de "Verificar" e, a cada 3 erros,
+# o gerador trava alguns segundos para esfriar.
+const GERADOR_MAX_ALAVANCAS: int = 3
+const GERADOR_TENTATIVAS: int = 3
+const GERADOR_ESPERA: float = 8.0 # segundos travado depois de errar 3 vezes
 
 # O PDF perdeu o símbolo de raiz: "36(+6)" é √36 = 6, "25(+5)" é √25 = 5 etc.
 const ALAVANCAS: Array = [
@@ -106,6 +113,8 @@ static func gerador_carga(ligadas: Array) -> int:
 
 # Lista vazia = carga exata. Senão, diz o que está errado.
 static func validate_gerador(ligadas: Array) -> Array[String]:
+	if ligadas.count(true) > GERADOR_MAX_ALAVANCAS:
+		return ["O painel só aguenta %d alavancas ligadas ao mesmo tempo." % GERADOR_MAX_ALAVANCAS]
 	var carga: int = gerador_carga(ligadas)
 	if carga == GERADOR_ALVO:
 		return []
