@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3]
+[gd_scene load_steps=31 format=3]
 
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="room"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="font"]
@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="ui_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="ui_dialogue_box"]
 [ext_resource type="PackedScene" path="res://scenes/ui/challenge_modal.tscn" id="ui_challenge_modal"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/skin_aranha_frames.tres" id="skin_aranha"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_150x20"]
 size = Vector2(150, 20)
@@ -166,11 +167,10 @@ position = Vector2(0, 45)
 
 [node name="AlunoMochila" parent="." instance=ExtResource("npc_aluno")]
 position = Vector2(-170, 30)
-npc_name = "Aluno"
-frames = ExtResource("f_bob")
-tint = Color(1, 0.85, 0.7, 1)
-flow_id = "aluno_aleatorio"
+npc_name = "Homem-Aranha"
+frames = ExtResource("skin_aranha")
 hidden_in_tasks = Array[int]([8])
+lines = Array[String](["Shh! Ninguém pode saber quem está por trás da máscara.", "Meu sentido aranha tá formigando... deve ser prova de matemática.", "Com grandes poderes vêm grandes lições de casa."])
 
 [node name="AlunaCorredor" parent="." instance=ExtResource("npc_aluno")]
 position = Vector2(175, 30)

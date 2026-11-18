@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3]
+[gd_scene load_steps=31 format=3]
 
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="room"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="font"]
@@ -22,6 +22,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="ui_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="ui_dialogue_box"]
 [ext_resource type="PackedScene" path="res://scenes/ui/challenge_modal.tscn" id="ui_challenge_modal"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/skin_luffy_frames.tres" id="skin_luffy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_300x20"]
 size = Vector2(300, 20)
@@ -275,11 +276,10 @@ default_animation = "idle_left"
 
 [node name="AlunoLanche" parent="." instance=ExtResource("npc_aluno")]
 position = Vector2(-95, 70)
-npc_name = "Aluno"
-frames = ExtResource("f_bob")
-tint = Color(0.85, 0.85, 1, 1)
-flow_id = "aluno_aleatorio"
+npc_name = "Luffy"
+frames = ExtResource("skin_luffy")
 hidden_in_tasks = Array[int]([9, 11])
+lines = Array[String](["Eu ainda tô com fome! Será que a cantina tem carne?", "Um dia eu vou ser o rei... da hora do recreio!", "Esse chapéu de palha é meu tesouro. Ninguém encosta nele!"])
 
 [node name="DoorToAla" type="Area2D" parent="."]
 position = Vector2(-150, 0)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3]
+[gd_scene load_steps=35 format=3]
 
 [ext_resource type="Script" path="res://scripts/school_room.gd" id="room"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="font"]
@@ -26,6 +26,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="ui_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="ui_dialogue_box"]
 [ext_resource type="PackedScene" path="res://scenes/ui/challenge_modal.tscn" id="ui_challenge_modal"]
+[ext_resource type="SpriteFrames" path="res://assets/character_frames/skin_eren_frames.tres" id="skin_eren"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_210x20"]
 size = Vector2(210, 20)
@@ -455,11 +456,10 @@ visible_in_tasks = Array[int]([12])
 
 [node name="AlunoPatio1" parent="." instance=ExtResource("npc_aluno")]
 position = Vector2(-160, 30)
-npc_name = "Aluno"
-frames = ExtResource("f_bob")
-tint = Color(0.9, 1, 0.9, 1)
-flow_id = "aluno_aleatorio"
+npc_name = "Eren"
+frames = ExtResource("skin_eren")
 hidden_in_tasks = Array[int]([12])
+lines = Array[String](["Um dia eu vou ver o que tem do outro lado do muro da escola.", "Eu não vou desistir dessa prova. Nunca!", "Se a gente não lutar, não vence. Nem na gincana."])
 
 [node name="AlunoPatio2" parent="." instance=ExtResource("npc_aluno")]
 position = Vector2(150, 30)
