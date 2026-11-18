@@ -86,7 +86,10 @@ func _cartaz() -> void:
 	check_eq(prop_roteiro.size(), 2, "No roteiro original DOIS cartazes (A e B) mantêm a proporção (problema documentado)")
 	check(Fase2Puzzles.cartazes_certos(Fase2Puzzles.CARTAZES_ROTEIRO).is_empty(), "No roteiro original nenhum cartaz mede 45x60 (problema documentado)")
 	# Versão corrigida usada no jogo
-	check_eq(Fase2Puzzles.cartazes_proporcionais(), ["B"], "No jogo só um cartaz mantém a proporção")
+	check_eq(Fase2Puzzles.cartazes_proporcionais(), ["C"], "No jogo só um cartaz mantém a proporção")
+	# 18/11: o desenho não pode entregar a resposta -> todos com a mesma largura (45)
+	check(Fase2Puzzles.CARTAZES.all(func(c): return int(c["largura"]) == Fase2Puzzles.NOVA_LARGURA), "Os 3 cartazes têm 45 cm de largura (o desenho não entrega a resposta)")
+	check(Fase2Puzzles.CARTAZ_CERTO != "B", "A resposta não fica no cartaz do meio")
 	check_eq(Fase2Puzzles.cartazes_certos(), [Fase2Puzzles.CARTAZ_CERTO], "O cartaz certo é o de 45x60")
 
 func _tarefas() -> void:

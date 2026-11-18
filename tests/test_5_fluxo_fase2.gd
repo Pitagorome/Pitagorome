@@ -25,7 +25,7 @@ func get_cases() -> Array:
 		["T5.3 Task 7: caixas de figurinhas (erro e acerto) e apagão", _task7],
 		["T5.4 Task 8: gerador (pouco, passou de 30 e exato)", _task8],
 		["T5.5 Task 9: mesas do refeitório (erro e acerto)", _task9],
-		["T5.6 Task 10: cartaz da feira em 2 passos (erro e acerto)", _task10],
+		["T5.6 Task 10: cartaz da feira, uma pergunta só (erro e acerto)", _task10],
 		["T5.7 Fim da Fase 2", _fim],
 	]
 
@@ -280,33 +280,32 @@ func _task10() -> void:
 	var lines: Array = await _read_all()
 	check(_has(lines, "tragédia"), "Professor: '{diretor}, tragédia...'")
 	check(_has(lines, "Diretora, tragédia"), "Fala usa 'Diretora' (feminino)")
+	# 18/11: uma pergunta só (antes tinha a altura e depois o cartaz) e não abre direto
 	var modal: Node = _modal()
-	check(modal.code_container.visible and modal.title_label.text.contains("1/2"), "Passo 1: pergunta da altura")
-	modal.code_input.text = "51"
-	modal._on_code_submitted()
-	check(not modal.last_answer_correct, "Altura 51 está errada")
-	modal._on_feedback_closed()
-	modal.code_input.text = "60"
-	modal._on_code_submitted()
-	check(modal.last_answer_correct, "Altura 60 está certa")
-	check_eq(GameManager.current_task_id, 10, "Acertar o passo 1 ainda não conclui a tarefa")
-	modal._on_feedback_closed()
-	lines = await _read_all()
-	check(_has(lines, "cavaletes"), "Professor manda olhar os cartazes nos cavaletes")
-	check(not modal.modal_panel.visible, "A escolha não abre direto (precisa olhar os cartazes)")
-	_find("CartazB").interact()
-	lines = await _read_all()
-	check(_has(lines, "45 x 60"), "Examinar um cartaz mostra a medida")
+	check(not modal.modal_panel.visible, "A pergunta não abre direto: primeiro olhar os cartazes")
+	check(GameManager.current_objective.contains("cavaletes"), "Objetivo manda olhar os cartazes nos cavaletes")
+	for letra in ["A", "B", "C"]:
+		_find("Cartaz" + letra).interact()
+		lines = await _read_all()
+		check(_has(lines, "45 x "), "Cartaz %s mostra a medida com 45 de largura" % letra)
+	for cav in _find("Cartazes").find_children("Cavalete", "Node2D", true, false):
+		check_eq(cav.largura_cm, 45.0, "Cavalete %s desenhado com 45 de largura" % cav.letra)
 	_find("NPCProfessorTask10").interact()
 	await _read_all()
-	check(modal.options_container.visible and modal.title_label.text.contains("2/2"), "Passo 2: escolher o cartaz")
+	check(modal.options_container.visible and not modal.code_container.visible, "Só uma pergunta: escolher o cartaz (sem digitar a altura)")
+	check(not modal.title_label.text.contains("1/2") and not modal.title_label.text.contains("2/2"), "O título não fala em 2 passos")
 	var opcoes: String = " ".join(modal.options_container.get_children().map(func(b): return b.text))
 	check(not opcoes.contains("x"), "As opções não mostram as medidas (estão nos cavaletes)")
-	modal._on_option_selected(0) # cartaz A
-	check(not modal.last_answer_correct, "Cartaz A está errado")
+	modal._on_option_selected(1) # cartaz B (45x56)
+	check(not modal.last_answer_correct, "Cartaz B (45 x 56) está errado")
+	check(modal.feedback_text.text.contains("baixo demais"), "Dica: o B ficou baixo demais")
+	check_eq(GameManager.current_task_id, 10, "Errar não conclui a tarefa")
 	modal._on_feedback_closed()
-	modal._on_option_selected(1) # cartaz B (45x60)
-	check(modal.last_answer_correct, "Cartaz B (45 x 60) está certo")
+	modal._on_option_selected(0) # cartaz A (45x64)
+	check(modal.feedback_text.text.contains("alto demais"), "Dica: o A ficou alto demais")
+	modal._on_feedback_closed()
+	modal._on_option_selected(2) # cartaz C (45x60)
+	check(modal.last_answer_correct, "Cartaz C (45 x 60) está certo")
 	modal._on_feedback_closed()
 
 func _fim() -> void:

@@ -113,15 +113,10 @@ func _capture_all() -> void:
 	await sim._go(Flow.BIBLIOTECA, "SpawnFromCorridor")
 	await _shot("16_task10_biblioteca")
 	await sim._read_all()
-	sim._modal().code_input.text = "60"
-	await _shot("17_task10_altura")
-	sim._modal()._on_code_submitted()
-	sim._modal()._on_feedback_closed()
-	await sim._read_all()
 	sim._find("NPCProfessorTask10").interact()
 	await sim._read_all()
 	await _shot("18_task10_cartazes")
-	sim._modal()._on_option_selected(1)
+	sim._modal()._on_option_selected(2)
 	sim._modal()._on_feedback_closed()
 	await sim._read_all()
 	await get_tree().create_timer(1.0).timeout
