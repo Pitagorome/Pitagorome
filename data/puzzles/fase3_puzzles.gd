@@ -125,7 +125,7 @@ static func foto_resposta() -> int:
 # Task 15 — A Decoração do Pátio (arranjo: a ordem das placas importa)
 # ------------------------------------------------------------------
 
-const PLACAS: Array[String] = ["Bem-vindos", "Obrigado!", "Boas férias", "Pitagorome", "Até 2027", "Turma 3º ano"]
+const PLACAS: Array[String] = ["Bem-vindos", "Obrigado!", "Boas férias", "Pitagórica", "Até 2027", "Turma 3º ano"]
 const PLACAS_NO_MURAL: int = 3
 
 static func mural_resposta() -> int:

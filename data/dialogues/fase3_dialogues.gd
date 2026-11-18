@@ -173,7 +173,7 @@ static func final_parte2() -> Array:
 		_l(NARRADOR, "(Você fica em silêncio. A Coordenadora sorri.)"),
 		_l(COORD, "Bom..."),
 		_l(NARRADOR, "(Ela entrega um envelope.)"),
-		_l(COORD, "Talvez a Escola Pitagorome precise de {um|uma} {diretor|diretora} de novo."),
+		_l(COORD, "Talvez a Escola Pitagórica precise de {um|uma} {diretor|diretora} de novo."),
 		_l(PLAYER, "Isso é uma renovação?"),
 		_l(COORD, "Isso é um 'talvez'. Não quero que você fique {convencido|convencida}."),
 		_l(NARRADOR, "(Você olha pela janela da escola.)"),
@@ -182,7 +182,7 @@ static func final_parte2() -> Array:
 	]
 
 const MENSAGEM_FINAL: Array = [
-	["Obrigado por cuidar da Escola Pitagorome.", "", 3.0],
+	["Obrigado por cuidar da Escola Pitagórica.", "", 3.0],
 	["Talvez alguns problemas tenham sido resolvidos.", "", 2.5],
 	["Talvez outros tenham acabado de começar.", "", 2.5],
 	["Fim.", "Pitagorome", 3.0],

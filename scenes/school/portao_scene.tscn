@@ -121,7 +121,7 @@ theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
 theme_override_fonts/font = ExtResource("9_font")
 theme_override_font_sizes/font_size = 8
-text = "ESCOLA PITAGOROME"
+text = "ESCOLA PITAGÓRICA"
 horizontal_alignment = 1
 
 [node name="MapWalls" type="StaticBody2D" parent="."]

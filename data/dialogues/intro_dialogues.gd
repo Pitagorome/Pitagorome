@@ -9,11 +9,11 @@ static func get_intro_sequence() -> Array:
 	return [
 		{
 			"speaker": "Coordenadora",
-			"text": "Ah, você chegou! Eu sou a Coordenadora da Escola Pitagorome, estávamos realmente precisando de um novo diretor desde que o último foi embora. Os conflitos e os dilemas só têm aumentado."
+			"text": "Ah, você chegou! Eu sou a Coordenadora da Escola Pitagórica, estávamos realmente precisando de um novo diretor desde que o último foi embora. Os conflitos e os dilemas só têm aumentado."
 		},
 		{
 			"speaker": "Coordenadora",
-			"text": "Aqui na Escola Pitagorome nós vivemos um dia de cada vez. Seu papel como diretor será organizar a escola e solucionar problemas. Você deve estar se perguntando que tipos de problemas um diretor enfrentaria... só espero que você não vá embora como o último..."
+			"text": "Aqui na Escola Pitagórica nós vivemos um dia de cada vez. Seu papel como diretor será organizar a escola e solucionar problemas. Você deve estar se perguntando que tipos de problemas um diretor enfrentaria... só espero que você não vá embora como o último..."
 		},
 		{
 			"speaker": "Coordenadora",

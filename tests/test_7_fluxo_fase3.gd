@@ -298,7 +298,7 @@ func _final() -> void:
 			titulos.append(Transition.title_label.text)
 		await tree().process_frame
 	await _frames(4)
-	check_eq(titulos, ["Obrigado por cuidar da Escola Pitagorome.", "Talvez alguns problemas tenham sido resolvidos.", "Talvez outros tenham acabado de começar.", "Fim."], "Mensagem final do roteiro, na ordem")
+	check_eq(titulos, ["Obrigado por cuidar da Escola Pitagórica.", "Talvez alguns problemas tenham sido resolvidos.", "Talvez outros tenham acabado de começar.", "Fim."], "Mensagem final do roteiro, na ordem")
 	check(GameManager.game_finished, "Jogo marcado como concluído")
 	check(_hud_text().contains("Jogo concluído!"), "HUD mostra 'Jogo concluído!'")
 	check(not DialogueManager.is_active, "O final não recomeça ao voltar para o gabinete")
