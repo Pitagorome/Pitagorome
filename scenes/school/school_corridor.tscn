@@ -223,7 +223,7 @@ follow_player_in_tasks = Array[int]([1])
 y_sort_enabled = true
 
 [node name="NPCCoordenadoraTask4" parent="Task4Group" instance=ExtResource("2_coord")]
-position = Vector2(110, 45)
+position = Vector2(84, 45)
 visible_in_tasks = Array[int]([4])
 
 [node name="NPCProfessorTask4" parent="Task4Group" instance=ExtResource("94_prof")]

@@ -338,6 +338,7 @@ hint_text = "[E] Placas"
 flow_event = "placas"
 
 [node name="Visual" parent="Furniture/MesaPlacas" instance=ExtResource("p_balcao")]
+z_index = 0
 position = Vector2(0, 0)
 
 [node name="Placa1" type="ColorRect" parent="Furniture/MesaPlacas"]
