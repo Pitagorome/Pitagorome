@@ -25,16 +25,31 @@ func _grade_inicial() -> void:
 	var errors: Array[String] = Fase1Puzzles.validate_schedule(Fase1Puzzles.SCHEDULE_INITIAL)
 	check(errors.size() > 0, "A grade inicial deve ter pelo menos um conflito")
 	check(errors.any(func(e): return e.contains("Sala 1")), "Conflito de sala (duas turmas na Sala 1) é apontado")
-	check(errors.any(func(e): return e.contains("Prof. Carlos")), "Conflito de professor (Prof. Carlos em duas turmas) é apontado")
+	check(errors.any(func(e): return e.contains("Prof. Carlos") and e.contains("duas turmas")), "Conflito de professor (Prof. Carlos em duas turmas) é apontado")
+	check(errors.any(func(e): return e.contains("só chega no 2º horário")), "Prof. Carlos fora do horário dele é apontado")
+	check(errors.any(func(e): return e.contains("Profa. Rita") and e.contains("3º horário")), "Profa. Rita no 3º horário é apontada")
 	note("Erros encontrados na grade inicial: %s" % " | ".join(errors))
 
 func _grade_solucao() -> void:
-	var solucao: Dictionary = Fase1Puzzles.SCHEDULE_INITIAL.duplicate()
-	solucao["mat_2b"] = 3 # Matemática 2º B -> 2º horário, Sala 1
-	check_eq(Fase1Puzzles.validate_schedule(solucao).size(), 0, "Mover Matemática do 2º B para o 2º horário resolve tudo")
+	check_eq(Fase1Puzzles.validate_schedule(Fase1Puzzles.SCHEDULE_SOLUTION).size(), 0, "A grade de solução é válida")
+	# Ficou mais difícil: mudar só uma aula não resolve mais (antes resolvia)
+	var ids: Array = Fase1Puzzles.SCHEDULE_CLASSES.map(func(c): return c["id"])
+	var resolve_com_uma: int = 0
+	for id in ids:
+		for slot in Fase1Puzzles.SCHEDULE_SLOTS.size():
+			var g: Dictionary = Fase1Puzzles.SCHEDULE_INITIAL.duplicate()
+			g[id] = slot
+			if Fase1Puzzles.validate_schedule(g).is_empty():
+				resolve_com_uma += 1
+	check_eq(resolve_com_uma, 0, "Nenhuma mudança de UMA aula só resolve a grade inicial")
+	var mudancas: int = 0
+	for id in ids:
+		if Fase1Puzzles.SCHEDULE_INITIAL[id] != Fase1Puzzles.SCHEDULE_SOLUTION[id]:
+			mudancas += 1
+	check(mudancas >= 4, "A solução muda várias aulas (%d de %d)" % [mudancas, ids.size()])
 
 func _grade_regras() -> void:
-	var base: Dictionary = {"mat_1a": 1, "mat_2b": 3, "cie_1a": 4, "cie_2b": 2}
+	var base: Dictionary = Fase1Puzzles.SCHEDULE_SOLUTION.duplicate()
 	check_eq(Fase1Puzzles.validate_schedule(base).size(), 0, "Grade de referência é válida")
 
 	var cancelada: Dictionary = base.duplicate()
@@ -42,31 +57,62 @@ func _grade_regras() -> void:
 	check(Fase1Puzzles.validate_schedule(cancelada).any(func(e): return e.contains("perder aula")), "Cancelar uma aula quebra a regra 'nenhuma turma pode perder aula'")
 
 	var fora_lab: Dictionary = base.duplicate()
-	fora_lab["cie_1a"] = 3
-	check(Fase1Puzzles.validate_schedule(fora_lab).any(func(e): return e.contains("Laboratório")), "Ciências fora do laboratório é apontado")
+	fora_lab["cie_1a"] = 8 # 3º horário, Sala 2
+	check(Fase1Puzzles.validate_schedule(fora_lab).any(func(e): return e.contains("precisa acontecer no Laboratório")), "Ciências fora do laboratório é apontado")
 
 	var lab_lotado: Dictionary = base.duplicate()
-	lab_lotado["cie_1a"] = 2
+	lab_lotado["cie_1a"] = 3 # 1º horário no Lab, onde já está Ciências do 2º B
 	check(Fase1Puzzles.validate_schedule(lab_lotado).any(func(e): return e.contains("Laboratório") and e.contains("2 turmas")), "Laboratório com duas turmas no mesmo horário é apontado")
 
-	var turma_dupla: Dictionary = {"mat_1a": 1, "mat_2b": 3, "cie_1a": 2, "cie_2b": 4}
+	var lab_errado: Dictionary = base.duplicate()
+	lab_errado["por_2b"] = 6 # Português no Laboratório
+	check(Fase1Puzzles.validate_schedule(lab_errado).any(func(e): return e.contains("só para as aulas de Ciências")), "Outra aula dentro do Laboratório é apontada")
+
+	var turma_dupla: Dictionary = base.duplicate()
+	turma_dupla["por_1a"] = 5 # 2º horário, junto com Matemática do 1º A
 	check(Fase1Puzzles.validate_schedule(turma_dupla).any(func(e): return e.contains("1º A") and e.contains("duas aulas")), "Turma com duas aulas no mesmo horário é apontada")
+
+	var carlos_cedo: Dictionary = base.duplicate()
+	carlos_cedo["mat_2b"] = 2 # 1º horário
+	check(Fase1Puzzles.validate_schedule(carlos_cedo).any(func(e): return e.contains("Prof. Carlos só chega")), "Prof. Carlos no 1º horário é apontado")
 
 func _grade_forca_bruta() -> void:
 	var total: int = 0
 	var validas: int = 0
-	var ids: Array = Fase1Puzzles.SCHEDULE_CLASSES.map(func(c): return c["id"])
-	for a in 5:
-		for b in 5:
-			for c in 5:
-				for d in 5:
-					total += 1
-					var g: Dictionary = {ids[0]: a, ids[1]: b, ids[2]: c, ids[3]: d}
-					if Fase1Puzzles.validate_schedule(g).is_empty():
-						validas += 1
+	# Ciências só pode nos slots do Laboratório e as outras aulas só nas salas (qualquer outra
+	# combinação já quebra a regra do laboratório), então basta testar essas.
+	var lab: Array = []
+	var salas: Array = []
+	for slot in Fase1Puzzles.SLOT_INFO:
+		(lab if Fase1Puzzles.SLOT_INFO[slot][1] == Fase1Puzzles.LABORATORIO else salas).append(slot)
+	var opcoes: Array = Fase1Puzzles.SCHEDULE_CLASSES.map(func(c): return lab if c["precisa_lab"] else salas)
+	var horarios_validos: Dictionary = {}
+	var atual: Dictionary = {}
+	var indices: Array = []
+	indices.resize(opcoes.size())
+	indices.fill(0)
+	while true: # produto cartesiano de todas as opções
+		for i in opcoes.size():
+			atual[Fase1Puzzles.SCHEDULE_CLASSES[i]["id"]] = opcoes[i][indices[i]]
+		total += 1
+		if Fase1Puzzles.validate_schedule(atual).is_empty():
+			validas += 1
+			var chave: Array = []
+			for c in Fase1Puzzles.SCHEDULE_CLASSES:
+				chave.append(Fase1Puzzles.SLOT_INFO[atual[c["id"]]][0])
+			horarios_validos[str(chave)] = true
+		var k: int = opcoes.size() - 1
+		while k >= 0:
+			indices[k] += 1
+			if indices[k] < opcoes[k].size():
+				break
+			indices[k] = 0
+			k -= 1
+		if k < 0:
+			break
 	check(validas > 0, "Existe pelo menos uma grade válida")
-	check(validas <= 4, "O desafio não é trivial (poucas grades válidas)")
-	note("%d grades testadas, %d válidas" % [total, validas])
+	check_eq(horarios_validos.size(), 2, "Só existem 2 jeitos de distribuir os horários (o resto é escolher Sala 1 ou Sala 2)")
+	note("%d grades testadas, %d válidas, %d distribuições de horário diferentes" % [total, validas, horarios_validos.size()])
 
 func _cofre() -> void:
 	check(Fase1Puzzles.cofre_broken_clues("246").is_empty(), "246 respeita todas as pistas")

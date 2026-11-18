@@ -63,7 +63,7 @@ func _capture_all() -> void:
 	await _shot("06_task2_grade")
 	grade.check_answer()
 	await _shot("07_task2_grade_erro")
-	grade.set_assignment({"mat_2b": 3})
+	grade.set_assignment(Fase1Puzzles.SCHEDULE_SOLUTION)
 	grade.check_answer()
 	await _shot("08_task2_grade_certa")
 	grade.close()

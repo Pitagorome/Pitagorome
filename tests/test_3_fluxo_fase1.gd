@@ -195,14 +195,20 @@ func _task2_grade() -> void:
 
 	# Bug do print: a grade não ficava vermelha quando a mesma turma tinha duas aulas no mesmo horário
 	var vermelho := Color(0.75, 0.2, 0.1)
-	puzzle.set_assignment({"mat_1a": 1, "mat_2b": 3, "cie_1a": 2, "cie_2b": 4})
-	check(puzzle.board_cells.values().all(func(c): return c.get_theme_color("font_color") == vermelho), "Turma com duas aulas no mesmo horário fica vermelha na grade")
+	var dupla: Dictionary = Fase1Puzzles.SCHEDULE_SOLUTION.duplicate()
+	dupla["cie_1a"] = 6 # Ciências do 1º A no 2º horário, junto com Matemática do 1º A
+	puzzle.set_assignment(dupla)
+	check(puzzle.board_cells[4].get_theme_color("font_color") == vermelho and puzzle.board_cells[6].get_theme_color("font_color") == vermelho, "Turma com duas aulas no mesmo horário fica vermelha na grade")
 	check(puzzle.rules_label.text.contains("uma turma não pode ter duas aulas"), "Regra da turma aparece no texto do desafio")
-	puzzle.set_assignment({"mat_1a": 1, "mat_2b": 3, "cie_1a": 4, "cie_2b": 2})
+	check(puzzle.rules_label.text.contains("Prof. Carlos só chega no 2º horário"), "Horário dos professores aparece no texto do desafio")
+	puzzle.set_assignment(Fase1Puzzles.SCHEDULE_SOLUTION)
 	check(puzzle.board_cells.values().all(func(c): return c.get_theme_color("font_color") != vermelho), "Grade certa não tem nada vermelho")
 	puzzle.set_assignment(Fase1Puzzles.SCHEDULE_INITIAL)
+	check(puzzle.board_cells[1].get_theme_color("font_color") == vermelho, "Grade inicial mostra o conflito em vermelho")
+	puzzle.set_assignment({"mat_2b": 4})
+	check(not puzzle.check_answer().is_empty(), "Mudar só uma aula não resolve mais (Tarefa 2 ficou mais difícil)")
 
-	puzzle.set_assignment({"mat_2b": 3})
+	puzzle.set_assignment(Fase1Puzzles.SCHEDULE_SOLUTION)
 	errors = puzzle.check_answer()
 	check(errors.is_empty() and puzzle.is_solved, "Grade corrigida é aceita")
 	puzzle.close()
