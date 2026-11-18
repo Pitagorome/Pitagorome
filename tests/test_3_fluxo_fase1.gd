@@ -116,6 +116,35 @@ func _inicio() -> void:
 	check(player.animated_sprite.sprite_frames == GameManager.get_appearance_frames(), "Sprite do jogador usa a aparência escolhida")
 
 func _movimento_e_porta() -> void:
+	# Apontamento do grupo (18/11): no lugar da caixa verde grande, uma prancheta que abre ao clicar/Tab
+	var hud: Node = _find("HUD")
+	check(hud.botao_prancheta.visible and hud.botao_prancheta.text.contains("Tarefa"), "HUD mostra a prancheta 'Tarefa N' no canto")
+	hud.espiando = false
+	hud._atualizar_painel()
+	check(not hud.painel_visivel(), "A caixa da tarefa fica fechada (não atrapalha a visão)")
+	hud.botao_prancheta.pressed.emit()
+	check(hud.painel_visivel() and hud.objective_label.text != "", "Clicar na prancheta mostra a tarefa e o objetivo")
+	var tab := InputEventKey.new()
+	tab.keycode = KEY_TAB
+	tab.pressed = true
+	Input.parse_input_event(tab)
+	await _frames(2)
+	check(not hud.painel_visivel(), "Tab fecha a prancheta")
+	var objetivo_antes: String = GameManager.current_objective
+	GameManager.set_objective("Objetivo de teste")
+	check(hud.painel_visivel() and hud.aviso_label.visible, "Objetivo novo: a prancheta abre sozinha e mostra '!'")
+	hud._espiada_id += 1 # não espera os 4 s
+	hud.espiando = false
+	hud._atualizar_painel()
+	check(not hud.painel_visivel() and hud.aviso_label.visible, "Depois fecha sozinha, mas o '!' fica até o jogador abrir")
+	hud.alternar_prancheta()
+	check(not hud.aviso_label.visible, "Abrir a prancheta apaga o '!'")
+	hud.alternar_prancheta()
+	GameManager.set_objective(objetivo_antes)
+	hud._espiada_id += 1
+	hud.espiando = false
+	hud.aviso_label.visible = false
+	hud._atualizar_painel()
 	var player: CharacterBody2D = _find("Player")
 	var start_x: float = player.global_position.x
 	await _segurar_tecla(KEY_LEFT, 20)

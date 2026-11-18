@@ -40,14 +40,20 @@ func _capture_all() -> void:
 
 	# Task 6
 	await sim._go(Flow.CORREDOR, "SpawnFromDirector")
+	DialogueManager.advance()
 	await _shot("02_task6_coordenadora")
-	for i in 7:
-		DialogueManager.advance()
-	await _shot("03_task6_bilhete")
 	await sim._read_all()
+	await _shot("02b_task6_prancheta_espiando")
 	await sim._go(Flow.ALA, "SpawnFromCorridor")
 	await _shot("04_ala_refeitorio")
 	await sim._go(Flow.ARMARIOS, "SpawnFromAla")
+	await sim._read_all()
+	sim._find("Bilhete").interact()
+	DialogueManager.advance()
+	await _shot("03_task6_bilhete")
+	for i in 3:
+		DialogueManager.advance()
+	await _shot("03b_task6_explicacao")
 	await sim._read_all()
 	sim._find("Armario15").interact()
 	DialogueManager.advance()
@@ -86,9 +92,15 @@ func _capture_all() -> void:
 	# Task 8
 	await sim._read_all()
 	var ger: Node = sim._find("GeradorPuzzle")
-	ger.set_levers([true, true, true, true, true])
+	for i in 4:
+		ger.levers[i].button_pressed = true # a 4ª não liga
+	await _shot("11a_task8_maximo_3")
 	ger.check_answer()
-	await _shot("11_task8_passou_de_30")
+	await _shot("11b_task8_carga_medida")
+	ger.check_answer()
+	ger.check_answer()
+	await _shot("11c_task8_travado")
+	ger.destravar()
 	ger.set_levers([true, false, true, false, true])
 	ger.check_answer()
 	await _shot("12_task8_gerador_certo")
