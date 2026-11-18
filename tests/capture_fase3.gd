@@ -112,10 +112,10 @@ func _capture_all() -> void:
 	await _shot("16_task14_portao_foto")
 	sim._find("CameraFoto").interact()
 	await sim._frames(2)
-	await _answer("30")
-	await _shot("17_task14_dica_30")
-	sim._modal()._on_feedback_closed()
 	await _answer("60")
+	await _shot("17_task14_dica_60")
+	sim._modal()._on_feedback_closed()
+	await _answer("30")
 	sim._modal()._on_feedback_closed()
 	await sim._read_all()
 

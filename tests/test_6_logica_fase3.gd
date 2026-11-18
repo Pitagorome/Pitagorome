@@ -14,7 +14,7 @@ func get_cases() -> Array:
 		["T6.1 Máquina (Task 11): y = 3x + 3 e 6 refrigerantes = R$ 21", _maquina],
 		["T6.2 Gincana (Task 12): 20 equipes de 3 com 6 alunos", _gincana],
 		["T6.3 Luzes (Task 13): A = 8 e B = 12", _luzes],
-		["T6.4 Foto (Task 14): 60 formações", _foto],
+		["T6.4 Foto (Task 14): 30 fotos diferentes", _foto],
 		["T6.5 Mural (Task 15): 120 organizações", _mural],
 		["T6.6 Dicas de erro não entregam a resposta", _dicas],
 		["T6.7 Tarefas da Fase 3 no GameManager", _tarefas],
@@ -62,17 +62,17 @@ func _luzes() -> void:
 	check_eq(Fase3Puzzles.LUZES_EQUACOES[Fase3Puzzles.LUZES_EQUACAO_CERTA], "x + (x + 4) = 20", "A opção certa é x + (x + 4) = 20")
 
 func _foto() -> void:
-	var formacoes: Array = Fase3Puzzles.formacoes_possiveis(Fase3Puzzles.FOTO_PROFESSORES, 3)
-	check_eq(formacoes.size(), 60, "Listando todas: 60 formações (roteiro: 60)")
-	check_eq(Fase3Puzzles.foto_resposta(), 60, "Resposta do jogo = 60")
-	# Por que 60 e não 30: os dois lugares de trás são diferentes (esquerda/direita)
-	var sem_ordem_atras: Dictionary = {}
-	for f in formacoes:
-		var atras: Array = [f[0], f[1]]
-		atras.sort()
-		sem_ordem_atras[str(atras) + "|" + f[2]] = true
-	check_eq(sem_ordem_atras.size(), 30, "Se a ordem de trás não importasse seriam 30 (por isso o jogo diz 'atrás à esquerda/direita')")
-	check_eq(Fase3Puzzles.FOTO_LUGARES.size(), 3, "3 lugares marcados")
+	var fotos: Array = Fase3Puzzles.fotos_possiveis()
+	check_eq(fotos.size(), 30, "Listando todas: 30 fotos diferentes (5 na frente × 6 duplas atrás)")
+	check_eq(Fase3Puzzles.foto_resposta(), 30, "Resposta do jogo = 30")
+	# cada foto: 1 na frente que não está na dupla de trás
+	check(fotos.all(func(f): return f[1].size() == 2 and not f[1].has(f[0]) and f[1][0] != f[1][1]), "Toda foto tem 3 professores diferentes")
+	# Por que 30 e não 60: contando a ordem dos dois de trás, cada foto aparece 2 vezes
+	check_eq(Fase3Puzzles.formacoes_possiveis(Fase3Puzzles.FOTO_PROFESSORES, 3).size(), 60, "Contando a ordem dos de trás seriam 60 (o dobro) — é o erro que a dica explica")
+	var por_frente: Dictionary = {}
+	for f in fotos:
+		por_frente[f[0]] = por_frente.get(f[0], 0) + 1
+	check(por_frente.size() == 5 and por_frente.values().all(func(v): return v == 6), "Cada professor na frente aparece com 6 duplas atrás")
 
 func _mural() -> void:
 	check_eq(Fase3Puzzles.formacoes_possiveis(Fase3Puzzles.PLACAS, 3).size(), 120, "Listando todas: 120 organizações (roteiro: 120)")
