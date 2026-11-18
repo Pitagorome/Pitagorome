@@ -36,6 +36,7 @@ func get_cases() -> Array:
 		["T2.7 Indicadores '!' configurados (Tasks 3, 5 e 7 a 15)", _marcadores],
 		["T2.8 Andando pela sala: portas, NPCs e objetos alcançáveis, sem sair do mapa", _alcance_andando],
 		["T2.9 Chão desenhado atrás dos móveis (nada escondido)", _camadas],
+		["T2.10 Ninguém nasce em cima de uma porta (bug da porta que não funcionava)", _spawn_fora_da_porta],
 	]
 
 func _instantiate(path: String) -> Node:
@@ -390,3 +391,35 @@ func _marcadores() -> void:
 	numeros.sort()
 	check_eq(numeros, range(1, Fase2Puzzles.TOTAL_ARMARIOS + 1), "Sala dos Armários tem os armários de 1 a 15 (sem repetir)")
 	arm.free()
+
+# Bug de 18/11: entrando numa sala e indo de volta para a porta, o jogador não trocava de sala
+# e andava até a parte vazia do mapa. Um dos motivos era nascer EM CIMA da porta de volta:
+# a porta não percebe a "entrada" de quem já está dentro dela. Aqui o pé do jogador no ponto
+# de spawn (com 2 px de folga) não pode encostar em nenhuma porta da sala.
+func _spawn_fora_da_porta() -> void:
+	var total: int = 0
+	for path in ROOMS:
+		var room: Node = _instantiate(path)
+		var door_rects: Array = []
+		for door in _doors_of(room):
+			var shape_node: CollisionShape2D = door.get_node("CollisionShape2D")
+			var r: Rect2 = shape_node.shape.get_rect()
+			door_rects.append([str(door.name), Rect2(_pos_fora_da_arvore(shape_node) + r.position, r.size)])
+		for spawn in room.find_children("Spawn*", "Node2D", true, false):
+			total += 1
+			var p: Vector2 = _pos_fora_da_arvore(spawn)
+			var foot: Rect2 = Rect2(p.x - 5, p.y + 7, 10, 8).grow(2)
+			for d in door_rects:
+				check(not foot.intersects(d[1]), "%s: spawn %s não nasce em cima da porta %s" % [path.get_file(), spawn.name, d[0]])
+		room.free()
+	note("%d pontos de spawn verificados" % total)
+
+# Posição "global" de um nó de uma cena que não foi colocada na árvore (sem rodar o _ready da sala)
+func _pos_fora_da_arvore(node: Node) -> Vector2:
+	var t: Transform2D = Transform2D.IDENTITY
+	var n: Node = node
+	while n != null:
+		if n is Node2D:
+			t = (n as Node2D).transform * t
+		n = n.get_parent()
+	return t.origin

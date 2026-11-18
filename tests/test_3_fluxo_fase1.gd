@@ -144,6 +144,20 @@ func _movimento_e_porta() -> void:
 	var spawn: Node2D = _find("SpawnFromDirector")
 	check(_find("Player").global_position.distance_to(spawn.global_position) < 2.0, "Jogador aparece no ponto de spawn certo")
 
+	# Bug de 18/11: entrar numa sala e voltar LOGO para a porta não trocava de sala (a porta
+	# ignorava quem encostava nela nos primeiros 0,5 s e depois não percebia mais) e o jogador
+	# andava pela passagem escura até a parte vazia do mapa.
+	if DialogueManager.is_busy():
+		await _read_all()
+	var volta: Node2D = _find("DoorToDirectorOffice")
+	_find("Player").global_position = volta.global_position + Vector2(0, -12)
+	await _physics_frames(6)
+	await _wait_transition()
+	check_eq(scene().get("location_id"), "gabinete", "Voltar logo para a porta de onde veio troca de sala (não fica preso na passagem)")
+	await _go(CORREDOR, "SpawnFromDirector")
+	if DialogueManager.is_busy():
+		await _read_all()
+
 func _task1_tour() -> void:
 	var coord: Node2D = _find("NPCCoordenadora")
 	var player: Node2D = _find("Player")

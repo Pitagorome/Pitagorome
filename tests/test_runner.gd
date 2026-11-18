@@ -27,9 +27,17 @@ func _run() -> void:
 	var results: Array = []
 	var all_passed: bool = true
 	var started: String = Time.get_datetime_string_from_system(false, true)
-	print("\n===== TESTES AUTOMATIZADOS — PITAGOROME (Fases 1 e 2) =====")
-	for suite_script in SUITES:
-		var suite = suite_script.new()
+	print("\n===== TESTES AUTOMATIZADOS — PITAGOROME (Fases 1, 2 e 3) =====")
+	# --suite=2,5 roda só essas suítes (para testar mais rápido); sem ele roda todas
+	var only: Array = []
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--suite="):
+			for n in arg.trim_prefix("--suite=").split(","):
+				only.append(int(n))
+	for i in SUITES.size():
+		if not only.is_empty() and not only.has(i + 1):
+			continue
+		var suite = SUITES[i].new()
 		suite.runner = self
 		print("\n>> ", suite.suite_name)
 		await suite.run()
