@@ -117,7 +117,7 @@ position = Vector2(50, -91)
 position = Vector2(-150, -97)
 
 [node name="AvisosDir" parent="Parede" instance=ExtResource("p_quadro_avisos")]
-position = Vector2(150, -91)
+position = Vector2(205, -97)
 
 [node name="MapWalls" type="StaticBody2D" parent="."]
 
@@ -129,9 +129,13 @@ shape = SubResource("RectangleShape2D_wall_50")
 position = Vector2(-100, -85)
 shape = SubResource("RectangleShape2D_c_wall_top_l")
 
-[node name="TopRight" type="CollisionShape2D" parent="MapWalls"]
-position = Vector2(145, -85)
-shape = SubResource("RectangleShape2D_wall_250")
+[node name="TopRightA" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(75, -85)
+shape = SubResource("RectangleShape2D_wall_110")
+
+[node name="TopRightB" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(220, -85)
+shape = SubResource("RectangleShape2D_wall_100")
 
 [node name="BottomA" type="CollisionShape2D" parent="MapWalls"]
 position = Vector2(-220, 85)
@@ -140,6 +144,10 @@ shape = SubResource("RectangleShape2D_wall_100")
 [node name="BottomB" type="CollisionShape2D" parent="MapWalls"]
 position = Vector2(-75, 85)
 shape = SubResource("RectangleShape2D_wall_110")
+
+[node name="BottomMeio" type="CollisionShape2D" parent="MapWalls"]
+position = Vector2(0, 85)
+shape = SubResource("RectangleShape2D_wall_50")
 
 [node name="BottomC" type="CollisionShape2D" parent="MapWalls"]
 position = Vector2(75, 85)
@@ -164,7 +172,7 @@ y_sort_enabled = true
 position = Vector2(-150, -76)
 
 [node name="ArmarioDir" parent="Furniture" instance=ExtResource("p_armario_metal")]
-position = Vector2(185, -76)
+position = Vector2(205, -76)
 
 [node name="PalmeiraEsq" parent="Furniture" instance=ExtResource("p_palmeira")]
 position = Vector2(-246, -55)
@@ -179,7 +187,7 @@ position = Vector2(-105, 62)
 position = Vector2(105, 62)
 
 [node name="SpawnFromDirector" type="Marker2D" parent="."]
-position = Vector2(0, 45)
+position = Vector2(150, -45)
 
 [node name="SpawnFromMath" type="Marker2D" parent="."]
 position = Vector2(210, 0)
@@ -203,7 +211,7 @@ position = Vector2(-200, -45)
 position = Vector2(0, 45)
 
 [node name="NPCCoordenadora" parent="." instance=ExtResource("2_coord")]
-position = Vector2(35, 45)
+position = Vector2(182, -42)
 visible_in_tasks = Array[int]([1])
 follow_player_in_tasks = Array[int]([1])
 
@@ -211,16 +219,16 @@ follow_player_in_tasks = Array[int]([1])
 y_sort_enabled = true
 
 [node name="NPCCoordenadoraTask4" parent="Task4Group" instance=ExtResource("2_coord")]
-position = Vector2(110, 30)
+position = Vector2(110, 45)
 visible_in_tasks = Array[int]([4])
 
 [node name="NPCProfessorTask4" parent="Task4Group" instance=ExtResource("94_prof")]
-position = Vector2(160, 30)
+position = Vector2(160, 45)
 default_animation = "idle_up"
 visible_in_tasks = Array[int]([4])
 
 [node name="AlunoJoao" parent="Task4Group" instance=ExtResource("93_aluno")]
-position = Vector2(110, -20)
+position = Vector2(110, 0)
 npc_name = "João"
 default_animation = "idle_down"
 visible_in_tasks = Array[int]([4])
@@ -229,7 +237,7 @@ tint = Color(1, 0.9, 0.8, 1)
 testimony_id = "joao"
 
 [node name="AlunoPedro" parent="Task4Group" instance=ExtResource("93_aluno")]
-position = Vector2(155, -20)
+position = Vector2(155, 0)
 npc_name = "Pedro"
 default_animation = "idle_down"
 visible_in_tasks = Array[int]([4])
@@ -238,7 +246,7 @@ tint = Color(0.85, 0.95, 1, 1)
 testimony_id = "pedro"
 
 [node name="AlunoLucas" parent="Task4Group" instance=ExtResource("93_aluno")]
-position = Vector2(200, -20)
+position = Vector2(200, 0)
 npc_name = "Lucas"
 default_animation = "idle_down"
 visible_in_tasks = Array[int]([4])
@@ -261,7 +269,7 @@ position = Vector2(-60, -10)
 hidden_in_tasks = Array[int]([8])
 
 [node name="DoorToDirectorOffice" type="Area2D" parent="."]
-position = Vector2(0, 85)
+position = Vector2(150, -85)
 script = ExtResource("7_door")
 target_scene = "res://scenes/intro/intro_scene.tscn"
 target_spawn_id = "SpawnFromCorridor"
@@ -273,14 +281,14 @@ shape = SubResource("RectangleShape2D_door")
 
 [node name="DoorLabel" type="Label" parent="DoorToDirectorOffice"]
 offset_left = -50.0
-offset_top = -24.0
+offset_top = 10.0
 offset_right = 50.0
-offset_bottom = -11.0
+offset_bottom = 23.0
 theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
 theme_override_fonts/font = ExtResource("12_font")
 theme_override_font_sizes/font_size = 7
-text = "▼ Gabinete Diretor"
+text = "▲ Gabinete Diretor"
 horizontal_alignment = 1
 
 [node name="DoorToMath" type="Area2D" parent="."]

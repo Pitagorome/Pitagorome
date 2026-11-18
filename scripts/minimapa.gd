@@ -33,7 +33,7 @@ const SALAS: Dictionary = {
 	"corredor":       {"rect": Rect2(-62, 20, 124, 16), "nome": "Corredor"},
 	"matematica":     {"rect": Rect2(66, 16, 32, 24), "nome": "Sala de Matemática"},
 	"almoxarifado":   {"rect": Rect2(-54, 42, 28, 20), "nome": "Almoxarifado"},
-	"gabinete":       {"rect": Rect2(-14, 42, 28, 22), "nome": "Gabinete"},
+	"gabinete":       {"rect": Rect2(28, -8, 28, 22), "nome": "Gabinete"},
 	"portao":         {"rect": Rect2(26, 42, 30, 20), "nome": "Portão"},
 }
 # Salas ligadas por porta: [sala A, sala B, ponto da porta (unidades do mapa)]
@@ -43,7 +43,7 @@ const LIGACOES: Array = [
 	["corredor", "coordenacao", Vector2(-64, 28)],
 	["corredor", "matematica", Vector2(64, 28)],
 	["corredor", "almoxarifado", Vector2(-40, 39)],
-	["corredor", "gabinete", Vector2(0, 39)],
+	["corredor", "gabinete", Vector2(42, 17)],
 	["corredor", "portao", Vector2(41, 39)],
 	["ala_refeitorio", "sala_artes", Vector2(-52, -36)],
 	["ala_refeitorio", "sala_armarios", Vector2(-24, -36)],
