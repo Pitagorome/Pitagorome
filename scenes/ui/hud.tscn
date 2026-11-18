@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://d9v1x3k5m7p8a"]
+[gd_scene load_steps=8 format=3 uid="uid://d9v1x3k5m7p8a"]
 
 [ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://scripts/minimapa.gd" id="4_minimapa"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="2_font_bold"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Regular.ttf" id="3_font_reg"]
+[ext_resource type="Texture2D" path="res://assets/props/prancheta.png" id="5_prancheta"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
 bg_color = Color(0.18, 0.25, 0.16, 0.85)
@@ -16,6 +17,22 @@ corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_prancheta"]
+bg_color = Color(0.18, 0.25, 0.16, 0.7)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.95, 0.91, 0.82, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 8.0
+content_margin_bottom = 2.0
 
 [node name="HUD" type="CanvasLayer"]
 layer = 5
@@ -44,8 +61,41 @@ theme_override_constants/margin_right = 12
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="PanelTask" type="PanelContainer" parent="Control/MarginContainer/HBoxContainer"]
+[node name="BotaoPrancheta" type="Button" parent="Control/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
+size_flags_vertical = 0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
+theme_override_colors/font_hover_color = Color(1, 0.9, 0.55, 1)
+theme_override_fonts/font = ExtResource("2_font_bold")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_prancheta")
+theme_override_styles/hover = SubResource("StyleBoxFlat_prancheta")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_prancheta")
+tooltip_text = "Ver a tarefa (Tab)"
+text = "Tarefa"
+icon = ExtResource("5_prancheta")
+
+[node name="Aviso" type="Label" parent="Control/MarginContainer/HBoxContainer/BotaoPrancheta"]
+visible = false
+layout_mode = 0
+offset_left = 14.0
+offset_top = -6.0
+offset_right = 26.0
+offset_bottom = 8.0
+theme_override_colors/font_color = Color(1, 0.84, 0.25, 1)
+theme_override_colors/font_outline_color = Color(0.15, 0.1, 0.05, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("2_font_bold")
+theme_override_font_sizes/font_size = 12
+text = "!"
+
+[node name="PanelTask" type="PanelContainer" parent="Control/MarginContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
 
 [node name="Margin" type="MarginContainer" parent="Control/MarginContainer/HBoxContainer/PanelTask"]
