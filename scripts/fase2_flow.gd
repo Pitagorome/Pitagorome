@@ -71,7 +71,9 @@ func on_room_ready(location: String) -> void:
 				DialogueManager.start_dialogue(Fase2Dialogues.task9_briefing(), open_mesas)
 		"biblioteca":
 			if task == 10 and GameManager.mark_event("t10_briefing"):
-				DialogueManager.start_dialogue(Fase2Dialogues.task10_briefing(), open_cartaz_altura)
+				DialogueManager.start_dialogue(Fase2Dialogues.task10_briefing(), func():
+					GameManager.set_objective("Olhe as medidas dos 3 cartazes nos cavaletes, calcule a altura certa e diga ao Professor qual é o cartaz certo.")
+				)
 
 # ------------------------------------------------------------------
 # NPCs
@@ -115,7 +117,7 @@ func on_zelador_interact() -> void:
 
 func on_professor_interact() -> void:
 	if GameManager.current_task_id == 10 and current_location == "biblioteca":
-		DialogueManager.start_dialogue(Fase2Dialogues.task10_reminder(), _reopen_cartaz)
+		DialogueManager.start_dialogue(Fase2Dialogues.task10_reminder(), open_cartaz_escolha)
 	else:
 		DialogueManager.start_dialogue(Fase1Dialogues.professor_idle())
 
@@ -325,60 +327,40 @@ func open_mesas() -> Node:
 	return modal
 
 # ------------------------------------------------------------------
-# Task 10 — cartaz da feira (2 passos: altura e depois o cartaz certo)
+# Task 10 — cartaz da feira (1 pergunta só: qual cartaz é o certo)
 # ------------------------------------------------------------------
-
-func open_cartaz_altura() -> Node:
-	var modal: Node = _get_challenge_modal()
-	modal.show_code_challenge(
-		0, # passo intermediário: não conclui a tarefa
-		"Tarefa 10: O Cartaz da Feira (1/2)",
-		"Modelo original: %d cm de largura × %d cm de altura.\nA nova largura será %d cm, sem mudar a proporção." % [Fase2Puzzles.MODELO_LARGURA, Fase2Puzzles.MODELO_ALTURA, Fase2Puzzles.NOVA_LARGURA],
-		"Qual deve ser a nova altura, em cm? (digite só o número)",
-		str(Fase2Puzzles.cartaz_nova_altura()),
-		"Isso! 45 ÷ 18 = 2,5 (a largura ficou 2,5 vezes maior). Então a altura também: 24 × 2,5 = 60 cm.",
-		"Essa altura muda a proporção. Descubra quantas vezes 45 é maior que 18 e aumente a altura 24 na mesma quantidade.",
-		func():
-			GameManager.mark_event("t10_altura")
-			DialogueManager.start_dialogue(Fase2Dialogues.task10_height_ok(), func():
-				GameManager.set_objective("Olhe as medidas dos 3 cartazes nos cavaletes e diga ao Professor qual é o certo.")
-			)
-	)
-	modal.code_input.placeholder_text = "Altura em cm"
-	puzzle_opened.emit(modal)
-	return modal
+# Antes eram 2 passos (digitar a altura e depois escolher o cartaz); o grupo achou repetido.
+# Agora o jogador calcula a altura de cabeça e só escolhe o cartaz.
 
 func open_cartaz_escolha() -> Node:
-	GameManager.mark_event("t10_altura")
 	var modal: Node = _get_challenge_modal()
 	# Sem as medidas nas opções: elas estão escritas nos cavaletes da biblioteca
-	var context: String = "Você calculou o tamanho certo do cartaz. Agora compare com as medidas escritas nos cavaletes (dá para fechar com Esc e olhar de novo)."
+	var context: String = "Modelo original: %d cm de largura × %d cm de altura.\nOs 3 cartazes têm %d cm de largura; só a altura muda (as medidas estão nos cavaletes — dá para fechar com Esc e olhar de novo)." % [Fase2Puzzles.MODELO_LARGURA, Fase2Puzzles.MODELO_ALTURA, Fase2Puzzles.NOVA_LARGURA]
 	var options: Array[String] = []
 	var correct: int = 0
+	var dicas: Dictionary = {}
 	for i in Fase2Puzzles.CARTAZES.size():
 		var c: Dictionary = Fase2Puzzles.CARTAZES[i]
 		options.append("Cartaz %s" % c["id"])
 		if c["id"] == Fase2Puzzles.CARTAZ_CERTO:
 			correct = i
+		else:
+			var alta: bool = int(c["altura"]) > Fase2Puzzles.cartaz_nova_altura()
+			dicas[i] = "O cartaz %s tem %d cm de altura: ficou %s. A largura foi de 18 para 45 (quantas vezes maior?). A altura 24 tem que crescer na mesma quantidade." % [c["id"], c["altura"], "alto demais" if alta else "baixo demais"]
 	modal.show_multiple_choice_challenge(
-		0, # a tarefa só termina depois da fala final do professor
-		"Tarefa 10: O Cartaz da Feira (2/2)",
+		0, # a tarefa só termina depois da fala final do professor (_finish_phase)
+		"Tarefa 10: O Cartaz da Feira",
 		context.strip_edges(),
 		"Qual cartaz mantém a proporção do modelo original?",
 		options,
 		correct,
-		"Isso! O cartaz B mede 45 x 60: 18/24 = 45/60 = 3/4. Os outros não mantêm a proporção (27/40 e 36/50 não dão 3/4).",
-		"Esse cartaz não tem 45 x 60 e não mantém a proporção 18 : 24 (= 3 : 4). Procure o que tem a altura que você calculou.",
+		"Isso! 45 ÷ 18 = 2,5 (a largura ficou 2,5 vezes maior), então a altura também: 24 × 2,5 = 60. O cartaz %s mede 45 x 60 (18/24 = 45/60 = 3/4)." % Fase2Puzzles.CARTAZ_CERTO,
+		"Esse cartaz não mantém a proporção 18 : 24. Descubra quantas vezes 45 é maior que 18 e aumente a altura 24 na mesma quantidade.",
 		func(): DialogueManager.start_dialogue(Fase2Dialogues.task10_done(), _finish_phase)
 	)
+	modal.wrong_hints = dicas
 	puzzle_opened.emit(modal)
 	return modal
-
-func _reopen_cartaz() -> void:
-	if GameManager.seen_events.has("t10_altura"):
-		open_cartaz_escolha()
-	else:
-		open_cartaz_altura()
 
 func _finish_phase() -> void:
 	GameManager.complete_task(10)

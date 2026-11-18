@@ -191,12 +191,15 @@ const CARTAZES_ROTEIRO: Array = [
 	{"id": "B", "largura": 30, "altura": 40},
 	{"id": "C", "largura": 36, "altura": 50},
 ]
+# Apontamento do grupo (18/11): com larguras diferentes o desenho entregava a resposta (só um
+# tinha 45 cm de largura). Agora os TRÊS têm 45 cm de largura e só a altura muda: precisa
+# calcular a altura (60) para saber qual é o certo. A resposta saiu do meio (B) para o C.
 const CARTAZES: Array = [
-	{"id": "A", "largura": 27, "altura": 40},
-	{"id": "B", "largura": 45, "altura": 60},
-	{"id": "C", "largura": 36, "altura": 50},
+	{"id": "A", "largura": 45, "altura": 64},
+	{"id": "B", "largura": 45, "altura": 56},
+	{"id": "C", "largura": 45, "altura": 60},
 ]
-const CARTAZ_CERTO: String = "B"
+const CARTAZ_CERTO: String = "C"
 
 # Regra de três: 18/24 = 45/h -> h = 24 * 45 / 18
 @warning_ignore("integer_division")

@@ -174,19 +174,16 @@ static func task10_briefing() -> Array:
 		_l(PROF, "{diretor}, tragédia..."),
 		_l(PLAYER, "...o que aconteceu?"),
 		_l(PROF, "Os alunos imprimiram o cartaz da feira em tamanhos diferentes. Precisamos descobrir qual deles mantém exatamente a proporção do modelo original."),
-		_l(PROF, "O modelo original tem 18 cm de largura e 24 cm de altura. Para descobrir o tamanho correto, precisamos aumentar a largura para 45 cm sem alterar a proporção."),
-		_l(PROF, "Qual deve ser a nova altura?"),
+		_l(PROF, "O modelo original tem 18 cm de largura e 24 cm de altura. Os três cartazes ali nos cavaletes têm 45 cm de largura, mas cada um tem uma altura."),
+		_l(PROF, "Olhe as medidas, descubra qual altura mantém a proporção e depois me diga qual cartaz é o certo."),
 	]
 
 static func task10_reminder() -> Array:
-	return [_l(PROF, "Modelo: 18 x 24. Nova largura: 45. Qual a altura, e qual cartaz tem essas medidas?")]
-
-static func task10_height_ok() -> Array:
-	return [_l(PROF, "Isso! Agora olhe os cartazes que os alunos imprimiram, ali nos cavaletes. Veja as medidas de cada um e depois me diga qual é o certo.")]
+	return [_l(PROF, "Modelo: 18 x 24. Os cartazes têm 45 de largura. Qual altura mantém a proporção, e qual cartaz tem essa altura?")]
 
 static func task10_done() -> Array:
 	return [
-		_l(PROF, "Excelente. Então o cartaz correto deve medir 45x60. Agora sim podemos imprimir sem transformar a feira em um anúncio de estacionamento."),
+		_l(PROF, "Excelente. O cartaz correto mede 45x60. Agora sim podemos imprimir sem transformar a feira em um anúncio de estacionamento."),
 		_l(NARRADOR, "(A feira foi um sucesso! Alunos e servidores se despedem e vão para casa.)"),
 	]
 
