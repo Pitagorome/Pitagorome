@@ -182,6 +182,38 @@ func _animacoes() -> void:
 		var loc: String = str(inst.get("location_id"))
 		check(Minimapa.SALAS.has(loc), "A sala '%s' está no minimapa" % loc)
 		inst.free()
+	# Pedido de 17/11 (image-8): as portas precisam ser coerentes entre as salas e com o minimapa.
+	# Se a porta da sala A para B fica embaixo, a porta de B para A tem que ficar em cima,
+	# e no minimapa B tem que estar abaixo de A.
+	var lados: Dictionary = {}  # "a>b" -> Vector2 (lado da porta)
+	var loc_da_cena: Dictionary = {}
+	for room in ROOMS:
+		var inst: Node = _instantiate(room)
+		loc_da_cena[room] = str(inst.get("location_id"))
+		inst.free()
+	for room in ROOMS:
+		var inst: Node = _instantiate(room)
+		var sala_rect: Rect2 = ExteriorFundo.room_rect_of(inst)
+		for porta in inst.get_children():
+			if porta is Area2D and porta.get("target_scene") and loc_da_cena.has(porta.target_scene):
+				# lado = parede da sala mais perto da porta (mesma regra do passagem_porta.gd)
+				var p: Vector2 = porta.position
+				var dist: Dictionary = {Vector2.UP: absf(p.y - sala_rect.position.y), Vector2.DOWN: absf(sala_rect.end.y - p.y),
+					Vector2.LEFT: absf(p.x - sala_rect.position.x), Vector2.RIGHT: absf(sala_rect.end.x - p.x)}
+				var lado: Vector2 = Vector2.UP
+				for d in dist:
+					if dist[d] < dist[lado]:
+						lado = d
+				lados["%s>%s" % [loc_da_cena[room], loc_da_cena[porta.target_scene]]] = lado
+		inst.free()
+	for chave in lados:
+		var ab: PackedStringArray = chave.split(">")
+		var volta: String = "%s>%s" % [ab[1], ab[0]]
+		if lados.has(volta):
+			check(lados[chave] == -lados[volta], "Portas coerentes: %s está do lado oposto da volta" % chave)
+		if Minimapa.SALAS.has(ab[0]) and Minimapa.SALAS.has(ab[1]):
+			var dir: Vector2 = Minimapa.SALAS[ab[1]]["rect"].get_center() - Minimapa.SALAS[ab[0]]["rect"].get_center()
+			check(dir.dot(lados[chave]) > 0, "Minimapa: %s fica do mesmo lado da porta" % chave)
 	var antes_tarefa: int = GameManager.current_task_id
 	var concluidas: Array = GameManager.completed_tasks.duplicate()
 	GameManager.completed_tasks.clear()

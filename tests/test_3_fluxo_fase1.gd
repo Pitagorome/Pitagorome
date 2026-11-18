@@ -148,7 +148,9 @@ func _task1_tour() -> void:
 	var coord: Node2D = _find("NPCCoordenadora")
 	var player: Node2D = _find("Player")
 	# Bug de 17/11: a Coordenadora ficava parada na porta e "falava de longe" com o Zelador
-	player.global_position = Vector2(-60, 20) # jogador vai até o Zelador
+	# A Coordenadora fica parada no meio do caminho (ex.: o jogador andou rápido) e o jogador vai até o Zelador
+	coord.global_position = Vector2(35, 45)
+	player.global_position = Vector2(-60, 20)
 	await _physics_frames(2)
 	check(coord.global_position.distance_to(player.global_position) > 60.0, "(preparação) jogador longe de onde a Coordenadora começou")
 	var zelador: Node = _find("NPCZelador")
