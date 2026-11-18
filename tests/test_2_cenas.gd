@@ -37,6 +37,7 @@ func get_cases() -> Array:
 		["T2.8 Andando pela sala: portas, NPCs e objetos alcançáveis, sem sair do mapa", _alcance_andando],
 		["T2.9 Chão desenhado atrás dos móveis (nada escondido)", _camadas],
 		["T2.10 Ninguém nasce em cima de uma porta (bug da porta que não funcionava)", _spawn_fora_da_porta],
+		["T2.11 Minimapa acompanha o jogador em todas as salas (inclusive o saguão)", _minimapa_acompanha],
 	]
 
 func _instantiate(path: String) -> Node:
@@ -423,3 +424,30 @@ func _pos_fora_da_arvore(node: Node) -> Vector2:
 			t = (n as Node2D).transform * t
 		n = n.get_parent()
 	return t.origin
+
+# Apontamento do grupo (18/11): no saguão (corredor) o ponto branco do minimapa não se mexia.
+# Em cada sala o jogador vai para a esquerda e depois para a direita: o ponto tem que andar junto.
+func _minimapa_acompanha() -> void:
+	GameManager.intro_dialogue_finished = true
+	for path in ROOMS:
+		var room: Node = _instantiate(path)
+		tree().root.add_child(room)
+		tree().current_scene = room
+		for i in 3:
+			await tree().physics_frame
+		var mapa: Node = room.find_child("Minimapa", true, false)
+		var player: Node2D = room.find_child("Player", true, false)
+		var area: Rect2 = mapa._area_da_sala()
+		if check(area.size != Vector2.ZERO, "%s: minimapa acha a área da sala" % path.get_file()):
+			var sala: String = mapa.sala_atual()
+			player.global_position = area.position + area.size * Vector2(0.25, 0.3)
+			var a: Vector2 = mapa._posicao_jogador(sala)
+			player.global_position = area.position + area.size * Vector2(0.75, 0.7)
+			var b: Vector2 = mapa._posicao_jogador(sala)
+			check(b.x > a.x + 1.0 and b.y > a.y + 0.5, "%s: ponto branco anda junto com o jogador (%s -> %s)" % [path.get_file(), str(a), str(b)])
+		DialogueManager.end_dialogue()
+		DialogueManager.modal_open = false
+		tree().current_scene = null
+		room.queue_free()
+		await tree().process_frame
+	GameManager.reset_progress()
