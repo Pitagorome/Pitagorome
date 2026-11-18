@@ -308,18 +308,19 @@ func _on_gerador_solved() -> void:
 
 func open_mesas() -> Node:
 	var modal: Node = _get_challenge_modal()
-	var context: String = "Lugares disponíveis: %d\n• 4 mesas com 8 cadeiras cada\n• 2 mesas com 6 cadeiras cada\n• 1 mesa final, ainda sem cadeiras" % Fase2Puzzles.REFEITORIO_LUGARES
+	var context: String = "• %d turmas de %d alunos, almoçando em %d turnos iguais\n• 4 mesas com 8 cadeiras cada (prontas)\n• 2 mesas com 6 cadeiras cada (prontas)\n• 1 mesa final, ainda sem cadeiras" % [Fase2Puzzles.REFEITORIO_TURMAS, Fase2Puzzles.REFEITORIO_ALUNOS_POR_TURMA, Fase2Puzzles.REFEITORIO_TURNOS]
 	modal.show_code_challenge(
 		9,
 		"Tarefa 9: As Mesas do Refeitório",
 		context,
-		"Quantas cadeiras faltam na mesa final? (digite só o número)",
+		"Para todos de UM turno sentarem, quantas cadeiras faltam na mesa final? (digite só o número)",
 		str(Fase2Puzzles.cadeiras_mesa_final()),
-		"Isso! 4 × 8 = 32 e 2 × 6 = 12, então já são 32 + 12 = 44 lugares. 56 − 44 = 12 cadeiras na mesa final.",
-		"Não fecha a conta. Some as cadeiras que já estão nas mesas (4 × 8 e 2 × 6) e veja quanto falta para chegar a 56.",
+		"Isso! 4 × 28 = 112 alunos ÷ 2 turnos = 56 por turno. Já tem 4 × 8 + 2 × 6 = 32 + 12 = 44 cadeiras. 56 − 44 = 12 cadeiras na mesa final.",
+		"Não fecha a conta. 1º: quantos alunos vêm em cada turno (turmas × alunos ÷ turnos)? 2º: quantas cadeiras já estão nas mesas prontas? 3º: quanto falta?",
 		func(): DialogueManager.start_dialogue(Fase2Dialogues.task9_done())
 	)
 	modal.code_input.placeholder_text = "Digite um número"
+	modal.wrong_hints = Fase2Puzzles.mesas_dicas_erro()
 	puzzle_opened.emit(modal)
 	return modal
 

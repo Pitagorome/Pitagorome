@@ -143,10 +143,16 @@ static func gerador_descricao(ligadas: Array) -> String:
 	return " + ".join(partes) + " = %d" % gerador_carga(ligadas)
 
 # ------------------------------------------------------------------
-# Task 9 — As Mesas do Refeitório (equação simples)
+# Task 9 — As Mesas do Refeitório
 # ------------------------------------------------------------------
+# Apontamento do grupo (18/11): estava fácil (só somar e subtrair). Agora o total de lugares
+# não é dado: 4 turmas de 28 alunos almoçam em 2 turnos iguais -> 4 × 28 ÷ 2 = 56 por turno.
+# A resposta continua 12 (56 − 44), mas precisa de multiplicação E divisão.
 
-const REFEITORIO_LUGARES: int = 56
+const REFEITORIO_TURMAS: int = 4
+const REFEITORIO_ALUNOS_POR_TURMA: int = 28
+const REFEITORIO_TURNOS: int = 2
+const REFEITORIO_LUGARES: int = REFEITORIO_TURMAS * REFEITORIO_ALUNOS_POR_TURMA / REFEITORIO_TURNOS # 56
 # [quantidade de mesas, cadeiras por mesa]
 const MESAS_PRONTAS: Array = [[4, 8], [2, 6]]
 
@@ -158,6 +164,15 @@ static func cadeiras_ja_montadas() -> int:
 
 static func cadeiras_mesa_final() -> int:
 	return REFEITORIO_LUGARES - cadeiras_ja_montadas()
+
+# Erros comuns -> dica específica (resposta digitada: texto)
+static func mesas_dicas_erro() -> Dictionary:
+	var sem_turno: int = REFEITORIO_TURMAS * REFEITORIO_ALUNOS_POR_TURMA - cadeiras_ja_montadas() # 68
+	return {
+		str(sem_turno): "Quase! Você contou todos os alunos de uma vez, mas eles almoçam em %d turnos iguais. Quantos alunos vêm em CADA turno?" % REFEITORIO_TURNOS,
+		str(REFEITORIO_LUGARES): "%d é o número de alunos por turno. Mas algumas mesas já têm cadeiras: quantas faltam só na mesa final?" % REFEITORIO_LUGARES,
+		str(cadeiras_ja_montadas()): "%d é quantas cadeiras JÁ estão nas mesas prontas. A pergunta é quantas faltam na mesa final." % cadeiras_ja_montadas(),
+	}
 
 # ------------------------------------------------------------------
 # Task 10 — O Cartaz da Feira (proporção)

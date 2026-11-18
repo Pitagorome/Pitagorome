@@ -151,12 +151,13 @@ static func task9_briefing() -> Array:
 	return [
 		_l(COORD, "{diretor}, temos um problema. Amanhã teremos almoço especial e as mesas foram reorganizadas..."),
 		_l(CANTINEIRA, "Eu contei tudo direitinho! Quer dizer... quase."),
-		_l(COORD, "Temos 56 lugares disponíveis. Algumas mesas já foram organizadas: são 4 mesas com 8 cadeiras cada e mais 2 mesas com 6 cadeiras cada."),
-		_l(COORD, "Quantas cadeiras precisamos colocar na mesa final para completar todos os lugares?"),
+		_l(CANTINEIRA, "Vêm 4 turmas, cada uma com 28 alunos. Mas eles almoçam em 2 turnos iguais, então o refeitório só precisa de lugar para um turno de cada vez."),
+		_l(COORD, "Algumas mesas já foram organizadas: são 4 mesas com 8 cadeiras cada e mais 2 mesas com 6 cadeiras cada."),
+		_l(COORD, "Quantas cadeiras precisamos colocar na mesa final para que todos de um turno tenham lugar?"),
 	]
 
 static func task9_reminder() -> Array:
-	return [_l(COORD, "São 56 lugares no total: 4 mesas de 8 e 2 mesas de 6 já estão prontas. Quantas cadeiras faltam na mesa final?")]
+	return [_l(COORD, "4 turmas de 28 alunos, em 2 turnos iguais. Já estão prontas 4 mesas de 8 e 2 mesas de 6. Quantas cadeiras faltam na mesa final?")]
 
 static func task9_done() -> Array:
 	return [
