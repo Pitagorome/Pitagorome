@@ -172,6 +172,25 @@ func _animacoes() -> void:
 			continue
 		for anim in needed:
 			check(frames.has_animation(anim), "%s tem '%s'" % [path.get_file(), anim])
+	# Pedido de 17/11: os visuais 6 a 9 têm o nome dos personagens do grupo
+	check_eq(GameManager.APPEARANCE_NAMES.size(), GameManager.APPEARANCES.size(), "Todo visual tem nome no seletor")
+	check_eq(GameManager.APPEARANCE_NAMES.slice(5, 9), ["João", "Edu", "Guigas", "Ana"], "Visuais 6 a 9: João, Edu, Guigas e Ana")
+	# Minimapa: toda sala do jogo aparece no mapa, e a missão de cada tarefa aponta para uma sala do mapa
+	var Minimapa = load("res://scripts/minimapa.gd")
+	for room in ROOMS:
+		var inst: Node = _instantiate(room)
+		var loc: String = str(inst.get("location_id"))
+		check(Minimapa.SALAS.has(loc), "A sala '%s' está no minimapa" % loc)
+		inst.free()
+	var antes_tarefa: int = GameManager.current_task_id
+	var concluidas: Array = GameManager.completed_tasks.duplicate()
+	GameManager.completed_tasks.clear()
+	var esperado: Dictionary = {2: "gabinete", 3: "almoxarifado", 4: "corredor", 7: "sala_artes", 8: "sala_gerador", 9: "refeitorio", 10: "biblioteca"}
+	for t in esperado:
+		GameManager.current_task_id = t
+		check_eq(Minimapa.local_da_missao(), esperado[t], "Minimapa: missão da Tarefa %d" % t)
+	GameManager.current_task_id = antes_tarefa
+	GameManager.completed_tasks.assign(concluidas)
 	# Nenhum visual do jogador pode ser igual ao de um NPC fixo
 	for npc_path in ["res://scenes/characters/npc_coordenadora.tscn", "res://scenes/characters/npc_professor.tscn", "res://scenes/characters/npc_zelador.tscn"]:
 		var npc: Node = _instantiate(npc_path)
