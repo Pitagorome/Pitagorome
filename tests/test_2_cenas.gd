@@ -179,6 +179,8 @@ func _animacoes() -> void:
 	# Pedido de 17/11: os visuais 6 a 9 têm o nome dos personagens do grupo
 	check_eq(GameManager.APPEARANCE_NAMES.size(), GameManager.APPEARANCES.size(), "Todo visual tem nome no seletor")
 	check_eq(GameManager.APPEARANCE_NAMES.slice(5, 9), ["João", "Edu", "Guigas", "Ana"], "Visuais 6 a 9: João, Edu, Guigas e Ana")
+	# Pedido de 18/11: fardas EFOMM (João, Guigas), tenente-coronel (Edu) e cientista/engenheira (Ana Julia)
+	check_eq(GameManager.APPEARANCE_NAMES.slice(9, 13), ["João (EFOMM)", "Guigas (EFOMM)", "Edu (Tenente-Coronel)", "Ana Julia (Cientista/Engenheira)"], "Visuais 10 a 13: as fardas do grupo")
 	# Minimapa: toda sala do jogo aparece no mapa, e a missão de cada tarefa aponta para uma sala do mapa
 	var Minimapa = load("res://scripts/minimapa.gd")
 	for room in ROOMS:

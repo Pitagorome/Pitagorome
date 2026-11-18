@@ -47,6 +47,9 @@ func _capture_all() -> void:
 	box.female_btn.button_pressed = true
 	box.female_btn.pressed.emit()
 	await _shot("02_criar_personagem")
+	box._cycle_appearance(12 - GameManager.player_appearance) # farda de cientista (nome mais comprido)
+	await _shot("02b_criar_personagem_farda")
+	box._cycle_appearance(-12)
 	await sim._read_all(func(b): b._save_name_and_continue())
 
 	await sim._go(Flow.CORREDOR, "SpawnFromDirector")
