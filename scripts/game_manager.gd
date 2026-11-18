@@ -23,11 +23,17 @@ const APPEARANCES: Array = [
 	"res://assets/character_frames/grupo2_frames.tres",
 	"res://assets/character_frames/grupo3_frames.tres",
 	"res://assets/character_frames/grupo4_frames.tres",
+	# Fardas/roupas dos personagens do grupo (18/11, também do tools/gerar_personagens.py)
+	"res://assets/character_frames/joao_efomm_frames.tres",
+	"res://assets/character_frames/guigas_efomm_frames.tres",
+	"res://assets/character_frames/edu_tencel_frames.tres",
+	"res://assets/character_frames/ana_cientista_frames.tres",
 ]
 # Nome mostrado no seletor "Crie seu personagem" (mesma ordem de APPEARANCES)
 const APPEARANCE_NAMES: Array[String] = [
 	"Visual 1", "Visual 2", "Visual 3", "Visual 4", "Visual 5",
 	"João", "Edu", "Guigas", "Ana",
+	"João (EFOMM)", "Guigas (EFOMM)", "Edu (Tenente-Coronel)", "Ana Julia (Cientista/Engenheira)",
 ]
 
 func get_appearance_name(index: int = -1) -> String:
