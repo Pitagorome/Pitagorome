@@ -110,11 +110,11 @@ static func task14_briefing() -> Array:
 		_l(COORD, "{diretor}, temos 5 professores disponíveis, mas a organização pediu que apenas 3 participem da foto."),
 		_l(PLAYER, "Então é só escolher três deles."),
 		_l(COORD, "Não é tão simples. Dois professores ficarão na fila de trás e um ficará na frente. Precisamos descobrir de quantas formas diferentes podemos montar essa equipe."),
-		_l(COORD, "Os 3 lugares estão marcados no chão. Cada lugar é diferente na foto, então trocar duas pessoas de lugar já dá outra foto."),
+		_l(COORD, "Os lugares estão marcados no chão. Quem fica na frente aparece em destaque. Atrás, os dois ficam lado a lado e tanto faz quem fica de cada lado: a foto é a mesma."),
 	]
 
 static func task14_reminder() -> Array:
-	return [_l(COORD, "5 professores, 3 lugares marcados (atrás à esquerda, atrás à direita e na frente). De quantas formas dá para montar a foto?")]
+	return [_l(COORD, "5 professores: 1 na frente, em destaque, e 2 lado a lado na fila de trás (lá tanto faz quem fica de cada lado). De quantas formas diferentes dá para montar a foto?")]
 
 static func task14_done() -> Array:
 	return [

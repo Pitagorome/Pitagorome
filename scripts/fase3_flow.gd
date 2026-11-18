@@ -364,11 +364,11 @@ func open_foto() -> Node:
 	modal.show_code_challenge(
 		14,
 		"Tarefa 14: O Lugar da Foto Oficial",
-		"5 professores disponíveis: %s.\n3 lugares marcados no chão: %s.\nCada lugar é diferente na foto." % [", ".join(Fase3Puzzles.FOTO_PROFESSORES), ", ".join(Fase3Puzzles.FOTO_LUGARES).to_lower()],
+		"5 professores disponíveis: %s.\nLugares marcados no chão: %s.\nNa fila de trás, trocar os dois de lado dá a MESMA foto." % [", ".join(Fase3Puzzles.FOTO_PROFESSORES), "; ".join(Fase3Puzzles.FOTO_LUGARES).to_lower()],
 		"De quantas formas diferentes dá para montar a foto?",
 		str(Fase3Puzzles.foto_resposta()),
-		"Isso! No 1º lugar podem ir 5 professores, no 2º sobram 4 e no 3º sobram 3: 5 × 4 × 3 = 60 formações.",
-		"Não é esse número. Pense lugar por lugar: quantos professores podem ir em cada lugar, sem repetir ninguém?",
+		"Isso! Na frente podem ir 5 professores. Com os 4 que sobram dá para formar 6 duplas para a fila de trás (a ordem não importa): 5 × 6 = 30 fotos diferentes.",
+		"Não é esse número. Pense em duas partes: quem pode ir na frente, e quantas duplas diferentes dá para formar com quem sobrou?",
 		func(): DialogueManager.start_dialogue(Fase3Dialogues.task14_done())
 	)
 	modal.wrong_hints = Fase3Puzzles.foto_dicas()

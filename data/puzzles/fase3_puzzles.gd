@@ -94,13 +94,16 @@ static func luzes_b() -> int:
 	return luzes_a() + LUZES_DIFERENCA
 
 # ------------------------------------------------------------------
-# Task 14 — O Lugar da Foto Oficial (arranjo: cada lugar é diferente)
+# Task 14 — O Lugar da Foto Oficial (frente em destaque + dupla atrás sem ordem)
 # ------------------------------------------------------------------
 
 const FOTO_PROFESSORES: Array[String] = ["Prof. Matemática", "Prof.ª Artes", "Prof. História", "Prof.ª Português", "Prof. Ed. Física"]
-# Os 3 lugares marcados no chão. Cada lugar é diferente na foto, então trocar duas
-# pessoas de lugar dá uma foto diferente (por isso a resposta do roteiro é 60, e não 30).
-const FOTO_LUGARES: Array[String] = ["Atrás, à esquerda", "Atrás, à direita", "Na frente"]
+# 3 lugares marcados no chão: 1 na frente (em destaque) e 2 lado a lado na fila de trás.
+# Na fila de trás tanto faz quem fica de cada lado (trocar os dois dá a MESMA foto), mas
+# quem vai na frente muda a foto. Resposta: 5 (frente) × C(4, 2) (dupla de trás) = 30.
+# (O roteiro original dava 60, contando a ordem dos de trás; o grupo pediu 30 para ficar
+# mais difícil, porque mistura "a ordem importa" com "a ordem não importa".)
+const FOTO_LUGARES: Array[String] = ["Na frente (1 professor, em destaque)", "Fila de trás (2 professores lado a lado)"]
 
 # Conta de verdade todas as formações (pessoa em cada lugar, sem repetir ninguém)
 static func formacoes_possiveis(pessoas: Array, lugares: int) -> Array:
@@ -118,8 +121,21 @@ static func _arranjar(pessoas: Array, lugares: int, atual: Array, saida: Array) 
 			_arranjar(pessoas, lugares, atual, saida)
 			atual.pop_back()
 
+# Lista as fotos diferentes: [quem vai na frente, dupla de trás em ordem alfabética]
+static func fotos_possiveis() -> Array:
+	var fotos: Array = []
+	var vistas: Dictionary = {}
+	for f in formacoes_possiveis(FOTO_PROFESSORES, 3):
+		var atras: Array = [f[1], f[2]]
+		atras.sort()
+		var foto: Array = [f[0], atras]
+		if not vistas.has(str(foto)):
+			vistas[str(foto)] = true
+			fotos.append(foto)
+	return fotos
+
 static func foto_resposta() -> int:
-	return formacoes_possiveis(FOTO_PROFESSORES, FOTO_LUGARES.size()).size()
+	return fotos_possiveis().size()
 
 # ------------------------------------------------------------------
 # Task 15 — A Decoração do Pátio (arranjo: a ordem das placas importa)
@@ -144,9 +160,10 @@ static func gincana_dicas() -> Dictionary:
 
 static func foto_dicas() -> Dictionary:
 	return {
-		"10": "Você contou só QUEM vai para a foto. Mas o lugar de cada professor também muda a foto: trocar dois professores de lugar dá outra formação.",
-		"30": "Os dois lugares de trás também são diferentes (esquerda e direita)! Trocar os dois de lugar dá outra foto.",
-		"15": "Pense lugar por lugar: quantos professores podem ir no 1º lugar? E no 2º (sem repetir)? E no 3º?",
+		"60": "Você contou a ordem dos dois de trás. Mas na fila de trás tanto faz quem fica de cada lado: trocar os dois dá a MESMA foto. Cada foto apareceu 2 vezes na sua conta.",
+		"10": "Você contou só QUEM vai para a foto. Mas quem fica na frente muda a foto: os mesmos 3 professores podem ter qualquer um deles na frente.",
+		"20": "Quase! Comece por quem vai na frente (em destaque). Depois conte quantas duplas diferentes dá para formar com os professores que sobraram.",
+		"15": "Pense em duas partes: quantos professores podem ir na frente? E, com quem sobrou, quantas duplas diferentes dá para formar para a fila de trás?",
 	}
 
 static func mural_dicas() -> Dictionary:
