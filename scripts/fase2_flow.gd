@@ -84,6 +84,9 @@ func on_coordenadora_interact() -> void:
 			if not GameManager.seen_events.has("t6_briefing"):
 				_start_task6_briefing()
 				return
+			if not GameManager.seen_events.has("t6_bilhete"):
+				DialogueManager.start_dialogue(Fase2Dialogues.task6_ler_bilhete_primeiro())
+				return
 			DialogueManager.start_dialogue(Fase2Dialogues.task6_reminder())
 			return
 		8:
@@ -101,8 +104,10 @@ func on_coordenadora_interact() -> void:
 
 func on_zelador_interact() -> void:
 	var task: int = GameManager.current_task_id
-	if task == 6 and GameManager.seen_events.has("t6_briefing"):
+	if task == 6 and GameManager.seen_events.has("t6_bilhete"):
 		DialogueManager.start_dialogue([{"speaker": "Zelador", "text": "Quer ler o bilhete de novo? Aqui."}] + Fase2Dialogues.bilhete())
+	elif task == 6 and GameManager.seen_events.has("t6_briefing"):
+		_say("Zelador", "O bilhete está no quadro de avisos da Sala dos Armários, na Ala do Refeitório.")
 	elif task == 8 and current_location == "sala_gerador":
 		DialogueManager.start_dialogue(Fase2Dialogues.task8_reminder(), open_gerador_puzzle)
 	else:
@@ -168,7 +173,7 @@ func on_object_event(event_id: String, source: Node = null) -> void:
 					_say("Caixa " + id, texto)
 		"bilhete":
 			if task == 6 and GameManager.seen_events.has("t6_briefing"):
-				DialogueManager.start_dialogue([{"speaker": "", "text": "(Uma cópia do bilhete do Zelador, presa na parede.)"}] + Fase2Dialogues.bilhete())
+				ler_bilhete()
 			else:
 				_say("Quadro de avisos", "\"Armários numerados de 1 a 15. Não guarde comida aqui.\" — Zelador")
 		"mural":
@@ -202,8 +207,20 @@ func on_object_event(event_id: String, source: Node = null) -> void:
 func _start_task6_briefing() -> void:
 	GameManager.mark_event("t6_briefing")
 	DialogueManager.start_dialogue(Fase2Dialogues.task6_briefing(), func():
+		GameManager.set_objective("Vá até a Sala dos Armários (porta de cima à esquerda → Ala do Refeitório) e leia o bilhete do Zelador no quadro de avisos.")
+	)
+
+# Bilhete na parede da Sala dos Armários. Na 1ª leitura a Coordenadora explica o que fazer
+# e só então o bilhete vai para o HUD e os armários podem ser abertos.
+func ler_bilhete() -> void:
+	var falas: Array = [{"speaker": "", "text": "(O bilhete do Zelador, preso no quadro de avisos.)"}] + Fase2Dialogues.bilhete()
+	if GameManager.seen_events.has("t6_bilhete"):
+		DialogueManager.start_dialogue(falas)
+		return
+	DialogueManager.start_dialogue(falas + Fase2Dialogues.task6_explicacao(), func():
+		GameManager.mark_event("t6_bilhete")
 		GameManager.set_note(Fase2Puzzles.BILHETE_HUD)
-		GameManager.set_objective("Resolva a equação do bilhete e abra o armário certo na Sala dos Armários (porta de cima à esquerda → Ala do Refeitório).")
+		GameManager.set_objective("Resolva 2x + 6 = 36, diminua 3 do x e abra o armário com esse número.")
 	)
 
 func open_locker(numero: int) -> void:
@@ -212,6 +229,9 @@ func open_locker(numero: int) -> void:
 			_say("Armário %d" % numero, "Vazio. O troféu já voltou para a estante da escola.")
 		else:
 			_say("Armário %d" % numero, "Armário %d. Melhor não mexer no que não é seu." % numero)
+		return
+	if not GameManager.seen_events.has("t6_bilhete"):
+		DialogueManager.start_dialogue(Fase2Dialogues.task6_ler_bilhete_primeiro())
 		return
 	if numero == Fase2Puzzles.trofeu_armario():
 		DialogueManager.start_dialogue(Fase2Dialogues.task6_done(), func():

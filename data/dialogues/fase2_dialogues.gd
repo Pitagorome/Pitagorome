@@ -26,6 +26,9 @@ static func phase_start() -> Array:
 
 # ---------------- Task 6 — O Troféu Desaparecido ----------------
 
+# Apontamento do grupo (18/11): antes o saguão falava TUDO de uma vez (problema + bilhete +
+# instruções). Agora é em etapas: no saguão só o problema -> na Sala dos Armários o jogador
+# lê o bilhete na parede -> a Coordenadora explica, passo a passo, o que fazer.
 static func task6_briefing() -> Array:
 	return [
 		_l(NARRADOR, "(A Coordenadora vem andando apressada pelo corredor.)"),
@@ -33,9 +36,8 @@ static func task6_briefing() -> Array:
 		_l(PLAYER, "Como alguém perde um troféu?"),
 		_l(COORD, "Segundo o zelador, ele guardou em um armário para 'deixar em segurança' e depois esqueceu qual era."),
 		_l(ZELADOR, "Eu não esqueci. Eu deixei duas pistas."),
-		_l(NARRADOR, "(O Zelador entrega um papel.)"),
-	] + bilhete() + [
-		_l(COORD, "Os armários ficam na Sala dos Armários, na Ala do Refeitório. Te encontro lá!"),
+		_l(ZELADOR, "Escrevi num bilhete e preguei no quadro de avisos da Sala dos Armários. Assim ninguém perde."),
+		_l(COORD, "A Sala dos Armários fica na Ala do Refeitório. Vamos lá ler esse bilhete!"),
 	]
 
 static func bilhete() -> Array:
@@ -47,11 +49,23 @@ static func bilhete() -> Array:
 static func task6_arrival() -> Array:
 	return [
 		_l(COORD, "São 15 armários... Não dá para abrir um por um antes da inspeção."),
-		_l(COORD, "Resolva a equação do bilhete e abra só o armário certo, {diretor}."),
+		_l(COORD, "O bilhete do Zelador está ali no quadro de avisos, na parede. Leia primeiro, {diretor}."),
 	]
 
+# Depois de ler o bilhete na parede: o que o jogador tem que fazer, em passos
+static func task6_explicacao() -> Array:
+	return [
+		_l(COORD, "Certo, vamos por partes."),
+		_l(COORD, "1º passo: descobrir o x. Em 2x + 6 = 36, o dobro de um número, mais 6, dá 36."),
+		_l(COORD, "2º passo: com o x na mão, diminua 3. O resultado é o número do armário."),
+		_l(COORD, "Aí é só ir até esse armário e apertar [E] para abrir. Deixei o bilhete anotado no canto da tela para você."),
+	]
+
+static func task6_ler_bilhete_primeiro() -> Array:
+	return [_l(COORD, "Calma, {diretor}! Antes de sair abrindo armário, leia o bilhete do Zelador no quadro de avisos.")]
+
 static func task6_reminder() -> Array:
-	return [_l(COORD, "O bilhete dizia: 2x + 6 = 36. Depois é só pegar o x e diminuir 3.")]
+	return [_l(COORD, "O bilhete dizia: 2x + 6 = 36. Primeiro descubra o x, depois diminua 3.")]
 
 static func task6_wrong(numero: int, conteudo: String, dica: String) -> Array:
 	return [

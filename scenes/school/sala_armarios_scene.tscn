@@ -254,6 +254,7 @@ horizontal_alignment = 1
 [node name="ExclamationMarker" parent="Furniture/Bilhete" instance=ExtResource("marker")]
 position = Vector2(0, -26)
 show_in_tasks = Array[int]([6])
+hide_after_event = "t6_bilhete"
 
 [node name="SpawnFromAla" type="Marker2D" parent="."]
 position = Vector2(0, 75)
