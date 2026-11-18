@@ -50,6 +50,11 @@ func _ready() -> void:
 		collision_layer = 0
 		come_to_player.call_deferred()
 
+# Durante um diálogo/desafio o "[E] Conversar" some (antes ficava aparecendo atrás da caixa de diálogo)
+func _process(_delta: float) -> void:
+	if hint_label:
+		hint_label.visible = player_in_range and not DialogueManager.is_busy()
+
 func is_following() -> bool:
 	return follow_player_in_tasks.has(GameManager.current_task_id)
 
