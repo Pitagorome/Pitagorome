@@ -35,6 +35,7 @@ const SALAS: Dictionary = {
 	"almoxarifado":   {"rect": Rect2(-54, 42, 28, 20), "nome": "Almoxarifado"},
 	"gabinete":       {"rect": Rect2(28, -8, 28, 22), "nome": "Gabinete"},
 	"portao":         {"rect": Rect2(26, 42, 30, 20), "nome": "Portão"},
+	"patio":          {"rect": Rect2(-18, 42, 36, 22), "nome": "Pátio"},
 }
 # Salas ligadas por porta: [sala A, sala B, ponto da porta (unidades do mapa)]
 const LIGACOES: Array = [
@@ -45,6 +46,7 @@ const LIGACOES: Array = [
 	["corredor", "almoxarifado", Vector2(-40, 39)],
 	["corredor", "gabinete", Vector2(42, 17)],
 	["corredor", "portao", Vector2(41, 39)],
+	["corredor", "patio", Vector2(0, 39)],
 	["ala_refeitorio", "sala_artes", Vector2(-52, -36)],
 	["ala_refeitorio", "sala_armarios", Vector2(-24, -36)],
 	["ala_refeitorio", "sala_gerador", Vector2(-72, -24)],
@@ -107,6 +109,16 @@ static func local_da_missao() -> String:
 			return "refeitorio"
 		10:
 			return "biblioteca"
+		11:
+			return "refeitorio" if GameManager.seen_events.has("t11_chamado") else "gabinete"
+		12:
+			return "patio" if GameManager.seen_events.has("t12_gabinete") else "gabinete"
+		13:
+			return "corredor"
+		14:
+			return "portao"
+		15:
+			return "patio"
 	return ""
 
 func sala_atual() -> String:
