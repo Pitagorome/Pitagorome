@@ -34,6 +34,10 @@ var current_feedback_success: String = ""
 var current_feedback_error: String = ""
 var current_on_success: Callable = Callable()
 var last_answer_correct: bool = false
+# Dica específica para algumas respostas erradas (resposta digitada -> texto). Ex.: na Fase 3,
+# quem responde 120 para "equipes de 3" contou a ordem, e a dica explica isso.
+# É zerado a cada desafio novo; o roteiro preenche depois de abrir o desafio.
+var wrong_hints: Dictionary = {}
 
 func _ready() -> void:
 	modal_panel.visible = false
@@ -56,6 +60,7 @@ func show_multiple_choice_challenge(task_id: int, title: String, context: String
 	current_feedback_error = error_feedback if error_feedback != "" else "Essa resposta não atende a todas as condições do problema. Analise de novo e tente outra vez!"
 	current_on_success = on_success
 	current_correct_code = ""
+	wrong_hints = {}
 	
 	title_label.text = title
 	context_label.text = context
@@ -78,6 +83,7 @@ func show_code_challenge(task_id: int, title: String, context: String, question:
 	current_feedback_success = success_feedback
 	current_feedback_error = error_feedback if error_feedback != "" else "Código incorreto! Releia as pistas e tente novamente."
 	current_on_success = on_success
+	wrong_hints = {}
 	
 	title_label.text = title
 	context_label.text = context
@@ -87,6 +93,9 @@ func show_code_challenge(task_id: int, title: String, context: String, question:
 	code_container.visible = true
 	code_input.text = ""
 	code_input.placeholder_text = "ex: 1 2 3" # cada desafio pode trocar depois de abrir
+	# O texto do botão era sempre "Abrir Cadeado" (da Task 3). Agora o padrão é "Confirmar"
+	# e o cadeado troca para "Abrir Cadeado" depois de abrir o desafio.
+	code_submit_btn.text = "Confirmar"
 	
 	modal_panel.visible = true
 	feedback_panel.visible = false
@@ -97,14 +106,14 @@ func _on_option_selected(index: int) -> void:
 	if index == current_correct_index:
 		_show_success_feedback()
 	else:
-		_show_error_feedback(current_feedback_error)
+		_show_error_feedback(wrong_hints.get(index, current_feedback_error))
 
 func _on_code_submitted() -> void:
 	var typed = code_input.text.replace(" ", "").strip_edges()
 	if typed == current_correct_code:
 		_show_success_feedback()
 	else:
-		_show_error_feedback(current_feedback_error)
+		_show_error_feedback(wrong_hints.get(typed, current_feedback_error))
 
 func _show_success_feedback() -> void:
 	last_answer_correct = true

@@ -66,6 +66,10 @@ var testimonies_heard: Dictionary = {}
 # Fase 2: escola sem luz (Task 8) e quantas vezes o jogador abriu o armário errado (Task 6)
 var lights_out: bool = false
 var wrong_lockers: int = 0
+# Fase 3: salas escuras só por um tempo (Task 13 — a Sala de Matemática com as luzes apagadas)
+var dark_rooms: Array[String] = []
+# Fica true depois do encerramento (seção 6 do roteiro)
+var game_finished: bool = false
 
 # Sistema de Spawn entre salas
 var target_spawn_id: String = ""
@@ -81,10 +85,16 @@ const TASK_NAMES: Dictionary = {
 	8: "O Gerador de Emergência",
 	9: "As Mesas do Refeitório",
 	10: "O Cartaz da Feira",
+	11: "A Máquina de Refrigerante",
+	12: "As Equipes da Gincana",
+	13: "As Luzes do Corredor",
+	14: "O Lugar da Foto Oficial",
+	15: "A Decoração do Pátio",
 }
 
 # Em que fase fica cada tarefa
-const TASK_PHASE: Dictionary = {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 2, 10: 2}
+const TASK_PHASE: Dictionary = {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 2, 10: 2, 11: 3, 12: 3, 13: 3, 14: 3, 15: 3}
+const LAST_PHASE: int = 3
 const PHASE_NAMES: Dictionary = {
 	1: "Lógica e Organização",
 	2: "Equações, Proporções e Probabilidade",
@@ -102,6 +112,11 @@ const TASK_OBJECTIVES: Dictionary = {
 	8: "Vá até a Sala do Gerador (Ala do Refeitório, porta da esquerda).",
 	9: "Vá ao Refeitório (Ala do Refeitório, porta da direita).",
 	10: "Encontre o Professor de Matemática na Biblioteca (corredor, porta de cima no meio).",
+	11: "Um aluno entrou correndo no seu gabinete. Fale com ele.",
+	12: "Volte ao seu gabinete: a Coordenadora quer falar com você.",
+	13: "Volte ao corredor principal (porta de cima do Pátio).",
+	14: "A Coordenadora te espera no Portão para a foto oficial (corredor, porta de baixo à direita).",
+	15: "No fim do dia, passe pelo Pátio (corredor, porta de baixo no meio).",
 }
 
 func _ready() -> void:
@@ -122,6 +137,8 @@ func reset_progress() -> void:
 	tour_completed = false
 	testimonies_heard.clear()
 	wrong_lockers = 0
+	dark_rooms.clear()
+	game_finished = false
 	set_lights_out(false)
 	set_note("")
 	target_spawn_id = ""
@@ -157,6 +174,17 @@ func set_note(text: String) -> void:
 func set_lights_out(value: bool) -> void:
 	lights_out = value
 	lights_changed.emit(value)
+
+# Apaga/acende só uma sala (location_id). A escola inteira continua com luz.
+func set_room_dark(location: String, dark: bool) -> void:
+	if dark and not dark_rooms.has(location):
+		dark_rooms.append(location)
+	elif not dark:
+		dark_rooms.erase(location)
+	lights_changed.emit(lights_out)
+
+func is_room_dark(location: String) -> bool:
+	return lights_out or dark_rooms.has(location)
 
 func set_player_info(new_name: String, new_gender: String = "", new_appearance: int = -1) -> void:
 	if new_name.strip_edges() != "":
@@ -209,8 +237,12 @@ func advance_phase() -> void:
 	current_phase += 1
 	current_task_id = 0
 	current_task_name = "Fase %d concluída!" % (current_phase - 1)
+	if current_phase > LAST_PHASE:
+		current_task_name = "Jogo concluído!"
 	task_updated.emit(current_task_id, current_task_name)
-	if first_task_of_phase(current_phase) == 0:
+	if current_phase > LAST_PHASE:
+		set_objective("")
+	elif first_task_of_phase(current_phase) == 0:
 		set_objective("A Fase %d está em desenvolvimento. Obrigado por testar!" % current_phase)
 	else:
 		set_objective("")
