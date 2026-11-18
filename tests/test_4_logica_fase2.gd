@@ -53,11 +53,21 @@ func _gerador() -> void:
 	for s in solucoes:
 		textos.append(Fase2Puzzles.gerador_descricao(s))
 	note("Combinações que dão 30 (força bruta das 32): " + " | ".join(textos))
-	check_eq(solucoes.size(), 2, "Existem 2 combinações certas (o jogo aceita as duas)")
-	check(textos.has("8 + √36(6) + 3²(9) + √49(7) = 30"), "√36 + 3² + √49 é uma solução")
-	check(textos.has("8 + √36(6) + √25(5) + 2²(4) + √49(7) = 30"), "√36 + √25 + 2² + √49 é uma solução")
+	# 18/11: no máximo 3 alavancas -> a de 4 alavancas (√36 + √25 + 2² + √49) deixou de valer
+	check_eq(solucoes.size(), 1, "Com no máximo 3 alavancas existe UMA combinação certa")
+	check(textos.has("8 + √36(6) + 3²(9) + √49(7) = 30"), "√36 + 3² + √49 é a solução")
+	check(not Fase2Puzzles.validate_gerador([true, true, false, true, true]).is_empty(), "4 alavancas (√36 + √25 + 2² + √49) não vale mais, mesmo somando 30")
+	var com_3: int = 0
+	for mask in range(1 << 5):
+		var l: Array = []
+		for i in 5:
+			l.append(((mask >> i) & 1) == 1)
+		if l.count(true) <= 3:
+			com_3 += 1
+	note("Combinações possíveis com até 3 alavancas: %d (só 1 certa)" % com_3)
 	check(Fase2Puzzles.validate_gerador(nada)[0].contains("faltam 22"), "Carga baixa diz quanto falta")
-	check(Fase2Puzzles.validate_gerador([true, true, true, true, true])[0].contains("passou de 30"), "Carga acima de 30 avisa que passou")
+	check(Fase2Puzzles.validate_gerador([true, true, true, true, true])[0].contains("só aguenta 3"), "Mais de 3 alavancas: o painel não aceita")
+	check(Fase2Puzzles.validate_gerador([true, false, true, false, false])[0].contains("faltam 7"), "√36 + 3² = 23: faltam 7")
 
 func _refeitorio() -> void:
 	check_eq(Fase2Puzzles.cadeiras_ja_montadas(), 44, "4 × 8 + 2 × 6 = 44 cadeiras já montadas")

@@ -201,18 +201,31 @@ func _task7() -> void:
 func _task8() -> void:
 	var lines: Array = await _read_all()
 	check(_has(lines, "exatamente 30 unidades"), "Mensagem do gerador: exatamente 30 unidades")
-	check(_has(lines, "Se passar de 30"), "Zelador: 'Se passar de 30, ele reinicia...'")
+	check(_has(lines, "no máximo 3 alavancas"), "Zelador avisa: no máximo 3 alavancas ligadas")
+	check(_has(lines, "Errou 3 vezes"), "Zelador avisa que o painel trava depois de 3 erros")
 	var puzzle: Node = _find("GeradorPuzzle")
 	if not check(puzzle != null, "Painel do gerador abre"):
 		return
 	check(DialogueManager.is_busy(), "Jogador fica travado com o painel aberto")
 	var errors: Array[String] = puzzle.check_answer()
-	check(errors.size() == 1 and errors[0].contains("faltam 22"), "Sem alavancas: 'faltam 22'")
-	puzzle.set_levers([true, true, true, true, true])
-	check(puzzle.charge_label.text.contains("39"), "Painel mostra a carga 39 com todas ligadas")
+	check(errors[0].contains("faltam 22"), "Sem alavancas: 'faltam 22'")
+	# Jogador clicando: a 4ª alavanca não liga
+	for i in 4:
+		puzzle.levers[i].button_pressed = true
+	check_eq(puzzle.get_levers(), [true, true, true, false, false], "A 4ª alavanca não liga (máximo 3)")
+	check(puzzle.feedback_label.text.contains("só aguenta 3"), "Painel avisa que só aguenta 3 alavancas")
+	check(puzzle.charge_label.text.contains("?") and not puzzle.charge_label.text.contains("28"), "A carga não aparece antes de Verificar (tem que fazer a conta)")
+	errors = puzzle.check_answer() # 8 + 6 + 5 + 9 = 28
+	check(errors[0].contains("28") and puzzle.charge_label.text.contains("28"), "Depois de Verificar a carga medida (28) aparece")
+	check(not puzzle.esta_travado(), "Com 2 erros o gerador ainda não travou")
 	errors = puzzle.check_answer()
-	check(errors.size() == 1 and errors[0].contains("passou de 30"), "Passar de 30 dá erro")
-	check(puzzle.get_levers().all(func(v): return v == false), "Passou de 30: o gerador reinicia (alavancas desligam)")
+	check(puzzle.esta_travado(), "No 3º erro seguido o gerador trava para esfriar")
+	check(puzzle.get_levers().all(func(v): return v == false), "Travou: as alavancas desligam")
+	check(puzzle.levers[0].disabled and puzzle.check_button.disabled, "Travado: não dá para puxar alavanca nem verificar")
+	puzzle.set_levers([true, false, true, false, true])
+	check(not puzzle.check_answer().is_empty() and not puzzle.is_solved, "Travado: nem a resposta certa é aceita até esfriar")
+	puzzle.destravar()
+	check(not puzzle.levers[0].disabled, "Depois de esfriar dá para tentar de novo")
 	puzzle.set_levers([true, false, true, false, true]) # √36 + 3² + √49
 	errors = puzzle.check_answer()
 	check(errors.is_empty() and puzzle.is_solved, "√36 + 3² + √49 = 22, com 8 dá 30: aceito")
@@ -223,10 +236,10 @@ func _task8() -> void:
 	check(not GameManager.lights_out and not _dark(), "As luzes voltam")
 	check_eq(GameManager.current_task_id, 9, "Task 9 começa")
 
-	# A outra combinação também funciona (testa num painel novo)
+	# A antiga 2ª combinação (4 alavancas) não vale mais (testa num painel novo)
 	var outro: Node = Fase2Flow.open_gerador_puzzle()
 	outro.set_levers([true, true, false, true, true]) # √36 + √25 + 2² + √49
-	check(outro.check_answer().is_empty(), "A outra combinação (√36 + √25 + 2² + √49) também é aceita")
+	check(not outro.check_answer().is_empty(), "√36 + √25 + 2² + √49 (4 alavancas) não é aceita")
 	outro.solved.disconnect(Fase2Flow._on_gerador_solved)
 	outro.close()
 	await _frames(2)
