@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://e2m8qf3v4p7x1"]
+[gd_scene load_steps=42 format=3 uid="uid://e2m8qf3v4p7x1"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/characters/npc_coordenadora.tscn" id="2_coord"]
@@ -25,6 +25,8 @@
 [ext_resource type="Texture2D" path="res://assets/tiles/paredes/bege.png" id="parede_bege"]
 [ext_resource type="PackedScene" path="res://scenes/school/exterior_fundo.tscn" id="exterior_fundo"]
 [ext_resource type="PackedScene" path="res://scenes/school/passagem_porta.tscn" id="passagem_porta"]
+[ext_resource type="Script" path="res://scripts/interactable_object.gd" id="f3_obj"]
+[ext_resource type="PackedScene" path="res://scenes/ui/exclamation_marker.tscn" id="f3_marker"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c_wall_top_l"]
 size = Vector2(160, 20)
@@ -61,6 +63,12 @@ size = Vector2(110, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_50"]
 size = Vector2(50, 20)
+
+[sub_resource type="RectangleShape2D" id="RectF3_14x6"]
+size = Vector2(14, 6)
+
+[sub_resource type="CircleShape2D" id="CircleF3_16"]
+radius = 16.0
 
 [node name="SchoolCorridor" type="Node2D"]
 script = ExtResource("90_room")
@@ -144,10 +152,6 @@ shape = SubResource("RectangleShape2D_wall_100")
 [node name="BottomB" type="CollisionShape2D" parent="MapWalls"]
 position = Vector2(-75, 85)
 shape = SubResource("RectangleShape2D_wall_110")
-
-[node name="BottomMeio" type="CollisionShape2D" parent="MapWalls"]
-position = Vector2(0, 85)
-shape = SubResource("RectangleShape2D_wall_50")
 
 [node name="BottomC" type="CollisionShape2D" parent="MapWalls"]
 position = Vector2(75, 85)
@@ -428,6 +432,124 @@ theme_override_fonts/font = ExtResource("12_font")
 theme_override_font_sizes/font_size = 7
 text = "▲ Ala do Refeitório"
 horizontal_alignment = 1
+
+[node name="SpawnFromPatio" type="Marker2D" parent="."]
+position = Vector2(0, 45)
+
+[node name="DoorToPatio" type="Area2D" parent="."]
+position = Vector2(0, 85)
+script = ExtResource("7_door")
+target_scene = "res://scenes/school/patio_scene.tscn"
+target_spawn_id = "SpawnFromCorridor"
+
+[node name="PassagemPorta" parent="DoorToPatio" instance=ExtResource("passagem_porta")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToPatio"]
+shape = SubResource("RectangleShape2D_door")
+
+[node name="DoorLabel" type="Label" parent="DoorToPatio"]
+offset_left = -50.0
+offset_top = -24.0
+offset_right = 50.0
+offset_bottom = -11.0
+theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("12_font")
+theme_override_font_sizes/font_size = 7
+text = "▼ Pátio"
+horizontal_alignment = 1
+
+[node name="NPCCoordenadoraTask13" parent="." instance=ExtResource("2_coord")]
+position = Vector2(212, -28)
+default_animation = "idle_right"
+visible_in_tasks = Array[int]([13])
+
+[node name="AlunoLuzes" parent="." instance=ExtResource("93_aluno")]
+position = Vector2(196, 32)
+npc_name = "Aluno"
+frames = ExtResource("98_alex")
+tint = Color(0.9, 0.95, 1, 1)
+flow_id = "aluno_luzes"
+default_animation = "idle_right"
+visible_in_tasks = Array[int]([13])
+
+[node name="Interruptores" type="StaticBody2D" parent="Furniture"]
+z_index = 1
+position = Vector2(250, 40)
+script = ExtResource("f3_obj")
+object_name = "Painel de interruptores"
+hint_text = "[E] Interruptores"
+flow_event = "interruptores"
+
+[node name="Placa" type="ColorRect" parent="Furniture/Interruptores"]
+offset_left = -7.0
+offset_top = -14.0
+offset_right = 7.0
+offset_bottom = 2.0
+mouse_filter = 2
+color = Color(0.9, 0.88, 0.8, 1)
+
+[node name="Borda" type="ColorRect" parent="Furniture/Interruptores"]
+offset_left = -7.0
+offset_top = 2.0
+offset_right = 7.0
+offset_bottom = 3.0
+mouse_filter = 2
+color = Color(0.5, 0.45, 0.4, 1)
+
+[node name="BotaoA" type="ColorRect" parent="Furniture/Interruptores"]
+offset_left = -5.0
+offset_top = -11.0
+offset_right = -1.0
+offset_bottom = -3.0
+mouse_filter = 2
+color = Color(0.3, 0.3, 0.35, 1)
+
+[node name="BotaoB" type="ColorRect" parent="Furniture/Interruptores"]
+offset_left = 1.0
+offset_top = -11.0
+offset_right = 5.0
+offset_bottom = -3.0
+mouse_filter = 2
+color = Color(0.3, 0.3, 0.35, 1)
+
+[node name="Letras" type="Label" parent="Furniture/Interruptores"]
+offset_left = -7.0
+offset_top = -3.0
+offset_right = 7.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_fonts/font = ExtResource("12_font")
+theme_override_font_sizes/font_size = 4
+text = "A  B"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Interruptores"]
+position = Vector2(0, 0)
+shape = SubResource("RectF3_14x6")
+
+[node name="InteractionArea" type="Area2D" parent="Furniture/Interruptores"]
+position = Vector2(0, 10)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/Interruptores/InteractionArea"]
+shape = SubResource("CircleF3_16")
+
+[node name="HintLabel" type="Label" parent="Furniture/Interruptores"]
+offset_left = -45.0
+offset_top = 16.0
+offset_right = 45.0
+offset_bottom = 29.0
+theme_override_colors/font_color = Color(0.98, 0.95, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_fonts/font = ExtResource("12_font")
+theme_override_font_sizes/font_size = 7
+text = "[E] Interruptores"
+horizontal_alignment = 1
+
+[node name="ExclamationMarker" parent="Furniture/Interruptores" instance=ExtResource("f3_marker")]
+position = Vector2(0, -24)
+show_in_tasks = Array[int]([13])
 
 [node name="HUD" parent="." instance=ExtResource("5_hud")]
 
