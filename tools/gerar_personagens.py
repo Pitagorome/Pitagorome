@@ -62,9 +62,9 @@ PERSONAGENS = {
 # 'peito_desenho': estampa na camisa vista de frente (X = peito_cor), a partir da coluna 5, linha 24.
 # 'extra': cores das letras a mais usadas nos desenhos das cabeças.
 SKINS = {
-    # sem jaqueta: camiseta verde-acinzentada; olhos verde-vivo
+    # sem jaqueta: camiseta verde-acinzentada; olhos verde-azulados (mais escuros que verde-vivo)
     'skin_eren': dict(base='Adam', cabelo=(62, 44, 36), pele=(240, 198, 160), camisa=(92, 104, 92),
-                      calca=(34, 34, 42), sapato=(24, 24, 30), olho=(40, 196, 110)),
+                      calca=(34, 34, 42), sapato=(24, 24, 30), olho=(30, 128, 92)),
     # menino de moletom vermelho com uma aranha preta no peito
     'skin_aranha': dict(base='Adam', cabelo=(96, 62, 40), pele=(232, 180, 140), camisa=(206, 38, 44),
                         calca=(52, 82, 140), sapato=(36, 36, 44), olho=(50, 34, 28),
@@ -73,7 +73,7 @@ SKINS = {
     # chapéu de palha e cicatriz, mas com roupa própria (camiseta verde-água, jeans e tênis)
     'skin_luffy': dict(base='Adam', cabelo=(32, 30, 36), pele=(250, 206, 160), camisa=(64, 166, 150),
                        calca=(52, 82, 140), sapato=(232, 232, 236), olho=(32, 30, 36),
-                       extra={'K': (250, 220, 70), 'k': (226, 168, 40), 'R': (214, 56, 48), 'C': (176, 66, 62)}),
+                       extra={'K': (250, 220, 70), 'k': (226, 168, 40), 'R': (214, 56, 48), 'C': (26, 24, 30)}),
 }
 
 # ---------------- cabeças desenhadas à mão (pixel art) ----------------
@@ -420,7 +420,7 @@ CABECAS = {
             ".oDHSSSSSSSoSo..",
             "..oDsSSSSSSESo..",
         ],
-        # cicatriz logo abaixo do olho esquerdo dele (direita de quem olha)
+        # cicatriz PRETA logo abaixo do olho esquerdo dele (direita de quem olha), como na arte de referência
         'abaixo': {
             'baixo': [
                 "..........C.....",
