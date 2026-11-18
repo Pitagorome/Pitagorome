@@ -18,6 +18,8 @@ npc_name = "Zelador"
 default_animation = "idle_left"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 15)
+offset = Vector2(0, -15)
 sprite_frames = ExtResource("2_frames")
 animation = &"idle_left"
 autoplay = "idle_left"

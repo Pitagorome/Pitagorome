@@ -12,6 +12,8 @@ y_sort_enabled = true
 script = ExtResource("1_player")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1532110638]
+position = Vector2(0, 15)
+offset = Vector2(0, -15)
 sprite_frames = ExtResource("2_frames")
 animation = &"idle_down"
 autoplay = "idle_down"
