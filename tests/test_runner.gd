@@ -14,6 +14,8 @@ const SUITES: Array = [
 	preload("res://tests/test_3_fluxo_fase1.gd"),
 	preload("res://tests/test_4_logica_fase2.gd"),
 	preload("res://tests/test_5_fluxo_fase2.gd"),
+	preload("res://tests/test_6_logica_fase3.gd"),
+	preload("res://tests/test_7_fluxo_fase3.gd"),
 ]
 
 func _ready() -> void:

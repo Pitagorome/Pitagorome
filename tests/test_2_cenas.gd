@@ -17,6 +17,7 @@ const ROOMS: Array = [
 	"res://scenes/school/sala_artes_scene.tscn",
 	"res://scenes/school/sala_gerador_scene.tscn",
 	"res://scenes/school/refeitorio_scene.tscn",
+	"res://scenes/school/patio_scene.tscn",
 ]
 const START_ROOM: String = "res://scenes/intro/intro_scene.tscn"
 
@@ -32,7 +33,7 @@ func get_cases() -> Array:
 		["T2.4 Todas as salas são alcançáveis a partir do gabinete", _alcance],
 		["T2.5 NPCs aparecem nas tarefas certas", _npcs_por_tarefa],
 		["T2.6 Sprites dos personagens têm as 8 animações", _animacoes],
-		["T2.7 Indicadores '!' configurados (Tasks 3, 5, 7, 8, 9 e 10)", _marcadores],
+		["T2.7 Indicadores '!' configurados (Tasks 3, 5 e 7 a 15)", _marcadores],
 		["T2.8 Andando pela sala: portas, NPCs e objetos alcançáveis, sem sair do mapa", _alcance_andando],
 		["T2.9 Chão desenhado atrás dos móveis (nada escondido)", _camadas],
 	]
@@ -217,7 +218,7 @@ func _animacoes() -> void:
 	var antes_tarefa: int = GameManager.current_task_id
 	var concluidas: Array = GameManager.completed_tasks.duplicate()
 	GameManager.completed_tasks.clear()
-	var esperado: Dictionary = {2: "gabinete", 3: "almoxarifado", 4: "corredor", 7: "sala_artes", 8: "sala_gerador", 9: "refeitorio", 10: "biblioteca"}
+	var esperado: Dictionary = {2: "gabinete", 3: "almoxarifado", 4: "corredor", 7: "sala_artes", 8: "sala_gerador", 9: "refeitorio", 10: "biblioteca", 13: "corredor", 14: "portao", 15: "patio"}
 	for t in esperado:
 		GameManager.current_task_id = t
 		check_eq(Minimapa.local_da_missao(), esperado[t], "Minimapa: missão da Tarefa %d" % t)
@@ -295,13 +296,18 @@ func _alcance_andando() -> void:
 	var problems: Array = []
 	var total_targets: int = 0
 	for path in ROOMS:
-		for task in range(1, 11):
+		for task in range(1, 16):
 			GameManager.current_phase = GameManager.TASK_PHASE[task]
 			GameManager.start_task(task)
 			GameManager.intro_dialogue_finished = true
 			GameManager.seen_events.clear()
 			if task >= 6:
 				GameManager.seen_events["t6_briefing"] = true
+			# Na Fase 3 algumas cenas automáticas levam a outra sala (ex.: o aluno da Task 11
+			# chama o diretor para o Refeitório). Aqui só interessa andar pela sala.
+			if task >= 11:
+				for ev in ["t11_chamado", "t12_gabinete", "t12_briefing", "t13_briefing", "t14_briefing", "t15_briefing"]:
+					GameManager.seen_events[ev] = true
 			var room: Node = _instantiate(path)
 			if not check(room != null, "Sala carrega: " + path):
 				continue
@@ -330,7 +336,7 @@ func _alcance_andando() -> void:
 			tree().current_scene = null
 			room.queue_free()
 			await tree().process_frame
-	check(problems.is_empty(), "Nenhum bloqueio ou buraco encontrado nas %d salas × 10 tarefas" % ROOMS.size())
+	check(problems.is_empty(), "Nenhum bloqueio ou buraco encontrado nas %d salas × 15 tarefas" % ROOMS.size())
 	for pr in problems:
 		check(false, pr)
 	note("%d NPCs/objetos testados (somando todas as tarefas)" % total_targets)
@@ -364,6 +370,12 @@ func _marcadores() -> void:
 		["res://scenes/school/sala_gerador_scene.tscn", "Gerador", 8],
 		["res://scenes/school/refeitorio_scene.tscn", "MesaFinal", 9],
 		["res://scenes/school/biblioteca_scene.tscn", "NPCProfessorTask10", 10],
+		# Fase 3
+		["res://scenes/school/refeitorio_scene.tscn", "MaquinaRefri", 11],
+		["res://scenes/school/patio_scene.tscn", "QuadroGincana", 12],
+		["res://scenes/school/school_corridor.tscn", "Interruptores", 13],
+		["res://scenes/school/portao_scene.tscn", "CameraFoto", 14],
+		["res://scenes/school/patio_scene.tscn", "MuralPlacas", 15],
 	]:
 		var room: Node = _instantiate(item[0])
 		var owner_node: Node = room.find_child(item[1], true, false)

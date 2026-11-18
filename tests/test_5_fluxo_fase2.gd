@@ -298,4 +298,11 @@ func _fim() -> void:
 	for t in range(6, 11):
 		check(GameManager.is_task_completed(t), "Task %d concluída" % t)
 	check_eq(GameManager.current_phase, 3, "Jogo passa para a Fase 3")
-	check(_hud_text().contains("Fase 2 concluída"), "HUD mostra 'Fase 2 concluída!'")
+	# Desde que a Fase 3 existe, o fim da Fase 2 leva direto para ela (tela preta o tempo todo)
+	check_eq(GameManager.current_task_id, 11, "A Fase 3 começa na Tarefa 11")
+	check_eq(scene().get("location_id"), "gabinete", "A Fase 3 começa no gabinete")
+	check(_hud_text().contains("Fase 3"), "HUD mostra a Fase 3")
+	var chamado: Array = await _read_all()
+	check(_has(chamado, "problema muito sério na cantina"), "Um aluno chama o diretor para a cantina")
+	await _wait_transition()
+	await _read_all()

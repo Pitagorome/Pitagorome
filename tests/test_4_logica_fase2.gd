@@ -90,7 +90,12 @@ func _tarefas() -> void:
 	for t in range(6, 11):
 		GameManager.complete_task(t)
 	check_eq(GameManager.current_phase, 3, "Completar a Task 10 passa para a Fase 3")
-	check(GameManager.current_objective.contains("em desenvolvimento"), "Fase 3 ainda aparece como 'em desenvolvimento'")
+	check_eq(GameManager.current_task_id, 0, "Entre a Fase 2 e a 3 fica sem tarefa (cartão de fim de fase)")
+	GameManager.start_task(11)
+	for t in range(11, 16):
+		GameManager.complete_task(t)
+	check(GameManager.current_phase > GameManager.LAST_PHASE, "Completar a Task 15 termina a última fase")
+	check_eq(GameManager.current_task_name, "Jogo concluído!", "Depois da Task 15 o HUD mostra 'Jogo concluído!'")
 	GameManager.reset_progress()
 	check_eq(GameManager.current_phase, 1, "reset_progress volta para a Fase 1")
 	check(not GameManager.lights_out, "reset_progress acende as luzes")
