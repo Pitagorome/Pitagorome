@@ -10,6 +10,7 @@ var out_dir: String = "user://capturas_fase2"
 var sim = null
 
 func _ready() -> void:
+	Fase1Flow.atraso_entrada = 0.0 # falas ao entrar na sala sem a espera de 1,2 s
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
 			out_dir = arg.trim_prefix("--out=")

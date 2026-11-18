@@ -155,9 +155,29 @@ func _task6() -> void:
 
 func _task7() -> void:
 	await _go(ALA, "SpawnFromArmarios")
+	# Apontamento do grupo (18/11): a fala de quem entra na sala espera um pouco (dá para ver a sala antes)
+	Fase1Flow.atraso_entrada = 1.0
 	await _go(ARTES, "SpawnFromAla")
+	check(not DialogueManager.is_active, "Logo ao entrar na Sala de Artes a caixa de texto ainda não aparece")
+	await tree().create_timer(1.2).timeout
+	check(DialogueManager.is_active, "Depois de ~1 s a Professora começa a falar")
+	Fase1Flow.atraso_entrada = 0.0
+	# Apontamento do grupo (18/11): retrato de quem fala no canto do balão
+	var box: Node = _find("DialogueBox")
+	check(not box.retrato_moldura.visible, "1ª fala é narração: sem retrato")
+	DialogueManager.advance()
+	await _frames(1)
+	check(box.speaker_label.text == "Professora" and box.retrato_moldura.visible and box.retrato.texture != null, "Na fala da Professora o balão mostra o retrato dela")
 	var lines: Array = await _read_all()
 	check(_has(lines, "misturando as figurinhas"), "Professora explica o problema do mural")
+	DialogueManager.start_dialogue([{"speaker": "", "text": "(narração)"}])
+	await _frames(1)
+	check(not box.retrato_moldura.visible, "Narração fica sem retrato")
+	await _read_all()
+	DialogueManager.start_dialogue([{"speaker": "{player_name}", "text": "Oi"}])
+	await _frames(1)
+	check(box.retrato_moldura.visible and box.retrato.texture.atlas == GameManager.get_appearance_frames().get_frame_texture("idle_down", 0).atlas, "Quando o jogador fala aparece o visual escolhido")
+	await _read_all()
 	check(_has(lines, "3 figurinhas douradas, usamos 6"), "Professora diz a regra 3 : 6")
 	check(_find("CaixaB").find_child("ExclamationMarker").visible, "Caixas mostram o '!'")
 	_find("CaixaC").interact()

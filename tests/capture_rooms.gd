@@ -22,6 +22,7 @@ const ROOMS: Array = [
 var out_dir: String = "user://salas"
 
 func _ready() -> void:
+	Fase1Flow.atraso_entrada = 0.0 # falas ao entrar na sala sem a espera de 1,2 s
 	var task: int = 1
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):

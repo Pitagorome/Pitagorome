@@ -19,6 +19,7 @@ const SUITES: Array = [
 ]
 
 func _ready() -> void:
+	Fase1Flow.atraso_entrada = 0.0 # falas ao entrar na sala sem a espera de 1,2 s
 	# O runner sai da posição de "cena atual" para não ser apagado quando os testes trocarem de cena
 	get_tree().current_scene = null
 	_run.call_deferred()
