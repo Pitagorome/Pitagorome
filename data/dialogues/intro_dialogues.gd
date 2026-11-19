@@ -61,3 +61,43 @@ static func get_professor_matematica_sequence() -> Array:
 			"text": "E aí está o professor de matemática. *Cochicho* ele não é muito agradável. Depois vocês se acertam, vamos indo."
 		}
 	]
+
+# ------------------------------------------------------------------
+# Historinha do começo (18/11, ideia do grupo) — scenes/intro/historia_inicio.tscn
+# Não está no roteiro do PDF: só mostra por que a escola precisa de um novo diretor
+# (o antigo é demitido) e como {o jogador|a jogadora} acha a vaga no jornal.
+# "???" é o jogador: ainda não sabemos o nome dele (ele se apresenta para a Coordenadora).
+# ------------------------------------------------------------------
+
+static func historia_demissao() -> Array:
+	return [
+		{"speaker": "Coordenadora", "text": "Diretor Otávio, chegou uma carta da Secretaria de Educação. Disseram que era urgente..."},
+		{"speaker": "Diretor Otávio", "text": "Deixa eu adivinhar: mais um prêmio de \"Melhor Diretor do Ano\"?"},
+		{"speaker": "Coordenadora", "text": "Não exatamente... Os pais reclamam, os horários não fecham, ninguém acha nada no almoxarifado. Nenhum problema da escola foi resolvido este ano."},
+		{"speaker": "Coordenadora", "text": "O senhor foi... demitido."},
+		{"speaker": "Diretor Otávio", "text": "DEMITIDO?! Mas eu ia resolver tudo! Um dia... talvez... com calma..."},
+	]
+
+static func historia_coordenadora_sozinha() -> Array:
+	return [
+		{"speaker": "Coordenadora", "text": "*suspiro* E agora? Quem vai cuidar da Escola Pitagórica?"},
+		{"speaker": "Coordenadora", "text": "Vou colocar um anúncio no jornal. Alguém que goste de lógica e matemática há de aparecer..."},
+	]
+
+static func historia_jornal_vagas() -> Array:
+	return [
+		{"speaker": "???", "text": "Vaga de malabarista... já preenchida. Astronauta... preenchida também."},
+		{"speaker": "???", "text": "Assim fica difícil arrumar um emprego!"},
+	]
+
+static func historia_jornal_achou() -> Array:
+	return [
+		{"speaker": "???", "text": "Espera... \"Procura-se diretor(a) para a Escola Pitagórica. Requisitos: gostar de lógica, de matemática e de resolver problemas.\""},
+		{"speaker": "???", "text": "Resolver problemas com lógica e matemática? Isso é comigo! Amanhã cedo eu vou até lá."},
+	]
+
+static func historia_chegada() -> Array:
+	return [
+		{"speaker": "???", "text": "Escola Pitagórica... é aqui."},
+		{"speaker": "???", "text": "\"Muitos problemas\", dizia o anúncio. Quantos problemas uma escola pode ter, afinal?"},
+	]
