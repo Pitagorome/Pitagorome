@@ -57,6 +57,26 @@ func show_card(title: String, subtitle: String = "", hold_time: float = 3.5) -> 
 	is_transitioning = false
 	transition_finished.emit()
 
+# Historinha do começo (scripts/historia_inicio.gd): escurece, mostra os cartões, roda "montar"
+# com a tela preta (troca o cenário da cutscene) e clareia, SEM trocar de cena.
+func trocar_quadro(cards: Array, montar: Callable = Callable()) -> void:
+	if is_transitioning:
+		return
+	is_transitioning = true
+	await _fade_to(1.0)
+	for card in cards:
+		await _show_caption(str(card[0]), str(card[1]) if card.size() > 1 else "", float(card[2]) if card.size() > 2 else 1.6)
+	if montar.is_valid():
+		montar.call()
+	await get_tree().process_frame
+	await _fade_to(0.0)
+	is_transitioning = false
+	transition_finished.emit()
+
+# Deixa a tela preta na hora (sem fade), para a cutscene não piscar o cenário vazio no começo.
+func escurecer_ja() -> void:
+	fade_rect.modulate.a = 1.0
+
 func _show_caption(title: String, subtitle: String, hold_time: float) -> void:
 	title_label.text = title
 	subtitle_label.text = subtitle
