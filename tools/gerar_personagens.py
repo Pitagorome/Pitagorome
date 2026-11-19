@@ -70,11 +70,14 @@ SKINS = {
     # sem jaqueta: camiseta verde-acinzentada; olhos verde-azulados (mais escuros que verde-vivo)
     'skin_eren': dict(base='Adam', cabelo=(62, 44, 36), pele=(240, 198, 160), camisa=(92, 104, 92),
                       calca=(34, 34, 42), sapato=(24, 24, 30), olho=(30, 128, 92)),
-    # menino de moletom vermelho com uma aranha preta no peito
-    'skin_aranha': dict(base='Adam', cabelo=(96, 62, 40), pele=(232, 180, 140), camisa=(206, 38, 44),
-                        calca=(52, 82, 140), sapato=(36, 36, 44), olho=(50, 34, 28),
-                        peito_desenho=["X.XX.X", ".XXXX.", "X.XX.X"], peito_cor=(28, 22, 26),
-                        extra={'Q': (150, 26, 32)}),
+    # 18/11: aluno FANTASIADO de Homem-Aranha (máscara vermelha com olhos brancos grandes,
+    # luvas e botas vermelhas, calça azul e aranha preta no peito). A versão de 17/11 era só
+    # um moletom vermelho e o grupo não reconheceu o personagem.
+    # 'pele' vermelha = luvas (as mãos usam a cor da pele)
+    'skin_aranha': dict(base='Adam', cabelo=(206, 38, 44), pele=(206, 38, 44), camisa=(206, 38, 44),
+                        calca=(40, 72, 150), sapato=(190, 32, 40), olho=(20, 20, 26),
+                        peito_desenho=["X.XX.X", ".XXXX.", "X.XX.X"], peito_cor=(20, 18, 24),
+                        extra={'R': (214, 40, 46), 'r': (150, 24, 32), 'W': (246, 246, 250), 'K': (20, 18, 24)}),
     # chapéu de palha e cicatriz, mas com roupa própria (camiseta verde-água, jeans e tênis)
     'skin_luffy': dict(base='Adam', cabelo=(32, 30, 36), pele=(250, 206, 160), camisa=(64, 166, 150),
                        calca=(52, 82, 140), sapato=(232, 232, 236), olho=(32, 30, 36),
@@ -401,63 +404,52 @@ CABECAS = {
             ],
         },
     },
-    'skin_aranha': {  # menino de cabelo castanho bagunçado (a aranha fica no moletom)
+    'skin_aranha': {  # máscara do Homem-Aranha: vermelha, teia (r), olhos brancos grandes com borda preta
         'baixo': [
             "....oooooooo....",
-            "..ooHLHHHLHHoo..",
-            ".oHHLHHHLHHHHHo.",
-            ".oHLHHHLHHHHLHo.",
-            "oHHHHHHHHHHHHHDo",
-            "oHHHHHHHHHHHHHDo",
-            "oDHHHHHHHHHHHHDo",
-            "oDHDHHDHHHDHHDDo",
-            "oSDSSDSSSDSSDSSo",
-            "oSSSSSSSSSSSSSSo",
-            "OsSSSSSSSSSSSSsO",
-            ".oSSSoSSSSoSSSo.",
-            "..osSESSSSESso..",
+            "..ooRRRRrRRRoo..",
+            ".oRRrRRRrRRRrRo.",
+            ".oRRRrRRrRRrRRo.",
+            "oRrRRRrRrRrRRRro",
+            "oRRrrrrrrrrrRRRo",
+            "oRKKKRRRrRRKKKRo",
+            "oKWWWKRRrRKWWWKo",
+            "oKWWWWKRrKWWWWKo",
+            "oKWWWWKRRKWWWWKo",
+            "OrKWWKRRRRKWWKrO",
+            ".orKKRrRRrRKKro.",
+            "..orRRRrrRRRro..",
         ],
         'cima': [
             "....oooooooo....",
-            "..ooHLHHHLHHoo..",
-            ".oHHLHHHLHHHHHo.",
-            ".oHLHHHLHHHHLHo.",
-            "oHHHHHHHHHHHHHDo",
-            "oHHHHHHHHHHHHHDo",
-            "oHHHHHHHHHHHHHDo",
-            "oDHHHHHHHHHHHHDo",
-            "oDHHHHHHHHHHHDDo",
-            "oDDHDHHDHHDHDDDo",
-            "OSDDDDDDDDDDDDSO",
-            ".oSsssssssssSSo.",
-            "..osSSSSSSSSso..",
+            "..ooRRRRrRRRoo..",
+            ".oRRrRRRrRRRrRo.",
+            ".oRRRrRRrRRrRRo.",
+            "oRrRRRrRrRrRRRro",
+            "oRRrrrrrrrrrRRRo",
+            "oRRRRRrRrRrRRRRo",
+            "orRRRrRRrRRrRRro",
+            "oRrRrRRRrRRRrRRo",
+            "oRRrrrrrrrrrrRRo",
+            "ORRRRRRRrRRRRRRO",
+            ".orRRRRRrRRRRro.",
+            "..orRRRRrRRRro..",
         ],
         'direita': [
             ".....oooooooo...",
-            "...ooHLHHHLHHoo.",
-            "..oHHLHHHLHHHHo.",
-            ".oHLHHHLHHHHLHHo",
-            ".oHHHHHHHHHHHHHo",
-            "oDHHHHHHHHHHHHHo",
-            "oDHHHHHHHHHHHHHo",
-            "oDHHHHHHHDHHDHo.",
-            "oDDHHHHSDSSDSSo.",
-            "oDDHHSSSSSSSSSo.",
-            "oDDDSsSSSSSSSo..",
-            ".oDDSSSSSSSoSo..",
-            "..oDsSSSSSSESo..",
+            "...ooRRRRRrRRoo.",
+            "..oRRRrRRRrRRRo.",
+            ".oRRRRRrRRrRRrRo",
+            ".oRrRRRRrRrRrRRo",
+            "oRRRrrrrrrrrRRRo",
+            "oRRRRRRRrRRKKKRo",
+            "orRRRRRRrRKWWWKo",
+            "oRrRRRRRrKWWWWo.",
+            "oRRrRRRRrKWWWKo.",
+            "oRRRrrrrrRKKKo..",
+            ".orRRRRRRRRRro..",
+            "..orRRRRRRRRro..",
         ],
-        # capuz do moletom aparecendo nas costas
-        'abaixo': {
-            'cima': [
-                "..oQQQQQQQQQQo..",
-                "...oQQQQQQQQo...",
-            ],
-            'direita': [
-                ".oQQo...........",
-                "..oo............",
-            ],
-        },
     },
     'skin_luffy': {  # chapéu de palha por cima do cabelo preto, cicatriz embaixo do olho
         'baixo': [
@@ -716,8 +708,13 @@ def gerar_tres(nome):
 
 
 def main():
+    # python tools/gerar_personagens.py skin_aranha  -> gera só os nomes passados
+    import sys
+    so = set(sys.argv[1:])
     os.makedirs(OUT_PNG, exist_ok=True)
     for nome, p in {**PERSONAGENS, **SKINS, **UNIFORMES}.items():
+        if so and nome not in so:
+            continue
         for tipo, arq in [('idle', '_idle_anim_16x16.png'), ('run', '_run_16x16.png')]:
             im = Image.open(BASE + p['base'] + arq).convert('RGBA')
             novo = recolor_adam(im, p) if p['base'] == 'Adam' else recolor_amelia(im, p)
