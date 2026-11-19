@@ -227,7 +227,7 @@ func on_object_event(event_id: String, source: Node = null) -> void:
 
 func _task11_chamado() -> void:
 	DialogueManager.start_dialogue(Fase3Dialogues.task11_chamado(), func():
-		Transition.change_scene(SCENE_REFEITORIO, "SpawnFromAla", "Vocês correm até o Refeitório...")
+		Transition.change_scene(SCENE_REFEITORIO, "SpawnFromAla")
 	)
 
 func open_maquina() -> Node:
@@ -283,7 +283,7 @@ func open_maquina_preco() -> Node:
 
 func _task12_gabinete() -> void:
 	DialogueManager.start_dialogue(Fase3Dialogues.task12_gabinete(), func():
-		Transition.change_scene(SCENE_PATIO, "SpawnFromCorridor", "Vocês vão até o pátio...")
+		Transition.change_scene(SCENE_PATIO, "SpawnFromCorridor")
 	)
 
 func open_gincana() -> Node:

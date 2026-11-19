@@ -2,6 +2,9 @@ extends CanvasLayer
 
 # Autoload: Transition (cena scenes/ui/transition.tscn)
 # Escurece a tela ao trocar de sala e mostra cartões de texto ("Mais tarde...", "Fim da Fase 1").
+# 18/11 (apontamento do grupo): o fundo era verde-escuro e aparecia com frases do tipo
+# "Vocês correm até...". Agora é preto puro e só mostra texto quando passa o tempo
+# ("Mais tarde...", "No dia seguinte...") ou muda de fase; ir de uma sala a outra é só o fade.
 
 signal transition_finished()
 

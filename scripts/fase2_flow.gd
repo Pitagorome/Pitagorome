@@ -289,7 +289,7 @@ func open_caixas() -> Node:
 func _start_blackout() -> void:
 	GameManager.set_lights_out(true)
 	DialogueManager.start_dialogue(Fase2Dialogues.task8_blackout(), func():
-		Transition.change_scene(SCENE_GERADOR, "SpawnFromAla", "Todos vão até a sala do gerador...")
+		Transition.change_scene(SCENE_GERADOR, "SpawnFromAla")
 	)
 
 func open_gerador_puzzle() -> Node:
