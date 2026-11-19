@@ -9,6 +9,7 @@ const CORREDOR: String = "res://scenes/school/school_corridor.tscn"
 const MATEMATICA: String = "res://scenes/school/math_classroom.tscn"
 const ALMOX: String = "res://scenes/school/almoxarifado_scene.tscn"
 const PORTAO: String = "res://scenes/school/portao_scene.tscn"
+const HISTORIA: String = "res://scenes/intro/historia_inicio.tscn"
 
 func _init() -> void:
 	suite_name = "Teste 3 — Jogada completa da Fase 1"
@@ -16,6 +17,7 @@ func _init() -> void:
 
 func get_cases() -> Array:
 	return [
+		["T3.0 Historinha do começo (demissão, jornal, chegada) e botão de pular", _historia],
 		["T3.1 Início: diálogo da Coordenadora e criação do personagem", _inicio],
 		["T3.2 Movimento do jogador e porta para o corredor", _movimento_e_porta],
 		["T3.3 Task 1: tour (Zelador e Professor) leva de volta ao gabinete", _task1_tour],
@@ -83,6 +85,56 @@ func _modal() -> Node:
 	return _find("ChallengeModal")
 
 # ---------------- Casos ----------------
+
+# Roda a historinha do começo até chegar no gabinete. Avança cada fala assim que aparece.
+# Devolve as falas vistas. (A cutscene usa tempo de verdade: leva uns 20 s.)
+func _assistir_historia(pular_depois_de: int = -1) -> Array:
+	var lines: Array = []
+	var capture: Callable = func(speaker: String, text: String): lines.append("%s: %s" % [speaker, text])
+	DialogueManager.dialogue_line_changed.connect(capture)
+	Transition.change_scene(HISTORIA)
+	await _wait_transition()
+	var inicio: int = Time.get_ticks_msec()
+	while Time.get_ticks_msec() - inicio < 90000:
+		await _frames(1)
+		var cena: Node = scene()
+		if cena and cena.get("location_id") == "gabinete" and not Transition.is_transitioning:
+			break
+		if pular_depois_de >= 0 and lines.size() >= pular_depois_de and cena and cena.has_method("pular"):
+			cena.pular()
+			pular_depois_de = -1
+		if DialogueManager.is_active and not Transition.is_transitioning and cena and cena.name == "HistoriaInicio":
+			DialogueManager.advance()
+	DialogueManager.dialogue_line_changed.disconnect(capture)
+	await _frames(4)
+	return lines
+
+func _historia() -> void:
+	GameManager.reset_progress()
+	check_eq(ProjectSettings.get_setting("application/run/main_scene"), HISTORIA, "O jogo abre na historinha")
+	var lines: Array = await _assistir_historia()
+	check(lines.any(func(l): return l.begins_with("Coordenadora:") and l.contains("demitido")), "Cena 1: a Coordenadora conta ao Diretor Otávio que ele foi demitido")
+	check(lines.any(func(l): return l.begins_with("Diretor Otávio:")), "O Diretor Otávio fala")
+	check(lines.any(func(l): return l.begins_with("???:") and l.contains("preenchida")), "Cena 2: o novo diretor procura emprego no jornal")
+	check(lines.any(func(l): return l.contains("Procura-se diretor(a) para a Escola Pitagórica")), "Ele acha o anúncio da escola")
+	check(lines.any(func(l): return l.begins_with("???:") and l.contains("é aqui")), "Cena 3: chega no portão da escola")
+	check(not lines.any(func(l): return l.contains("Pular") or l.contains("{")), "Nenhuma fala com marcador sobrando")
+	check(scene() != null and scene().get("location_id") == "gabinete", "Depois da história vai para o gabinete")
+	var player: Node = _find("Player")
+	var spawn: Node = _find("SpawnFromCorridor")
+	check(player != null and spawn != null and player.global_position.distance_to(spawn.global_position) < 2.0, "O jogador entra pela porta do gabinete")
+	await _frames(10)
+	check(DialogueManager.is_active and DialogueManager.dialogue_box_instance.text_label.text.contains("Ah, você chegou!"), "A Coordenadora recebe: 'Ah, você chegou!'")
+	check(not GameManager.player_named, "O nome ainda não foi escolhido (a Coordenadora pergunta depois)")
+	DialogueManager.end_dialogue()
+	# Pular: Esc / botão no canto leva direto ao gabinete
+	GameManager.reset_progress()
+	lines = await _assistir_historia(1)
+	check(lines.size() <= 2, "Pular corta a história no meio (%d falas vistas)" % lines.size())
+	check(scene() != null and scene().get("location_id") == "gabinete", "Pular leva ao gabinete")
+	await _frames(10)
+	check(DialogueManager.is_active and DialogueManager.dialogue_box_instance.text_label.text.contains("Ah, você chegou!"), "Depois de pular, a introdução da Coordenadora começa normalmente")
+	DialogueManager.end_dialogue()
 
 func _inicio() -> void:
 	GameManager.reset_progress()
