@@ -111,6 +111,8 @@ func _inicio() -> void:
 	check(_has(lines, "Eu tentei fazer uma regra de três"), "Aluno tentou regra de três")
 	check(GameManager.current_objective.contains("visor"), "Objetivo manda olhar o visor da máquina")
 	check(_find("NPCCoordenadora").visible and _find("AlunoRefri").visible, "Coordenadora e aluno estão no Refeitório")
+	var placa: Label = _find("Interrogacao") as Label
+	check(placa != null and placa.text == "12 lugares", "A mesa final mostra '12 lugares' (a Task 9 já foi resolvida na Fase 2)")
 
 func _task11() -> void:
 	var modal: Node = _modal()
