@@ -78,6 +78,11 @@ SKINS = {
                         calca=(40, 72, 150), sapato=(190, 32, 40), olho=(20, 20, 26),
                         peito_desenho=["X.XX.X", ".XXXX.", "X.XX.X"], peito_cor=(20, 18, 24),
                         extra={'R': (214, 40, 46), 'r': (150, 24, 32), 'W': (246, 246, 250), 'K': (20, 18, 24)}),
+    # 18/11: diretor antigo da historinha do começo (cabelo grisalho, terno cinza-escuro).
+    # Usa o cabelo do próprio sprite do Adam (não tem cabeça desenhada em CABECAS).
+    'diretor_antigo': dict(base='Adam', cabelo=(176, 176, 182), pele=(236, 190, 156), camisa=(62, 66, 84),
+                           calca=(52, 54, 66), sapato=(24, 22, 26), olho=(40, 30, 26),
+                           peito_desenho=["..X", "..X", "..X"], peito_cor=(170, 40, 48)),  # gravata vermelha
     # chapéu de palha e cicatriz, mas com roupa própria (camiseta verde-água, jeans e tênis)
     'skin_luffy': dict(base='Adam', cabelo=(32, 30, 36), pele=(250, 206, 160), camisa=(64, 166, 150),
                        calca=(52, 82, 140), sapato=(232, 232, 236), olho=(32, 30, 36),
