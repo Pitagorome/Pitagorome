@@ -318,7 +318,9 @@ func open_mesas() -> Node:
 		str(Fase2Puzzles.cadeiras_mesa_final()),
 		"Isso! 4 × 28 = 112 alunos ÷ 2 turnos = 56 por turno. Já tem 4 × 8 + 2 × 6 = 32 + 12 = 44 cadeiras. 56 − 44 = 12 cadeiras na mesa final.",
 		"Não fecha a conta. 1º: quantos alunos vêm em cada turno (turmas × alunos ÷ turnos)? 2º: quantas cadeiras já estão nas mesas prontas? 3º: quanto falta?",
-		func(): DialogueManager.start_dialogue(Fase2Dialogues.task9_done())
+		func():
+			Fase1Flow.atualizar_mesa_final()
+			DialogueManager.start_dialogue(Fase2Dialogues.task9_done())
 	)
 	modal.code_input.placeholder_text = "Digite um número"
 	modal.wrong_hints = Fase2Puzzles.mesas_dicas_erro()

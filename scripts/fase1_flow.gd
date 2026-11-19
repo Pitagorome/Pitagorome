@@ -39,6 +39,8 @@ func on_room_ready(location: String) -> void:
 	current_location = location
 	if location == "portao" and GameManager.current_task_id != 5:
 		_remove_vans() # as vans só aparecem no dia da excursão
+	if location == "refeitorio":
+		atualizar_mesa_final()
 	if _fase2():
 		_flow().on_room_ready(location)
 		return
@@ -268,6 +270,17 @@ func _drive_vans_away() -> void:
 	for van in vans.get_children():
 		tween.tween_property(van, "position:x", van.position.x + 420.0, 2.0).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await tween.finished
+
+# A placa da mesa final do Refeitório começa com "? lugares" (é a pergunta da Task 9).
+# Depois que a Task 9 é resolvida ela passa a mostrar as 12 cadeiras, inclusive na Fase 3.
+func atualizar_mesa_final() -> void:
+	if not GameManager.is_task_completed(9):
+		return
+	var scene: Node = get_tree().current_scene
+	var placa: Label = scene.find_child("Interrogacao", true, false) as Label if scene else null
+	if placa:
+		placa.text = "%d lugares" % Fase2Puzzles.cadeiras_mesa_final()
+		placa.add_theme_color_override("font_color", Color(0.3, 0.2, 0.1, 1))
 
 func _remove_vans() -> void:
 	var scene: Node = get_tree().current_scene
