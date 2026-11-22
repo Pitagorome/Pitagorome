@@ -3,3 +3,5 @@
 /android/
 *.import
 *.aseprite
+# Builds exportadas (ver VERSOES.md e tools/exportar.sh)
+/builds/
