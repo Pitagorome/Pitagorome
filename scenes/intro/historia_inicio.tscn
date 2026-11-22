@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/historia_inicio.gd" id="1_hist"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="2_dlgbox"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Bold.ttf" id="3_bold"]
 [ext_resource type="FontFile" path="res://assets/fonts/Montserrat-Regular.ttf" id="4_reg"]
+[ext_resource type="Texture2D" path="res://assets/ui/icone_pular.png" id="5_pular"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_papel"]
 bg_color = Color(0.95, 0.93, 0.86, 1)
@@ -271,19 +272,22 @@ layer = 60
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -128.0
+offset_left = -32.0
 offset_top = 6.0
 offset_right = -6.0
 offset_bottom = 22.0
 grow_horizontal = 0
+tooltip_text = "Pular história (Esc)"
 focus_mode = 0
 theme_override_colors/font_color = Color(0.99, 0.95, 0.85, 1)
 theme_override_colors/font_hover_color = Color(0.99, 0.75, 0.35, 1)
+theme_override_colors/icon_hover_color = Color(0.99, 0.75, 0.35, 1)
 theme_override_fonts/font = ExtResource("4_reg")
 theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxFlat_pular")
 theme_override_styles/hover = SubResource("StyleBoxFlat_pular")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_pular")
-text = "Pular história (Esc)"
+icon = ExtResource("5_pular")
+icon_alignment = 1
 
 [node name="DialogueBox" parent="." instance=ExtResource("2_dlgbox")]
