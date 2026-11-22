@@ -558,7 +558,7 @@ altura_cm = 34.0
 cor = Color(0.55, 0.4, 0.8, 1)
 
 [node name="Estante" parent="Furniture" instance=ExtResource("p_estante_madeira")]
-position = Vector2(132, -62)
+position = Vector2(132, -73)
 
 [node name="Planta" parent="Furniture" instance=ExtResource("p_planta_grande")]
 position = Vector2(-138, 82)
