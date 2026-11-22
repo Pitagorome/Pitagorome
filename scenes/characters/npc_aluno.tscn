@@ -16,13 +16,9 @@ y_sort_enabled = true
 script = ExtResource("1_aluno")
 npc_name = "Aluno"
 
-<<<<<<< Updated upstream
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=899325667]
 position = Vector2(0, 15)
 offset = Vector2(0, -15)
-=======
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=899325667]
->>>>>>> Stashed changes
 sprite_frames = ExtResource("2_frames")
 animation = &"idle_down"
 autoplay = "idle_down"
@@ -38,10 +34,10 @@ position = Vector2(0, 8)
 shape = SubResource("CircleShape2D_interact")
 
 [node name="HintLabel" type="Label" parent="." unique_id=920272027]
-offset_left = -31.0
+offset_left = -30.0
 offset_top = -24.0
-offset_right = 41.0
-offset_bottom = -5.0
+offset_right = 30.0
+offset_bottom = -11.0
 theme_override_colors/font_color = Color(0.98, 0.95, 0.8, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
 theme_override_constants/shadow_offset_x = 1
