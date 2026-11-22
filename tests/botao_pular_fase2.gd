@@ -15,6 +15,9 @@ extends CanvasLayer
 # Nenhum outro arquivo depende dele.
 # =====================================================================
 
+# ícone desenhado (o caractere ⏭ não existe na fonte e vira quadradinho na versão web)
+const ICONE: Texture2D = preload("res://assets/ui/icone_pular.png")
+
 var botao: Button
 var botao3: Button
 
@@ -26,10 +29,11 @@ func _ready() -> void:
 		queue_free()
 		return
 	layer = 9 # por cima do HUD (5), mas embaixo do diálogo (10) e dos desafios (12)
-	botao3 = _criar_botao("⏭ Pular p/ Fase 3 (TESTE)", 196)
+	botao3 = _criar_botao("Pular p/ Fase 3 (TESTE)", 196)
 	botao3.pressed.connect(_pular.bind(3))
 	botao = Button.new()
-	botao.text = "⏭ Pular p/ Fase 2 (TESTE)"
+	botao.text = "Pular p/ Fase 2 (TESTE)"
+	botao.icon = ICONE
 	botao.focus_mode = Control.FOCUS_NONE # não "rouba" o Espaço/Enter dos diálogos
 	# Canto superior direito, embaixo do minimapa (não cobre a caixa de diálogo)
 	botao.anchor_left = 1.0
@@ -47,6 +51,7 @@ func _ready() -> void:
 func _criar_botao(texto: String, topo: int) -> Button:
 	var b := Button.new()
 	b.text = texto
+	b.icon = ICONE
 	b.focus_mode = Control.FOCUS_NONE
 	b.anchor_left = 1.0
 	b.anchor_right = 1.0

@@ -83,15 +83,15 @@ func _update_display() -> void:
 		else:
 			task_label.text = GameManager.current_task_name
 	if objective_label:
-		objective_label.text = "► " + DialogueManager.format_text(GameManager.current_objective)
+		objective_label.text = "▶ " + DialogueManager.format_text(GameManager.current_objective)
 		objective_label.visible = GameManager.current_objective != ""
 	if note_label:
-		note_label.text = "✎ " + GameManager.current_note
+		note_label.text = "• " + GameManager.current_note
 		note_label.visible = GameManager.current_note != ""
 	if botao_prancheta:
 		var titulo: String = "Tarefa %d" % GameManager.current_task_id if GameManager.current_task_id > 0 else "Tarefas"
 		if GameManager.current_note != "":
-			titulo += "  ✎"
+			titulo += "  •"
 		botao_prancheta.text = titulo
 	if director_label:
 		director_label.text = GameManager.get_director_title() + ": " + GameManager.player_name

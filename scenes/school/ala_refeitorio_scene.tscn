@@ -270,7 +270,7 @@ theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
 theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 7
-text = "◄ Sala do Gerador"
+text = "◀ Sala do Gerador"
 horizontal_alignment = 1
 
 [node name="DoorToRefeitorio" type="Area2D" parent="."]
@@ -293,7 +293,7 @@ theme_override_colors/font_color = Color(0.98, 0.96, 0.88, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
 theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 7
-text = "► Refeitório"
+text = "▶ Refeitório"
 horizontal_alignment = 1
 
 [node name="HUD" parent="." instance=ExtResource("ui_hud")]
