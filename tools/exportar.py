@@ -94,7 +94,9 @@ def main() -> None:
     if os.path.exists(destino):
         if not opcoes.get("--sobrescrever"):
             erro(f"builds/{versao} já existe. Use --sobrescrever para gerar de novo.")
-        shutil.rmtree(destino)
+        # ignore_errors: no Windows uma pasta aberta no Explorer/terminal não pode ser
+        # apagada; os arquivos dentro somem e a exportação grava por cima.
+        shutil.rmtree(destino, ignore_errors=True)
 
     print(f"Gerando {versao} ({canal.upper()}) no commit {git('rev-parse', '--short', 'HEAD')}")
     exportar(godot, PRESETS[canal]["windows"], os.path.join(destino, "windows", "Pitagorome.exe"))
