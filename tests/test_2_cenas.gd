@@ -39,6 +39,7 @@ func get_cases() -> Array:
 		["T2.10 Ninguém nasce em cima de uma porta (bug da porta que não funcionava)", _spawn_fora_da_porta],
 		["T2.11 Minimapa acompanha o jogador em todas as salas (inclusive o saguão)", _minimapa_acompanha],
 		["T2.12 Nenhum objeto do cenário é desenhado POR CIMA de um personagem", _nada_por_cima_dos_personagens],
+		["T2.13 Nenhum arquivo com marcador de conflito do git (<<<<<<< / >>>>>>>)", _sem_conflito_git],
 	]
 
 func _instantiate(path: String) -> Node:
@@ -630,3 +631,33 @@ func _dono(room: Node, ci: Node) -> Node:
 	while dono.get_parent() != null and not (dono.get_parent().name in ["Furniture", "Decor", "Parede", "Cartazes"]) and dono.get_parent() != room:
 		dono = dono.get_parent()
 	return dono
+
+
+# Bug de 22/11: um stash mal resolvido deixou "<<<<<<< Updated upstream" dentro de
+# npc_aluno.tscn; o Godot não conseguia ler a cena e os alunos (Lucas, João, Pedro...)
+# sumiam do corredor e da historinha. Aqui varremos os arquivos de texto do projeto.
+func _sem_conflito_git() -> void:
+	var arquivos: Array = []
+	for pasta in ["res://scenes", "res://scripts", "res://data", "res://assets", "res://tests"]:
+		_listar_texto(pasta, arquivos)
+	arquivos.append("res://project.godot")
+	var ruins: Array = []
+	for path in arquivos:
+		var texto: String = FileAccess.get_file_as_string(path)
+		for linha in texto.split("
+"):
+			if linha.begins_with("<<<<<<< ") or linha.begins_with(">>>>>>> ") or linha == "=======":
+				ruins.append(path)
+				break
+	check(ruins.is_empty(), "Sem marcadores de conflito" + ("" if ruins.is_empty() else ": " + ", ".join(ruins)))
+	note("%d arquivos de texto verificados" % arquivos.size())
+
+func _listar_texto(dir_path: String, out: Array) -> void:
+	var dir: DirAccess = DirAccess.open(dir_path)
+	if dir == null:
+		return
+	for f in dir.get_files():
+		if f.get_extension() in ["tscn", "tres", "gd", "cfg"]:
+			out.append(dir_path.path_join(f))
+	for d in dir.get_directories():
+		_listar_texto(dir_path.path_join(d), out)
