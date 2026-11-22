@@ -11,7 +11,7 @@ atlas = ExtResource("1_atlas")
 region = Rect2(16, 614, 16, 19)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_base"]
-size = Vector2(11, 9)
+size = Vector2(11, 12)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cadeira"]
 size = Vector2(12, 4)
@@ -27,7 +27,7 @@ position = Vector2(0, 11)
 texture = SubResource("AtlasTexture_cadeira")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 6.5)
+position = Vector2(0, 5)
 shape = SubResource("RectangleShape2D_base")
 
 [node name="CollisionCadeira" type="CollisionShape2D" parent="."]

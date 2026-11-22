@@ -7,7 +7,7 @@ atlas = ExtResource("1_atlas")
 region = Rect2(209, 577, 13, 21)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_base"]
-size = Vector2(11, 5)
+size = Vector2(11, 12)
 
 [node name="globo" type="StaticBody2D" groups=["prop"]]
 z_index = 1
@@ -17,5 +17,5 @@ texture = SubResource("AtlasTexture_prop")
 offset = Vector2(0, 0.5)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 8.5)
+position = Vector2(0, 5)
 shape = SubResource("RectangleShape2D_base")

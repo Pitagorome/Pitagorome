@@ -7,7 +7,7 @@ atlas = ExtResource("1_atlas")
 region = Rect2(213, 704, 23, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_base"]
-size = Vector2(21, 6)
+size = Vector2(21, 12)
 
 [node name="palmeira" type="StaticBody2D" groups=["prop"]]
 z_index = 1
@@ -17,5 +17,5 @@ texture = SubResource("AtlasTexture_prop")
 offset = Vector2(0, -9)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 8)
+position = Vector2(0, 5)
 shape = SubResource("RectangleShape2D_base")

@@ -7,7 +7,7 @@ atlas = ExtResource("1_atlas")
 region = Rect2(192, 1094, 32, 34)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_base"]
-size = Vector2(30, 10)
+size = Vector2(30, 12)
 
 [node name="estante_livros_b" type="StaticBody2D" groups=["prop"]]
 z_index = 1
@@ -17,5 +17,5 @@ texture = SubResource("AtlasTexture_prop")
 offset = Vector2(0, -6)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 6)
+position = Vector2(0, 5)
 shape = SubResource("RectangleShape2D_base")
