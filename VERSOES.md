@@ -44,7 +44,7 @@ e vocês mudaram algo, a próxima build é `v0.3.1-teste`. O script avisa e recu
 ## Como gerar e publicar uma versão
 
 1. Atualizar o número em `project.godot` (se mudou algo desde a última publicada) e anotar no **Histórico** abaixo.
-2. Rodar os testes: `Godot --headless --path . res://tests/test_runner.tscn` (tem que dar *TODOS PASSARAM*).
+2. Rodar os testes (o T2.14 pega símbolo que vira quadradinho na web; `python tools/checar_glifos.py` confere também os diálogos): `Godot --headless --path . res://tests/test_runner.tscn` (tem que dar *TODOS PASSARAM*).
 3. Commitar (`versão: v0.3.1-teste ...`).
 4. Gerar as builds (precisa dos templates de exportação do Godot 4.6.2 instalados):
    ```
@@ -71,4 +71,4 @@ e abra http://localhost:8000. Ou, no editor do Godot, o botão *Executar no nave
 
 | Versão | Data | Canal | O que mudou |
 |---|---|---|---|
-| v0.3.0-teste | 22/11/2026 | teste | Primeira build publicada. Jogo completo: historinha do começo, Fases 1, 2 e 3 e encerramento. Correção dos alunos que sumiam do corredor (conflito de merge no `npc_aluno.tscn`) e botão de pular a historinha com ícone. |
+| v0.3.0-teste | 22/11/2026 | teste | Primeira build publicada. Jogo completo: historinha do começo, Fases 1, 2 e 3 e encerramento. Correção dos alunos que sumiam do corredor (conflito de merge no `npc_aluno.tscn`) e botão de pular a historinha com ícone. Símbolos que viravam quadradinho no navegador (►, ✎, ⏭, emojis) trocados. |
