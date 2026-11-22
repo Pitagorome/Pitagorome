@@ -118,7 +118,7 @@ static func task5_done() -> Array:
 		_l(COORD, "Espero que eles se cuidem e os monitores saibam cuidar dos alunos."),
 		_l(COORD, "Mais um trimestre acabou, o seu primeiro. Você se saiu muito bem para alguém que nunca foi {diretor}."),
 		_l(PLAYER, "{Obrigado|Obrigada}."),
-		_l(COORD, "Bom... nos vemos amanhã no novo bimestre."),
+		_l(COORD, "Bom... nos vemos amanhã no novo trimestre."),
 	]
 
 # ---------------- Dicas gerais da Coordenadora ----------------
