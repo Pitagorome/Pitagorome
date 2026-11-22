@@ -50,7 +50,10 @@ func on_room_ready(location: String) -> void:
 				DialogueManager.start_dialogue(Fase2Dialogues.phase_start())
 		"corredor":
 			if task == 6 and not GameManager.seen_events.has("t6_briefing"):
-				_start_task6_briefing()
+				GameManager.mark_event("t6_briefing")
+				await _coordenadora_vem_ate_jogador()
+				if current_location == "corredor":
+					_start_task6_briefing()
 		"sala_armarios":
 			if task == 6 and GameManager.seen_events.has("t6_briefing") and GameManager.mark_event("t6_arrival"):
 				DialogueManager.start_dialogue(Fase2Dialogues.task6_arrival())
@@ -204,6 +207,23 @@ func on_object_event(event_id: String, source: Node = null) -> void:
 # ------------------------------------------------------------------
 # Task 6 — armários numerados
 # ------------------------------------------------------------------
+
+# Pedido de 22/11: em vez de falar de longe, a Coordenadora vem andando até o diretor.
+# O jogador fica parado enquanto ela chega (modal_open deixa o DialogueManager "ocupado").
+func _coordenadora_vem_ate_jogador() -> void:
+	var room: Node = get_tree().current_scene
+	if room == null:
+		return
+	var coord: Node = null
+	for n in room.find_children("NPCCoordenadora*", "CharacterBody2D", true, false):
+		if n.is_visible_in_tree() and n.process_mode != Node.PROCESS_MODE_DISABLED and n.has_method("caminhar_ate_jogador"):
+			coord = n
+			break
+	if coord == null:
+		return
+	DialogueManager.modal_open = true
+	await coord.caminhar_ate_jogador()
+	DialogueManager.modal_open = false
 
 func _start_task6_briefing() -> void:
 	GameManager.mark_event("t6_briefing")

@@ -102,6 +102,45 @@ func come_to_player() -> void:
 			break
 	face_target(player)
 
+# O NPC anda de verdade até o jogador (ex.: Coordenadora chegando no corredor na Task 6).
+# Se ficar preso em algum móvel ou demorar demais, aparece ao lado dele (come_to_player).
+func caminhar_ate_jogador(velocidade: float = 90.0, distancia: float = 26.0, limite: float = 4.0) -> void:
+	var player: Node2D = _get_player()
+	if player == null:
+		return
+	var tempo: float = 0.0
+	var parado: float = 0.0
+	while is_inside_tree() and global_position.distance_to(player.global_position) > distancia and tempo < limite:
+		await get_tree().physics_frame
+		if not is_inside_tree():
+			return
+		var dt: float = get_physics_process_delta_time()
+		tempo += dt
+		var to_player: Vector2 = player.global_position - global_position
+		var antes: Vector2 = global_position
+		velocity = to_player.normalized() * velocidade
+		move_and_slide()
+		parado = parado + dt if global_position.distance_to(antes) < 0.2 else 0.0
+		if parado > 0.4:
+			break
+		if animated_sprite:
+			var dir: String
+			if absf(to_player.x) > absf(to_player.y):
+				dir = "right" if to_player.x > 0 else "left"
+			else:
+				dir = "down" if to_player.y > 0 else "up"
+			animated_sprite.play("walk_" + dir)
+	velocity = Vector2.ZERO
+	if global_position.distance_to(player.global_position) > distancia + 10.0:
+		come_to_player()
+	face_target(player)
+	# o jogador também se vira para quem chegou
+	if "current_direction" in player:
+		var para_npc: Vector2 = global_position - player.global_position
+		player.current_direction = Vector2(signf(para_npc.x), 0) if absf(para_npc.x) > absf(para_npc.y) else Vector2(0, signf(para_npc.y))
+		if player.has_method("_update_animation"):
+			player._update_animation(Vector2.ZERO)
+
 func face_target(target: Node2D) -> void:
 	if not animated_sprite or not target:
 		return

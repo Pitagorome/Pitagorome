@@ -101,7 +101,16 @@ func _inicio() -> void:
 
 func _task6() -> void:
 	await _go(CORREDOR, "SpawnFromDirector")
+	# Pedido de 22/11: ela vem ANDANDO até o diretor antes de falar
+	var coord: Node2D = _find("NPCCoordenadoraTask6")
+	var dist_antes: float = coord.global_position.distance_to(_find("Player").global_position)
+	var espera: float = 0.0
+	while not DialogueManager.is_active and espera < 6.0:
+		await tree().create_timer(0.1).timeout
+		espera += 0.1
 	check(DialogueManager.is_active, "A Coordenadora chega apressada no corredor")
+	var dist_depois: float = coord.global_position.distance_to(_find("Player").global_position)
+	check(dist_depois <= 40.0, "A Coordenadora veio andando até o diretor (%d px → %d px)" % [int(dist_antes), int(dist_depois)])
 	var lines: Array = await _read_all()
 	check(_has(lines, "troféu principal da escola desapareceu"), "Coordenadora: o troféu desapareceu")
 	check(_has(lines, "Eu deixei duas pistas"), "Zelador: 'Eu não esqueci. Eu deixei duas pistas.'")
