@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pitagorome — versões</title>
+<link rel="icon" href="teste/index.icon.png">
+<style>
+  :root {
+    --fundo: #f3eedb; --papel: #fbf8ec; --texto: #2f3a28; --suave: #66705c;
+    --verde: #4a6741; --verde-escuro: #36502f; --amarelo: #f2d98b; --laranja: #d9741c;
+    --borda: #c9bf9c;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fundo); color: var(--texto);
+         font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.5; }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { font-size: 2.2rem; margin: 0; color: var(--verde-escuro); letter-spacing: .5px; }
+  .sub { color: var(--suave); margin: 4px 0 28px; }
+  .card { background: var(--papel); border: 2px solid var(--borda); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+  .card h2 { margin: 0 0 4px; font-size: 1.2rem; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .selo { font-size: .72rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: .6px; }
+  .selo.teste { background: var(--amarelo); color: #6b4e00; }
+  .selo.final { background: #dfe9d8; color: var(--verde-escuro); }
+  .card p { margin: 6px 0 14px; color: var(--suave); }
+  .botoes { display: flex; gap: 10px; flex-wrap: wrap; }
+  a.botao { display: inline-block; padding: 10px 16px; border-radius: 8px; font-weight: 700; text-decoration: none;
+            background: var(--verde); color: #fdf6df; border: 2px solid var(--verde-escuro); }
+  a.botao:hover { background: var(--verde-escuro); }
+  a.botao.sec { background: transparent; color: var(--verde-escuro); }
+  a.botao.sec:hover { background: #e9e3cb; }
+  .indisp { color: var(--suave); font-style: italic; }
+  table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--borda); vertical-align: top; }
+  th { color: var(--suave); font-weight: 600; }
+  code { background: #ece5cb; padding: 1px 5px; border-radius: 4px; font-size: .88em; }
+  .dica { font-size: .9rem; color: var(--suave); }
+  footer { margin-top: 28px; font-size: .85rem; color: var(--suave); }
+  footer a { color: var(--verde-escuro); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Pitagorome</h1>
+  <p class="sub">Jogo educativo de matemática — você é o novo diretor da Escola Pitagórica.</p>
+
+  <section class="card">
+    <h2>v0.3.0-teste <span class="selo teste">versão de teste</span></h2>
+    <p>Jogo completo para testes (historinha, Fases 1, 2 e 3 e encerramento). Tem botões para pular
+       direto para a Fase 2 ou 3 e a marca “VERSÃO DE TESTE” no canto da tela.</p>
+    <div class="botoes">
+      <a class="botao" href="teste/">Jogar no navegador</a>
+      <a class="botao sec" href="https://github.com/Pitagorome/Pitagorome/releases/tag/v0.3.0-teste">Baixar para Windows</a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>v1.0.0 <span class="selo final">versão final</span></h2>
+    <p class="indisp">Ainda não lançada. Quando sair, fica em <code>/jogo/</code>, sem botões de teste.</p>
+  </section>
+
+  <section class="card">
+    <h2>Como jogar</h2>
+    <p class="dica" style="margin-bottom:0">
+      <b>WASD</b> ou setas para andar · <b>E</b> para conversar e interagir ·
+      <b>Espaço/Enter</b> para avançar as falas · <b>Tab</b> abre a prancheta da tarefa ·
+      <b>Esc</b> pula a historinha do começo.<br>
+      Na primeira vez o navegador baixa ~40 MB; depois abre mais rápido. Funciona melhor no Chrome, Edge ou Firefox, no computador.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Histórico</h2>
+    <table>
+      <tr><th>Versão</th><th>Data</th><th>O que mudou</th></tr>
+      <tr><td><code>v0.3.0-teste</code></td><td>22/11/2026</td>
+          <td>Primeira versão publicada: jogo completo. Correção dos alunos que sumiam do corredor e dos símbolos que viravam quadradinho no navegador.</td></tr>
+    </table>
+  </section>
+
+  <footer>
+    Regras de versão (o que é teste e o que é final): <a href="https://github.com/Pitagorome/Pitagorome/blob/main/VERSOES.md">VERSOES.md</a>
+    · Projeto escolar — IFSP Campus São Paulo.
+  </footer>
+</main>
+</body>
+</html>
