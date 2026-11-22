@@ -40,6 +40,7 @@ func get_cases() -> Array:
 		["T2.11 Minimapa acompanha o jogador em todas as salas (inclusive o saguão)", _minimapa_acompanha],
 		["T2.12 Nenhum objeto do cenário é desenhado POR CIMA de um personagem", _nada_por_cima_dos_personagens],
 		["T2.13 Nenhum arquivo com marcador de conflito do git (<<<<<<< / >>>>>>>)", _sem_conflito_git],
+		["T2.14 Textos das cenas só usam símbolos que existem na fonte (versão web)", _glifos_na_fonte],
 	]
 
 func _instantiate(path: String) -> Node:
@@ -661,3 +662,34 @@ func _listar_texto(dir_path: String, out: Array) -> void:
 			out.append(dir_path.path_join(f))
 	for d in dir.get_directories():
 		_listar_texto(dir_path.path_join(d), out)
+
+
+# Na versão WEB não existe fonte reserva do sistema: símbolo que a Montserrat não tem
+# (ex.: ⏭ ► ✎ e emojis) vira um quadradinho. No Windows o erro não aparece.
+func _glifos_na_fonte() -> void:
+	var scenes: Array = []
+	_find_scenes("res://scenes", scenes)
+	var faltando: Dictionary = {}
+	var textos: int = 0
+	for path in scenes:
+		var node: Node = _instantiate(path)
+		if node == null:
+			continue
+		var pilha: Array = [node]
+		while not pilha.is_empty():
+			var n: Node = pilha.pop_back()
+			pilha.append_array(n.get_children())
+			if not (n is Label or n is Button):
+				continue
+			var texto: String = n.text
+			var fonte: Font = (n as Control).get_theme_font("font")
+			if texto == "" or fonte == null:
+				continue
+			textos += 1
+			for i in texto.length():
+				var c: int = texto.unicode_at(i)
+				if c > 0x7E and not fonte.has_char(c):
+					faltando["%s (%s)" % [String.chr(c), path.get_file()]] = true
+		node.free()
+	check(faltando.is_empty(), "Todos os símbolos existem na fonte" + ("" if faltando.is_empty() else ": " + ", ".join(faltando.keys())))
+	note("%d textos verificados" % textos)
