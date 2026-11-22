@@ -90,6 +90,11 @@ def main() -> None:
         if not opcoes.get("--sobrescrever"):
             erro("aumente o número em project.godot (ver VERSOES.md) ou use --sobrescrever.")
 
+    # .gdignore: o Godot não importa nada de builds/ (senão os PNGs da build web
+    # viram recursos do projeto e uma build acabaria dentro da outra).
+    os.makedirs(os.path.join(RAIZ, "builds"), exist_ok=True)
+    open(os.path.join(RAIZ, "builds", ".gdignore"), "w").close()
+
     destino = os.path.join(RAIZ, "builds", versao)
     if os.path.exists(destino):
         if not opcoes.get("--sobrescrever"):
