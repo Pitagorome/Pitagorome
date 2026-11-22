@@ -20,6 +20,8 @@ const ROOMS: Array = [
 ]
 
 var out_dir: String = "user://salas"
+var so_sala: String = ""             # --sala=ala_refeitorio  (só essa sala)
+var centro_camera: Vector2 = Vector2.ZERO  # --cam=-180,-40  (onde a câmera olha)
 
 func _ready() -> void:
 	Fase1Flow.atraso_entrada = 0.0 # falas ao entrar na sala sem a espera de 1,2 s
@@ -29,6 +31,11 @@ func _ready() -> void:
 			out_dir = arg.trim_prefix("--out=")
 		elif arg.begins_with("--task="):
 			task = int(arg.trim_prefix("--task="))
+		elif arg.begins_with("--sala="):
+			so_sala = arg.trim_prefix("--sala=")
+		elif arg.begins_with("--cam="):
+			var xy: PackedStringArray = arg.trim_prefix("--cam=").split(",")
+			centro_camera = Vector2(float(xy[0]), float(xy[1]))
 	DirAccess.make_dir_recursive_absolute(out_dir)
 	GameManager.current_phase = GameManager.TASK_PHASE.get(task, 1)
 	GameManager.start_task(task)
@@ -41,6 +48,8 @@ func _ready() -> void:
 
 func _capture() -> void:
 	for path in ROOMS:
+		if so_sala != "" and not path.get_file().begins_with(so_sala):
+			continue
 		var room: Node = load(path).instantiate()
 		get_tree().root.add_child(room)
 		get_tree().current_scene = room
@@ -52,7 +61,7 @@ func _capture() -> void:
 		var cam: Camera2D = room.find_child("Camera2D", true, false)
 		cam.get_parent().remove_child(cam)
 		room.add_child(cam)
-		cam.position = Vector2.ZERO
+		cam.position = centro_camera
 		cam.zoom = Vector2(1.5, 1.5)
 		cam.position_smoothing_enabled = false
 		cam.make_current()
