@@ -41,6 +41,7 @@ func get_cases() -> Array:
 		["T2.12 Nenhum objeto do cenário é desenhado POR CIMA de um personagem", _nada_por_cima_dos_personagens],
 		["T2.13 Nenhum arquivo com marcador de conflito do git (<<<<<<< / >>>>>>>)", _sem_conflito_git],
 		["T2.14 Textos das cenas só usam símbolos que existem na fonte (versão web)", _glifos_na_fonte],
+		["T2.15 O jogador não consegue ficar \"em cima\" de um móvel (colisão x desenho)", _jogador_nao_sobe_em_movel],
 	]
 
 func _instantiate(path: String) -> Node:
@@ -693,3 +694,68 @@ func _glifos_na_fonte() -> void:
 		node.free()
 	check(faltando.is_empty(), "Todos os símbolos existem na fonte" + ("" if faltando.is_empty() else ": " + ", ".join(faltando.keys())))
 	note("%d textos verificados" % textos)
+
+
+# Bug de 22/11 (carteiras da sala de Matemática): a colisão dos móveis começava ABAIXO do
+# ponto de ordenação (y do móvel). Vindo de cima, os pés paravam entre esse ponto e a base
+# do desenho: o jogador era desenhado NA FRENTE da carteira, parecendo pisar em cima dela.
+# Aqui o jogador anda pela sala toda e, em cada ponto, nenhum móvel desenhado atrás dele
+# pode ter os pés dele dentro do desenho (acima da base).
+func _jogador_nao_sobe_em_movel() -> void:
+	var problemas: Dictionary = {}
+	for path in ROOMS:
+		for task in [1, 6, 11]:
+			_preparar_tarefa(task)
+			var room: Node = _instantiate(path)
+			tree().root.add_child(room)
+			tree().current_scene = room
+			for i in 3:
+				await tree().physics_frame
+			for p in _em_cima_de_movel(room):
+				problemas["%s: %s" % [path.get_file(), p]] = true
+			DialogueManager.end_dialogue()
+			DialogueManager.modal_open = false
+			tree().current_scene = null
+			room.queue_free()
+			await tree().process_frame
+	check(problemas.is_empty(), "Nenhum móvel com o jogador \"em cima\" nas %d salas" % ROOMS.size())
+	for pr in problemas:
+		check(false, pr)
+	GameManager.reset_progress()
+
+func _em_cima_de_movel(room: Node) -> Array:
+	var player: CharacterBody2D = room.find_child("Player", true, false)
+	var inicio: Vector2 = player.global_position
+	var andou: Dictionary = _flood(room)["seen"]
+	player.global_position = inicio
+	var z_j: int = _z_final(player)
+	var sprite_dy: float = (player.get_node("AnimatedSprite2D") as Node2D).position.y
+	var moveis: Array = []
+	for body in room.find_children("*", "StaticBody2D", true, false):
+		if not body.is_visible_in_tree() or body.find_children("*", "CollisionShape2D", true, false).is_empty():
+			continue
+		var desenho: Rect2 = Rect2()
+		var tem: bool = false
+		for ci in body.find_children("*", "Sprite2D", true, false):
+			if ci.is_visible_in_tree():
+				var r: Rect2 = _retangulo_desenho(ci)
+				desenho = r if not tem else desenho.merge(r)
+				tem = true
+		if not tem:
+			continue
+		# 2 px de folga dos lados (o desenho é um pouco mais largo que a colisão)
+		desenho = desenho.grow_individual(-2, 0, -2, 0)
+		moveis.append({"body": body, "rect": desenho, "z": _z_final(body), "y": _y_ordenacao(body)})
+	var achados: Dictionary = {}
+	for pos in andou:
+		var pes: Rect2 = Rect2(pos.x - 5, pos.y + 7, 10, 8)
+		var y_j: float = pos.y + sprite_dy
+		for m in moveis:
+			if m["z"] > z_j or (m["z"] == z_j and m["y"] > y_j):
+				continue # o móvel é desenhado na frente: o jogador está atrás dele, tudo certo
+			var r: Rect2 = m["rect"]
+			if pes.intersects(r) and y_j < r.end.y - 3.0:
+				var nome: String = str(m["body"].name)
+				if not achados.has(nome):
+					achados[nome] = "jogador fica em cima de %s (%d, %d)" % [nome, int(pos.x), int(pos.y)]
+	return achados.values()
