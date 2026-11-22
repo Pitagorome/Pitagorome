@@ -1,0 +1,74 @@
+# Versões do Pitagorome
+
+## Links
+
+| O quê | Onde |
+|---|---|
+| Jogar no navegador (última versão de **teste**) | https://pitagorome.github.io/Pitagorome/teste/ |
+| Jogar no navegador (versão **final**) | https://pitagorome.github.io/Pitagorome/jogo/ (só a partir da v1.0.0) |
+| Página com todas as versões | https://pitagorome.github.io/Pitagorome/ |
+| Download para Windows (.zip) | https://github.com/Pitagorome/Pitagorome/releases |
+
+## TESTE x FINAL
+
+O que diferencia as duas **não é o nome do arquivo**, é o **preset de exportação** usado:
+
+| | Build de TESTE | Build FINAL |
+|---|---|---|
+| Presets (Projeto → Exportar) | `Windows - TESTE`, `Web - TESTE` | `Windows - FINAL`, `Web - FINAL` |
+| Feature tag `teste` | sim | não |
+| Botões "Pular p/ Fase 2/3 (TESTE)" | aparecem | **não existem** |
+| Marca "VERSÃO DE TESTE vX" no canto | aparece | não |
+| Nome | `v0.3.0-teste` | `v1.0.0` |
+| Tag no git | `v0.3.0-teste` | `v1.0.0` |
+| Release no GitHub | marcada como **Pre-release** | Release normal (*Latest*) |
+| No site | `/teste/` | `/jogo/` |
+| Pode gerar com alterações não commitadas? | pode | **não** (o script recusa) |
+
+Quem decide isso dentro do jogo é `scripts/versao.gd` (autoload `Versao`):
+`Versao.eh_teste()` é verdadeiro na build de teste **e** quando roda pelo editor do Godot
+(para os botões de pular continuarem servindo durante o desenvolvimento).
+
+## Número da versão: `MAIOR.MENOR.CORRECAO`
+
+Fica em **Projeto → Configurações do Projeto → Aplicação → Config → Versão**
+(`config/version` no `project.godot`).
+
+- **MAIOR**: `0` enquanto o jogo está em desenvolvimento/teste. Vira **`1`** na entrega oficial (`v1.0.0`).
+- **MENOR**: quantas fases do roteiro estão prontas. `0.1` = Fase 1, `0.2` = Fase 2, `0.3` = Fase 3 + historinha + encerramento.
+- **CORRECAO**: sobe a cada nova build publicada com correções/ajustes, sem fase nova (`0.3.0` → `0.3.1` → `0.3.2`…). Volta a 0 quando MENOR ou MAIOR sobe.
+
+Regra de ouro: **um número publicado nunca é reaproveitado.** Se já existe a tag `v0.3.0-teste`
+e vocês mudaram algo, a próxima build é `v0.3.1-teste`. O script avisa e recusa se a tag já existir.
+
+## Como gerar e publicar uma versão
+
+1. Atualizar o número em `project.godot` (se mudou algo desde a última publicada) e anotar no **Histórico** abaixo.
+2. Rodar os testes: `Godot --headless --path . res://tests/test_runner.tscn` (tem que dar *TODOS PASSARAM*).
+3. Commitar (`versão: v0.3.1-teste ...`).
+4. Gerar as builds (precisa dos templates de exportação do Godot 4.6.2 instalados):
+   ```
+   python tools/exportar.py teste      # ou: final
+   ```
+   Saem em `builds/<versão>/` (pasta ignorada pelo git):
+   `Pitagorome_<versão>_windows.zip` e `Pitagorome_<versão>_web.zip`.
+5. Criar a tag e mandar: `git tag -a v0.3.1-teste -m "..." && git push origin v0.3.1-teste`.
+6. **Download Windows:** GitHub → Releases → *Draft a new release* → escolher a tag → anexar o
+   `_windows.zip` (e o `_web.zip`, se quiser) → em teste marcar **Set as a pre-release**.
+7. **Navegador:** copiar o conteúdo de `builds/<versão>/web/` para a pasta `teste/` (ou `jogo/` na final)
+   do branch `gh-pages`, atualizar a tabela do `index.html` desse branch e dar push.
+   O GitHub Pages publica sozinho em ~1 minuto.
+
+### Testar a versão web no próprio PC
+
+Abrir o `index.html` com dois cliques **não funciona** (o navegador bloqueia). Use:
+```
+python -m http.server 8000 --directory builds/v0.3.0-teste/web
+```
+e abra http://localhost:8000. Ou, no editor do Godot, o botão *Executar no navegador* (ícone ao lado do Play).
+
+## Histórico
+
+| Versão | Data | Canal | O que mudou |
+|---|---|---|---|
+| v0.3.0-teste | 22/11/2026 | teste | Primeira build publicada. Jogo completo: historinha do começo, Fases 1, 2 e 3 e encerramento. Correção dos alunos que sumiam do corredor (conflito de merge no `npc_aluno.tscn`) e botão de pular a historinha com ícone. |
