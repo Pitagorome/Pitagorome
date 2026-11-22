@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/quadro_dourado.tscn" id="p_quadro_dourado"]
 [ext_resource type="PackedScene" path="res://scenes/props/quadro_mapa.tscn" id="p_quadro_mapa"]
 [ext_resource type="PackedScene" path="res://scenes/props/planta_grande.tscn" id="p_planta_grande"]
-[ext_resource type="PackedScene" path="res://scenes/props/armario_metal.tscn" id="p_armario_metal"]
+[ext_resource type="PackedScene" path="res://scenes/props/maquina_lanches.tscn" id="p_maquina_lanches"]
 [ext_resource type="PackedScene" path="res://scenes/props/palmeira.tscn" id="p_palmeira"]
 [ext_resource type="PackedScene" path="res://scenes/props/planta_media.tscn" id="p_planta_media"]
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="player"]
@@ -135,8 +135,8 @@ position = Vector2(-150, -62)
 [node name="PlantaB" parent="Furniture" instance=ExtResource("p_planta_grande")]
 position = Vector2(150, -62)
 
-[node name="ArmarioMetal" parent="Furniture" instance=ExtResource("p_armario_metal")]
-position = Vector2(-230, -66)
+[node name="MaquinaLanches" parent="Furniture" instance=ExtResource("p_maquina_lanches")]
+position = Vector2(-201, -66)
 
 [node name="Palmeira" parent="Furniture" instance=ExtResource("p_palmeira")]
 position = Vector2(245, 55)
