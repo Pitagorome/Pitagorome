@@ -7,7 +7,8 @@ extends CanvasLayer
 # (Tarefa 6) ou da Fase 3 (Tarefa 11), no gabinete. Cada um some quando o jogo já
 # passou daquela fase.
 #
-# PARA TIRAR antes da entrega (procure por "TEMP-PULAR-FASE2" no projeto):
+# Nas builds exportadas pelo preset FINAL estes botões não aparecem (Versao.eh_teste()).
+# Para tirar de vez do projeto (procure por "TEMP-PULAR-FASE2" no projeto):
 #   1. Apague a linha "BotaoPularFase2=..." em project.godot
 #      (ou desmarque em Projeto > Configurações > Globais/Autoload)
 #   2. Apague este arquivo (tests/botao_pular_fase2.gd e o .uid)
@@ -18,6 +19,12 @@ var botao: Button
 var botao3: Button
 
 func _ready() -> void:
+	# Só existe nas builds de TESTE (e rodando pelo editor). Na build FINAL some
+	# sozinho, então não tem como entregar com estes botões. Ver scripts/versao.gd.
+	if not Versao.eh_teste():
+		set_process(false)
+		queue_free()
+		return
 	layer = 9 # por cima do HUD (5), mas embaixo do diálogo (10) e dos desafios (12)
 	botao3 = _criar_botao("⏭ Pular p/ Fase 3 (TESTE)", 196)
 	botao3.pressed.connect(_pular.bind(3))

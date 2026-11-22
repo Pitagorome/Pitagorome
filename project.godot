@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Pitagorome"
+config/version="0.3.0"
 run/main_scene="res://scenes/intro/historia_inicio.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
@@ -23,6 +24,7 @@ Transition="*res://scenes/ui/transition.tscn"
 Fase1Flow="*res://scripts/fase1_flow.gd"
 Fase2Flow="*res://scripts/fase2_flow.gd"
 Fase3Flow="*res://scripts/fase3_flow.gd"
+Versao="*res://scripts/versao.gd"
 ; TEMP-PULAR-FASE2: botão temporário de teste, apagar esta linha antes da entrega (ver tests/botao_pular_fase2.gd)
 BotaoPularFase2="*res://tests/botao_pular_fase2.gd"
 
