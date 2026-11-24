@@ -39,8 +39,13 @@ func _ready() -> void:
 		interaction_area.body_entered.connect(_on_body_entered)
 		interaction_area.body_exited.connect(_on_body_exited)
 
+# Só o mais próximo do jogador mostra a dica (ver scripts/interacao.gd); some durante diálogo/desafio
+func _process(_delta: float) -> void:
+	if hint_label:
+		hint_label.visible = player_in_range and not DialogueManager.is_busy() and Interacao.eh_o_mais_proximo(self)
+
 func _unhandled_input(event: InputEvent) -> void:
-	if not player_in_range or DialogueManager.is_busy():
+	if not player_in_range or DialogueManager.is_busy() or not Interacao.eh_o_mais_proximo(self):
 		return
 	
 	if event.is_action_pressed("abrir_licoes") or event.is_action_pressed("ui_accept") or (event is InputEventKey and event.pressed and (event.keycode == KEY_E or event.physical_keycode == KEY_E or event.keycode == KEY_SPACE or event.keycode == KEY_ENTER)):
@@ -50,12 +55,12 @@ func _unhandled_input(event: InputEvent) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player") or body.name == "Player" or body.name == "director":
 		player_in_range = true
-		if hint_label:
-			hint_label.visible = true
+		Interacao.entrou(self)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.is_in_group("player") or body.name == "Player" or body.name == "director":
 		player_in_range = false
+		Interacao.saiu(self)
 		if hint_label:
 			hint_label.visible = false
 

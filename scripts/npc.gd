@@ -53,7 +53,7 @@ func _ready() -> void:
 # Durante um diálogo/desafio o "[E] Conversar" some (antes ficava aparecendo atrás da caixa de diálogo)
 func _process(_delta: float) -> void:
 	if hint_label:
-		hint_label.visible = player_in_range and not DialogueManager.is_busy()
+		hint_label.visible = player_in_range and not DialogueManager.is_busy() and Interacao.eh_o_mais_proximo(self)
 
 func is_following() -> bool:
 	return follow_player_in_tasks.has(GameManager.current_task_id)
@@ -163,6 +163,8 @@ func is_present_in_task(task_id: int) -> bool:
 
 # O NPC não está nesta sala na tarefa atual: esconde e desliga colisão/interação.
 func _remove_from_room() -> void:
+	player_in_range = false
+	Interacao.saiu(self)
 	visible = false
 	process_mode = Node.PROCESS_MODE_DISABLED
 	for child in get_children():
@@ -172,7 +174,7 @@ func _remove_from_room() -> void:
 		interaction_area.set_deferred("monitoring", false)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not player_in_range or DialogueManager.is_busy():
+	if not player_in_range or DialogueManager.is_busy() or not Interacao.eh_o_mais_proximo(self):
 		return
 
 	if event.is_action_pressed("abrir_licoes") or event.is_action_pressed("ui_accept") or (event is InputEventKey and event.pressed and (event.keycode == KEY_E or event.physical_keycode == KEY_E or event.keycode == KEY_SPACE or event.keycode == KEY_ENTER)):
@@ -183,8 +185,7 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player") or body.name == "Player" or body.name == "director":
 		player_in_range = true
 		player_ref = body
-		if hint_label:
-			hint_label.visible = true
+		Interacao.entrou(self)
 		if auto_start_dialogue and not DialogueManager.is_busy():
 			auto_start_dialogue = false
 			interact()
@@ -193,6 +194,7 @@ func _on_body_exited(body: Node2D) -> void:
 	if body.is_in_group("player") or body.name == "Player" or body.name == "director":
 		player_in_range = false
 		player_ref = null
+		Interacao.saiu(self)
 		if hint_label:
 			hint_label.visible = false
 
