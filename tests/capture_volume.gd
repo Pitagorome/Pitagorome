@@ -8,6 +8,7 @@ var out_dir: String = "user://volume"
 
 func _ready() -> void:
 	Fase1Flow.atraso_entrada = 0.0
+	Audio.salvar_config_ativo = false # não mexe no volume salvo de quem joga
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
 			out_dir = arg.trim_prefix("--out=")

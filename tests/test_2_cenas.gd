@@ -767,6 +767,8 @@ func _controle_volume() -> void:
 	var cv: Node = tree().root.get_node_or_null("ControleVolume")
 	if not check(cv != null, "Autoload ControleVolume existe"):
 		return
+	# Não grava em user://audio.cfg (é o volume de quem joga neste computador)
+	Audio.salvar_config_ativo = false
 	var antes_vol: Dictionary = Audio.volumes.duplicate()
 	var antes_mudo: Dictionary = Audio.mudos.duplicate()
 	for bus in ["Master", "Musica", "Efeitos"]:
@@ -807,6 +809,8 @@ func _controle_volume() -> void:
 		for i in 3:
 			await tree().process_frame
 		var b: Button = cv.botao
+		check(b.get_global_rect().size.is_equal_approx(Vector2(26, 16)), "%s: botão do mesmo tamanho do de pular (26x16)" % str(par[0]).get_file())
+		check(cv.painel.offset_top >= b.offset_bottom and absf(cv.painel.offset_right - b.offset_right) < 0.5, "%s: painel abre logo abaixo do botão" % str(par[0]).get_file())
 		if par[1]:
 			var dir: Control = room.find_child("PanelDirector", true, false) as Control
 			GameManager.player_named = true
@@ -829,6 +833,7 @@ func _controle_volume() -> void:
 		Audio.mudos[bus] = antes_mudo[bus]
 		Audio.set_volume(bus, antes_vol[bus])
 		Audio.set_mudo(bus, antes_mudo[bus])
+	Audio.salvar_config_ativo = true
 
 # Cena mínima com um "BotaoPular" igual ao da historinha (canto superior direito, x -32..-6)
 func _cena_com_botao_pular() -> Node:

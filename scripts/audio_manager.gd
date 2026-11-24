@@ -52,6 +52,8 @@ signal volume_mudou
 # Buses do jogo: Master = geral, Musica = trilha, Efeitos = interações (cliques, portas, acertos...)
 const BUSES: Array[String] = ["Master", "Musica", "Efeitos"]
 const ARQUIVO_CONFIG: String = "user://audio.cfg"
+# Os testes automáticos desligam isto para não gravar por cima do volume de quem joga
+var salvar_config_ativo: bool = true
 
 var musica_ligada: bool = true
 var volumes: Dictionary = {"Master": 1.0, "Musica": 1.0, "Efeitos": 1.0} # 0.0 a 1.0
@@ -225,6 +227,8 @@ func _carregar_config() -> void:
 		mudos[bus] = bool(cfg.get_value("mudo", bus, false))
 
 func _salvar_config() -> void:
+	if not salvar_config_ativo:
+		return
 	var cfg := ConfigFile.new()
 	for bus in BUSES:
 		cfg.set_value("volume", bus, volumes[bus])
