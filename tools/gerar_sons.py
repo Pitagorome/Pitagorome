@@ -17,7 +17,7 @@ Saída (assets/audio/), WAV mono 16-bit 22050 Hz:
   sfx/fase.wav      fase concluída
   sfx/apagao.wav    a luz da escola cai (Task 8)
   sfx/energia.wav   a luz volta
-  musica/escola.wav    trilha principal (exploração), 100 bpm, 16 compassos
+  musica/escola.wav    trilha principal (exploração), estilo 8-bit clássico, 140 bpm, 16 compassos
   musica/historia.wav  historinha do começo, 80 bpm, 8 compassos
   musica/escuro.wav    escola sem luz, 64 bpm, 8 compassos
 
@@ -222,66 +222,96 @@ ACORDES = {
 
 
 def musica_escola():
-    """Tema principal: alegre e tranquilo, para andar pela escola."""
-    bpm = 100
+    """Tema principal no estilo 8-bit clássico (console dos anos 80): animado, para andar pela escola.
+
+    Imita os 4 canais do chip de som dessa época:
+      pulso 1   = melodia (onda quadrada 25%) + eco (a mesma melodia atrasada e baixinha)
+      pulso 2   = acorde em arpejo bem rápido (o "trinado" típico dos jogos antigos)
+      triângulo = baixo pulando de oitava em colcheias + bumbo
+      ruído     = chimbal e caixa
+    Melodia composta para o Pitagorome. 140 bpm, 16 compassos em loop (~27 s).
+    """
+    bpm = 140
     batida = 60 / bpm
     compasso = 4 * batida
-    progressao = ["C", "Am", "F", "G", "C", "Am", "F", "G", "F", "G", "Em", "Am", "F", "G", "C", "C"]
+    progressao = ["C", "G", "Am", "F", "C", "G", "F", "G",
+                  "F", "G", "Em", "Am", "F", "G", "C", "G"]
     # (nota ou None para pausa, duração em batidas) — cada compasso soma 4
     melodia = [
-        [("E5", 1), ("G5", 1), ("C6", 1), ("G5", 1)],
-        [("A5", 1.5), ("G5", 0.5), ("E5", 2)],
-        [("F5", 1), ("A5", 1), ("C6", 1), ("A5", 1)],
-        [("G5", 3), (None, 1)],
-        [("E5", 0.5), ("F5", 0.5), ("G5", 1), ("E5", 1), ("C5", 1)],
-        [("C5", 1), ("E5", 1), ("A5", 2)],
-        [("A5", 1), ("G5", 1), ("F5", 1), ("E5", 1)],
-        [("D5", 3), (None, 1)],
-        [("C5", 1), ("F5", 1), ("A5", 1.5), ("G5", 0.5)],
-        [("B4", 1), ("D5", 1), ("G5", 2)],
-        [("E5", 1), ("G5", 1), ("B5", 1.5), ("A5", 0.5)],
-        [("A5", 3), (None, 1)],
-        [("F5", 1), ("A5", 1), ("C6", 1), ("A5", 1)],
-        [("B5", 1), ("A5", 1), ("G5", 1), ("D5", 1)],
-        [("E5", 1.5), ("D5", 0.5), ("C5", 2)],
-        [("C5", 2), (None, 2)],
+        [("E5", .5), ("G5", .5), ("C6", 1), ("B5", .5), ("C6", .5), ("G5", 1)],
+        [("D5", .5), ("G5", .5), ("B5", 1), ("A5", .5), ("B5", .5), ("G5", 1)],
+        [("C6", .5), ("B5", .5), ("A5", .5), ("E5", .5), ("A5", 1), ("C6", 1)],
+        [("A5", .5), ("G5", .5), ("F5", .5), ("A5", .5), ("C6", 1.5), (None, .5)],
+        [("E5", .5), ("G5", .5), ("C6", 1), ("D6", .5), ("E6", .5), ("C6", 1)],
+        [("B5", .5), ("A5", .5), ("G5", 1), ("D5", .5), ("G5", .5), ("B5", 1)],
+        [("A5", .5), ("C6", .5), ("F6", .5), ("E6", .5), ("D6", .5), ("C6", .5), ("A5", 1)],
+        [("B5", .5), ("C6", .5), ("D6", 1), ("G5", 1.5), (None, .5)],
+        [("A5", 1), (None, .5), ("A5", .5), ("C6", .5), ("A5", .5), ("F5", 1)],
+        [("B5", 1), (None, .5), ("B5", .5), ("D6", .5), ("B5", .5), ("G5", 1)],
+        [("G5", .5), ("B5", .5), ("E6", 1), ("D6", .5), ("B5", .5), ("G5", 1)],
+        [("A5", .5), ("C6", .5), ("E6", 1), ("D6", .5), ("C6", .5), ("A5", 1)],
+        [("F5", .5), ("A5", .5), ("C6", .5), ("F6", .5), ("E6", 1), ("C6", 1)],
+        [("D6", .5), ("C6", .5), ("B5", .5), ("A5", .5), ("G5", 1), ("B5", 1)],
+        [("C6", 1.5), ("G5", .5), ("E5", 1), ("G5", 1)],
+        [("D5", .5), ("E5", .5), ("F5", .5), ("G5", .5), ("A5", .5), ("B5", .5), ("D6", 1)],
     ]
     total = len(progressao) * compasso
-    mel, harm, base = Faixa(total), Faixa(total), Faixa(total)
+    lead, eco, arp, base, bat = Faixa(total), Faixa(total), Faixa(total), Faixa(total), Faixa(total)
+    pulso25 = lambda p: quadrada(p, 0.25)
+    pulso12 = lambda p: quadrada(p, 0.125)
+    atraso_eco = batida * 0.75  # eco de uma semicolcheia pontuada
 
     for c, nome in enumerate(progressao):
         t0 = c * compasso
         notas = ACORDES[nome]
         raiz = notas[0]
-        # baixo: raiz - raiz - quinta - raiz (semínimas)
-        for b, n in enumerate([raiz + "2", raiz + "2", notas[2] + "2", raiz + "2"]):
+
+        # baixo (triângulo): raiz grave / oitava acima, em colcheias
+        for k in range(8):
+            n = raiz + ("2" if k % 2 == 0 else "3")
             f = freq(n)
             if f < freq("E2"):
                 f *= 2
-            base.nota(t0 + b * batida, batida * 0.9, f, triangular, 0.55, release=0.06)
-        # acorde em arpejo (colcheias), pulso fino e baixinho
-        arpejo = [notas[0], notas[1], notas[2], notas[1]] * 2
-        for k, n in enumerate(arpejo):
-            f = freq(n + "4")
-            harm.nota(t0 + k * batida / 2, batida / 2 * 0.85, f, lambda p: quadrada(p, 0.125), 0.13, release=0.04)
-        # bateria leve
-        harm.bumbo(t0, 0.5)
-        harm.bumbo(t0 + 2 * batida, 0.4)
+            base.nota(t0 + k * batida / 2, batida / 2 * 0.8, f, triangular, 0.6, ataque=0.001, release=0.02)
+
+        # acorde em arpejo rápido (troca de nota a cada 1/30 s), um "toque" por tempo
+        freqs = [freq(n + "4") for n in notas]
+        for b in range(4):
+            inicio = t0 + b * batida
+            dur = batida * 0.55
+            passo = 1 / 30
+            k = 0
+            while k * passo < dur:
+                arp.nota(inicio + k * passo, passo, freqs[k % 3], pulso12, 0.11, ataque=0.0005, release=0.002,
+                         decaimento=0.0)
+                k += 1
+
+        # bateria: bumbo nos tempos 1 e 3, caixa no 2 e 4, chimbal em todas as colcheias
+        for b in range(4):
+            tb = t0 + b * batida
+            if b % 2 == 0:
+                bat.nota(tb, 0.12, 160, triangular, 0.7, ataque=0.001, release=0.02, decaimento=20, glide_para=50)
+            else:
+                bat.ruido(tb, 0.14, 0.45, decaimento=22, passa_baixa=0.8)
         for k in range(8):
-            if k % 2 == 1:
-                harm.ruido(t0 + k * batida / 2, 0.05, 0.12, decaimento=60, passa_baixa=0.9)
-        # melodia (uma oitava abaixo do escrito, fica mais macia)
+            bat.ruido(t0 + k * batida / 2, 0.03, 0.12, decaimento=90, passa_baixa=1.0)
+
+        # melodia (pulso 25%) + eco
         t = t0
         for n, d in melodia[c]:
             if n:
-                f = freq(n) / 2
-                mel.nota(t, d * batida * 0.92, f, lambda p: quadrada(p, 0.5), 0.22, ataque=0.01, release=0.08, vibrato=0.004 if d >= 2 else 0)
+                f = freq(n)
+                dur = d * batida * 0.88
+                vib = 0.006 if d >= 1.5 else 0
+                lead.nota(t, dur, f, pulso25, 0.24, ataque=0.002, release=0.03, vibrato=vib)
+                eco.nota((t + atraso_eco) % total, min(dur, total - (t + atraso_eco) % total), f, pulso12, 0.08,
+                         ataque=0.002, release=0.03)
             t += d * batida
-    mel.suavizar(0.3)
-    harm.suavizar(0.5)
-    mel.somar(harm)
-    mel.somar(base)
-    mel.salvar(os.path.join(SAIDA, "musica", "escola.wav"), 0.7)
+
+    for faixa in (eco, arp, base, bat):
+        lead.somar(faixa)
+    lead.suavizar(0.75)  # só tira o chiado mais agudo; o timbre continua "de videogame"
+    lead.salvar(os.path.join(SAIDA, "musica", "escola.wav"), 0.7)
 
 
 def musica_historia():
