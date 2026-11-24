@@ -39,6 +39,7 @@ func _ready() -> void:
 
 	if hint_label:
 		hint_label.visible = false
+		Interacao.preparar_dica(hint_label)
 
 	if interaction_area:
 		interaction_area.body_entered.connect(_on_body_entered)

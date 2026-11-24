@@ -9,6 +9,15 @@ extends RefCounted
 # e aceita o E.
 
 const GRUPO: StringName = &"interagivel_perto"
+# A dica "[E] ..." fica acima de móveis e personagens. Antes ela herdava o z_index 1 do NPC
+# e entrava no y_sort da sala: um móvel mais abaixo na tela (ex.: a mesa do professor)
+# era desenhado por cima e escondia o texto (2º print do grupo, 24/11).
+const Z_DICA: int = 100
+
+static func preparar_dica(dica: CanvasItem) -> void:
+	if dica:
+		dica.z_as_relative = false
+		dica.z_index = Z_DICA
 
 static func entrou(no: Node) -> void:
 	no.add_to_group(GRUPO)
