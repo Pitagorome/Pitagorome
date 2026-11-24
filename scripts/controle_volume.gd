@@ -1,7 +1,8 @@
 extends CanvasLayer
 
 # Autoload: ControleVolume
-# Botão de alto-falante no canto direito (embaixo do minimapa e da legenda). Clicando nele abre um
+# Botão de alto-falante no canto superior direito (na historinha, ao lado do botão de
+# pular). Clicando nele abre um
 # painel com 3 controles de volume, cada um com botão de mudo:
 #   Geral       -> bus Master (o jogo todo)
 #   Música      -> bus Musica (trilhas)
@@ -30,10 +31,13 @@ var _sliders: Dictionary = {}    # bus -> HSlider
 var _icones: Dictionary = {}     # bus -> IconeSom
 var _porcentos: Dictionary = {}  # bus -> Label
 var _atualizando: bool = false
+var _cena_posicao: Node = null
+var _botao_pular: Control = null
+var _com_pular: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS # funciona com o jogo pausado
-	layer = 11 # por cima do HUD (5) e da caixa de diálogo (10), embaixo dos desafios (12)
+	layer = 61 # por cima de tudo do jogo, até da tela preta (50) e do botão de pular da historinha (60)
 	_criar_botao()
 	_criar_painel()
 	Audio.volume_mudou.connect(_atualizar)
@@ -45,7 +49,7 @@ func _criar_botao() -> void:
 	botao.focus_mode = Control.FOCUS_NONE # não rouba Espaço/Enter dos diálogos
 	botao.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	botao.tooltip_text = "Volume"
-	# Canto direito, abaixo do minimapa e da legenda dele (Você / Missão)
+	# Posição de verdade em _posicionar() (canto superior direito)
 	botao.anchor_left = 1.0
 	botao.anchor_right = 1.0
 	botao.offset_left = -34
@@ -186,10 +190,42 @@ func _input(event: InputEvent) -> void:
 			fechar()
 
 func _process(_delta: float) -> void:
-	# Some durante a transição de tela (tela preta) para não ficar "voando"
-	botao.visible = not Transition.is_transitioning
+	_posicionar()
+	# Some durante a troca de sala (tela preta), mas na historinha fica junto do botão de
+	# pular, que continua aparecendo nas telas pretas com texto
+	botao.visible = _com_pular or not Transition.is_transitioning
 	if not botao.visible and aberto:
 		fechar()
+
+# O botão fica SEMPRE no canto superior direito:
+#   - na escola: no canto (o painel com o nome do diretor no HUD abre espaço para ele);
+#   - na historinha: logo à esquerda do botão de pular (que fica em x -32..-6, y 6..22).
+# O painel de volume abre logo abaixo do botão, alinhado pela direita.
+func _posicionar() -> void:
+	var cena: Node = get_tree().current_scene
+	if cena != _cena_posicao:
+		_cena_posicao = cena
+		_botao_pular = cena.find_child("BotaoPular", true, false) as Control if cena else null
+	var com_pular: bool = is_instance_valid(_botao_pular) and _botao_pular.is_visible_in_tree()
+	_com_pular = com_pular
+	var topo: float = 6.0 if com_pular else 10.0
+	var lado: float = 16.0 if com_pular else 22.0
+	var direita: float = -38.0 if com_pular else -12.0
+	if botao.offset_top == topo and botao.offset_right == direita:
+		return
+	botao.offset_top = topo
+	botao.offset_bottom = topo + lado
+	botao.offset_right = direita
+	botao.offset_left = direita - lado - (2.0 if com_pular else 0.0)
+	var margem: float = 2.0 if com_pular else 3.0
+	icone_botao.offset_left = margem
+	icone_botao.offset_top = margem
+	icone_botao.offset_right = -margem
+	icone_botao.offset_bottom = -margem
+	painel.offset_right = direita
+	painel.offset_left = direita - 190.0
+	painel.offset_top = topo + lado + 4.0
+	painel.offset_bottom = painel.offset_top
 
 # ---------------- visual ----------------
 
