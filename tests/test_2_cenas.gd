@@ -42,6 +42,7 @@ func get_cases() -> Array:
 		["T2.13 Nenhum arquivo com marcador de conflito do git (<<<<<<< / >>>>>>>)", _sem_conflito_git],
 		["T2.14 Textos das cenas só usam símbolos que existem na fonte (versão web)", _glifos_na_fonte],
 		["T2.15 O jogador não consegue ficar \"em cima\" de um móvel (colisão x desenho)", _jogador_nao_sobe_em_movel],
+		["T2.16 Botão de volume: Geral, Música e Interações mudam o som de verdade", _controle_volume],
 	]
 
 func _instantiate(path: String) -> Node:
@@ -759,3 +760,44 @@ func _em_cima_de_movel(room: Node) -> Array:
 				if not achados.has(nome):
 					achados[nome] = "jogador fica em cima de %s (%d, %d)" % [nome, int(pos.x), int(pos.y)]
 	return achados.values()
+
+# 24/11: botão de volume (scripts/controle_volume.gd). Confere que cada controle mexe no
+# bus certo do AudioServer, que o mudo funciona e que o botão não fica em cima do minimapa.
+func _controle_volume() -> void:
+	var cv: Node = tree().root.get_node_or_null("ControleVolume")
+	if not check(cv != null, "Autoload ControleVolume existe"):
+		return
+	var antes_vol: Dictionary = Audio.volumes.duplicate()
+	var antes_mudo: Dictionary = Audio.mudos.duplicate()
+	for bus in ["Master", "Musica", "Efeitos"]:
+		var idx: int = AudioServer.get_bus_index(bus)
+		check(idx != -1, "Bus %s existe" % bus)
+		Audio.set_mudo(bus, false)
+		Audio.set_volume(bus, 0.5)
+		check(absf(AudioServer.get_bus_volume_db(idx) - linear_to_db(0.5)) < 0.01, "%s em 50%% muda o volume do bus" % bus)
+		check(absf(cv._sliders[bus].value - 50.0) < 0.01, "Slider de %s mostra 50" % bus)
+		Audio.set_mudo(bus, true)
+		check(AudioServer.is_bus_mute(idx), "Mudo de %s silencia o bus" % bus)
+		check(cv._porcentos[bus].text == "mudo", "Painel mostra 'mudo' em %s" % bus)
+		Audio.set_volume(bus, 0.8)
+		check(not AudioServer.is_bus_mute(idx), "Subir o volume de %s tira do mudo" % bus)
+		Audio.set_volume(bus, 0.0)
+		check(AudioServer.is_bus_mute(idx), "Volume 0 em %s fica mudo" % bus)
+	# tecla M (música) continua funcionando
+	Audio.set_volume("Musica", 1.0)
+	Audio.set_musica_ligada(false)
+	check(Audio.esta_mudo("Musica") and not Audio.musica_ligada, "set_musica_ligada(false) muta a música")
+	Audio.set_musica_ligada(true)
+	check(not Audio.esta_mudo("Musica"), "set_musica_ligada(true) volta a música")
+	# abre e fecha
+	cv.abrir()
+	check(cv.painel.visible, "Painel abre")
+	cv.fechar()
+	check(not cv.painel.visible, "Painel fecha")
+	# não cobre o minimapa (que vai até y=142 + legenda até ~162)
+	check(cv.botao.offset_top >= 162, "Botão fica abaixo do minimapa e da legenda")
+	for bus in antes_vol:
+		Audio.volumes[bus] = antes_vol[bus]
+		Audio.mudos[bus] = antes_mudo[bus]
+		Audio.set_volume(bus, antes_vol[bus])
+		Audio.set_mudo(bus, antes_mudo[bus])
