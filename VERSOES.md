@@ -71,4 +71,5 @@ e abra http://localhost:8000. Ou, no editor do Godot, o botão *Executar no nave
 
 | Versão | Data | Canal | O que mudou |
 |---|---|---|---|
+| v0.3.1-teste | 24/11/2026 | teste | Sons e música (trilha da escola no estilo 8-bit clássico). Botão de volume embaixo do minimapa (Geral, Música e Interações, salvo entre partidas). "[E] Conversar" não fica mais escondido atrás dos móveis nem duplicado perto de dois NPCs. |
 | v0.3.0-teste | 22/11/2026 | teste | Primeira build publicada. Jogo completo: historinha do começo, Fases 1, 2 e 3 e encerramento. Correção dos alunos que sumiam do corredor (conflito de merge no `npc_aluno.tscn`) e botão de pular a historinha com ícone. Símbolos que viravam quadradinho no navegador (►, ✎, ⏭, emojis) trocados. |
