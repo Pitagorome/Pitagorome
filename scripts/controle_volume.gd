@@ -14,6 +14,13 @@ extends CanvasLayer
 const FONTE: FontFile = preload("res://assets/fonts/Montserrat-Bold.ttf")
 const COR_TEXTO := Color(0.98, 0.96, 0.88)
 const COR_DESTAQUE := Color(1, 0.9, 0.55)
+# Botão igual ao de pular da historinha (StyleBoxFlat_pular em historia_inicio.tscn): 26x16,
+# fundo preto translúcido, borda laranja, ícone creme que fica laranja com o mouse em cima
+const TAMANHO_BOTAO := Vector2(26, 16)
+const COR_PULAR_FUNDO := Color(0, 0, 0, 0.45)
+const COR_PULAR_BORDA := Color(0.99, 0.75, 0.35, 0.8)
+const COR_PULAR_ICONE := Color(0.99, 0.95, 0.85)
+const COR_PULAR_HOVER := Color(0.99, 0.75, 0.35)
 const COR_FUNDO := Color(0.13, 0.19, 0.12, 0.92)
 const COR_BORDA := Color(0.95, 0.91, 0.82, 0.9) # amarelo pastel, igual ao minimapa
 
@@ -34,6 +41,7 @@ var _atualizando: bool = false
 var _cena_posicao: Node = null
 var _botao_pular: Control = null
 var _com_pular: bool = false
+var _modo_posicao: int = -1 # 0 = canto da tela, 1 = ao lado do botão de pular
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS # funciona com o jogo pausado
@@ -52,22 +60,23 @@ func _criar_botao() -> void:
 	# Posição de verdade em _posicionar() (canto superior direito)
 	botao.anchor_left = 1.0
 	botao.anchor_right = 1.0
-	botao.offset_left = -34
+	botao.offset_left = -38
 	botao.offset_right = -12
-	botao.offset_top = 166
-	botao.offset_bottom = 188
+	botao.offset_top = 10
+	botao.offset_bottom = 26
 	for estado in ["normal", "hover", "pressed", "focus"]:
-		botao.add_theme_stylebox_override(estado, _estilo(estado == "hover" or estado == "pressed"))
+		botao.add_theme_stylebox_override(estado, _estilo_pular())
 	botao.pressed.connect(alternar)
-	botao.mouse_entered.connect(func(): icone_botao.cor = COR_DESTAQUE)
-	botao.mouse_exited.connect(func(): icone_botao.cor = COR_TEXTO)
+	botao.mouse_entered.connect(func(): icone_botao.cor = COR_PULAR_HOVER)
+	botao.mouse_exited.connect(func(): icone_botao.cor = COR_PULAR_ICONE)
 	add_child(botao)
 	icone_botao = IconeSom.new()
+	icone_botao.cor = COR_PULAR_ICONE
 	icone_botao.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	icone_botao.offset_left = 4
-	icone_botao.offset_top = 4
-	icone_botao.offset_right = -4
-	icone_botao.offset_bottom = -4
+	icone_botao.offset_left = 6
+	icone_botao.offset_top = 3
+	icone_botao.offset_right = -6
+	icone_botao.offset_bottom = -3
 	botao.add_child(icone_botao)
 
 func _criar_painel() -> void:
@@ -209,25 +218,34 @@ func _posicionar() -> void:
 	var com_pular: bool = is_instance_valid(_botao_pular) and _botao_pular.is_visible_in_tree()
 	_com_pular = com_pular
 	var topo: float = 6.0 if com_pular else 10.0
-	var lado: float = 16.0 if com_pular else 22.0
 	var direita: float = -38.0 if com_pular else -12.0
-	if botao.offset_top == topo and botao.offset_right == direita:
+	var modo: int = 1 if com_pular else 0
+	if modo == _modo_posicao:
 		return
+	_modo_posicao = modo
 	botao.offset_top = topo
-	botao.offset_bottom = topo + lado
+	botao.offset_bottom = topo + TAMANHO_BOTAO.y
 	botao.offset_right = direita
-	botao.offset_left = direita - lado - (2.0 if com_pular else 0.0)
-	var margem: float = 2.0 if com_pular else 3.0
-	icone_botao.offset_left = margem
-	icone_botao.offset_top = margem
-	icone_botao.offset_right = -margem
-	icone_botao.offset_bottom = -margem
+	botao.offset_left = direita - TAMANHO_BOTAO.x
+	# ícone do tamanho do ícone de pular (13x9), no meio do botão
+	icone_botao.offset_left = 6
+	icone_botao.offset_right = -6
+	icone_botao.offset_top = 3
+	icone_botao.offset_bottom = -3
 	painel.offset_right = direita
 	painel.offset_left = direita - 190.0
-	painel.offset_top = topo + lado + 4.0
+	painel.offset_top = topo + TAMANHO_BOTAO.y + 4.0
 	painel.offset_bottom = painel.offset_top
 
 # ---------------- visual ----------------
+
+func _estilo_pular() -> StyleBoxFlat:
+	var e := StyleBoxFlat.new()
+	e.bg_color = COR_PULAR_FUNDO
+	e.border_color = COR_PULAR_BORDA
+	e.set_border_width_all(1)
+	e.set_corner_radius_all(4)
+	return e
 
 func _estilo(destaque: bool, margem: int = 0) -> StyleBoxFlat:
 	var e := StyleBoxFlat.new()
