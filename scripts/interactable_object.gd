@@ -60,6 +60,7 @@ func _on_body_exited(body: Node2D) -> void:
 			hint_label.visible = false
 
 func interact() -> void:
+	Audio.tocar("interagir")
 	if hint_label:
 		hint_label.visible = false
 	

@@ -39,12 +39,14 @@ func check_answer() -> Array[String]:
 	attempts += 1
 	var errors: Array[String] = _validate()
 	if errors.is_empty():
+		Audio.tocar("acerto")
 		is_solved = true
 		_set_feedback(_success_text(), COLOR_OK)
 		check_button.text = "Continuar"
 		close_button.visible = false
 		_set_inputs_enabled(false)
 	else:
+		Audio.tocar("erro")
 		# Mostra no máximo 3 problemas para o painel não estourar a tela
 		var shown: Array[String] = errors.slice(0, 3)
 		var text: String = "Ainda tem problema:\n• " + "\n• ".join(shown)

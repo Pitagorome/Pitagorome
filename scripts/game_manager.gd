@@ -9,6 +9,7 @@ signal phase_changed(new_phase: int)
 signal player_info_updated(player_name: String, player_gender: String)
 signal lights_changed(lights_out: bool)
 signal note_updated(text: String)
+signal task_completed(task_id: int)
 
 # Aparências disponíveis para o jogador (sprites em assets/character_frames).
 # Nenhuma é igual a um NPC: Bob = Professor, Alex = Zelador, Amelia = Coordenadora.
@@ -230,6 +231,7 @@ func complete_task(task_id: int) -> void:
 		return
 	completed_tasks.append(task_id)
 	print("[GameManager] Tarefa concluída: ", task_id)
+	task_completed.emit(task_id)
 
 	var next_task: int = task_id + 1
 	# A próxima tarefa só começa sozinha se for da mesma fase.

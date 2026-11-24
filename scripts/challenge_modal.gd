@@ -116,6 +116,7 @@ func _on_code_submitted() -> void:
 		_show_error_feedback(wrong_hints.get(typed, current_feedback_error))
 
 func _show_success_feedback() -> void:
+	Audio.tocar("acerto")
 	last_answer_correct = true
 	modal_panel.visible = false
 	feedback_title.text = "Desafio concluído com sucesso!"
@@ -129,6 +130,7 @@ func _show_success_feedback() -> void:
 	challenge_completed.emit(current_task_id)
 
 func _show_error_feedback(msg: String) -> void:
+	Audio.tocar("erro")
 	last_answer_correct = false
 	modal_panel.visible = false
 	feedback_title.text = "Tente novamente"

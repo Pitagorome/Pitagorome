@@ -35,6 +35,7 @@ func _physics_process(_delta: float) -> void:
 		return
 	if jogador_em_cima and not DialogueManager.is_busy():
 		_usada = true
+		Audio.tocar("porta")
 		GameManager.change_scene(target_scene, target_spawn_id)
 
 var _quadro_inicial: int = 0

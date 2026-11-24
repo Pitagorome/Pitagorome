@@ -42,6 +42,7 @@ A proposta é integrar o aprendizado de matemática à experiência de jogo, uti
 * Progressão por fases.
 * Sistema de missões e objetivos.
 * Salvamento do progresso.
+* Música de fundo e efeitos sonoros (tecla **M** liga/desliga a música). Todos os sons são sintetizados por `tools/gerar_sons.py`, sem músicas de terceiros (sem copyright).
 
 ### Conteúdo Matemático
 

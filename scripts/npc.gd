@@ -206,6 +206,7 @@ func face_player() -> void:
 		animated_sprite.play("idle_down" if dir.y > 0 else "idle_up")
 
 func interact() -> void:
+	Audio.tocar("interagir")
 	if hint_label:
 		hint_label.visible = false
 	face_player()

@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 
 GameManager="*res://scripts/game_manager.gd"
 DialogueManager="*res://scripts/dialogue_manager.gd"
+Audio="*res://scripts/audio_manager.gd"
 Transition="*res://scenes/ui/transition.tscn"
 Fase1Flow="*res://scripts/fase1_flow.gd"
 Fase2Flow="*res://scripts/fase2_flow.gd"
