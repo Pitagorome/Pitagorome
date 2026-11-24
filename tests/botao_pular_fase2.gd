@@ -29,7 +29,7 @@ func _ready() -> void:
 		queue_free()
 		return
 	layer = 9 # por cima do HUD (5), mas embaixo do diálogo (10) e dos desafios (12)
-	botao3 = _criar_botao("Pular p/ Fase 3 (TESTE)", 196)
+	botao3 = _criar_botao("Pular p/ Fase 3 (TESTE)", 220)
 	botao3.pressed.connect(_pular.bind(3))
 	botao = Button.new()
 	botao.text = "Pular p/ Fase 2 (TESTE)"
@@ -39,9 +39,9 @@ func _ready() -> void:
 	botao.anchor_left = 1.0
 	botao.anchor_right = 1.0
 	botao.offset_left = -170
-	botao.offset_top = 172
+	botao.offset_top = 196 # embaixo do botão de volume (scripts/controle_volume.gd)
 	botao.offset_right = -12
-	botao.offset_bottom = 192
+	botao.offset_bottom = 216
 	botao.add_theme_font_size_override("font_size", 10)
 	botao.modulate = Color(1, 0.8, 0.8, 0.85)
 	botao.tooltip_text = "Botão temporário de teste: vai direto para a Fase 2."
@@ -69,7 +69,7 @@ func _process(_delta: float) -> void:
 	botao.visible = GameManager.current_phase < 2 and not Transition.is_transitioning
 	botao3.visible = GameManager.current_phase < 3 and not Transition.is_transitioning
 	# quando só sobra o da Fase 3, ele sobe para o lugar do outro
-	botao3.offset_top = 196 if botao.visible else 172
+	botao3.offset_top = 220 if botao.visible else 196
 	botao3.offset_bottom = botao3.offset_top + 20
 
 func _pular(fase: int = 2) -> void:
