@@ -13,6 +13,8 @@ extends Node
 # Os outros sons (porta, interagir, acerto, erro) são chamados com Audio.tocar("nome").
 #
 # Tecla M liga/desliga a música.
+# Volumes (Geral, Música, Interações) são controlados pelo botão de alto-falante
+# (scripts/controle_volume.gd) e ficam salvos em user://audio.cfg.
 
 const SFX: Dictionary = {
 	"clique": "res://assets/audio/sfx/clique.wav",
@@ -45,7 +47,15 @@ const CANAIS_SFX: int = 8
 # Ignora o mesmo efeito repetido mais rápido que isto (evita "metralhadora" de cliques)
 const INTERVALO_MINIMO: float = 0.05
 
+signal volume_mudou
+
+# Buses do jogo: Master = geral, Musica = trilha, Efeitos = interações (cliques, portas, acertos...)
+const BUSES: Array[String] = ["Master", "Musica", "Efeitos"]
+const ARQUIVO_CONFIG: String = "user://audio.cfg"
+
 var musica_ligada: bool = true
+var volumes: Dictionary = {"Master": 1.0, "Musica": 1.0, "Efeitos": 1.0} # 0.0 a 1.0
+var mudos: Dictionary = {"Master": false, "Musica": false, "Efeitos": false}
 var musica_atual: String = ""
 
 var _sfx: Dictionary = {}          # nome -> AudioStream
@@ -63,6 +73,9 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS # continua tocando com o jogo pausado
 	_criar_bus("Musica")
 	_criar_bus("Efeitos")
+	_carregar_config()
+	for bus in BUSES:
+		_aplicar_bus(bus)
 	for nome in SFX:
 		var s: AudioStream = load(SFX[nome]) as AudioStream
 		if s:
@@ -164,8 +177,59 @@ func _unhandled_input(event: InputEvent) -> void:
 		set_musica_ligada(not musica_ligada)
 
 func set_musica_ligada(ligada: bool) -> void:
-	musica_ligada = ligada
-	AudioServer.set_bus_mute(AudioServer.get_bus_index("Musica"), not ligada)
+	set_mudo("Musica", not ligada)
+
+# ---------------- volume ----------------
+
+func set_volume(bus: String, valor: float) -> void:
+	if not volumes.has(bus):
+		return
+	volumes[bus] = clampf(valor, 0.0, 1.0)
+	# Subir o volume de algo que estava no mudo já tira do mudo
+	if volumes[bus] > 0.0:
+		mudos[bus] = false
+	_aplicar_bus(bus)
+	_salvar_config()
+	volume_mudou.emit()
+
+func get_volume(bus: String) -> float:
+	return float(volumes.get(bus, 1.0))
+
+func set_mudo(bus: String, mudo: bool) -> void:
+	if not mudos.has(bus):
+		return
+	mudos[bus] = mudo
+	_aplicar_bus(bus)
+	_salvar_config()
+	volume_mudou.emit()
+
+# Mudo de verdade: apertou o botão de mudo OU deixou o volume no zero
+func esta_mudo(bus: String) -> bool:
+	return bool(mudos.get(bus, false)) or get_volume(bus) <= 0.0
+
+func _aplicar_bus(bus: String) -> void:
+	var idx: int = AudioServer.get_bus_index(bus)
+	if idx == -1:
+		return
+	AudioServer.set_bus_volume_db(idx, linear_to_db(maxf(get_volume(bus), 0.0001)))
+	AudioServer.set_bus_mute(idx, esta_mudo(bus))
+	if bus == "Musica":
+		musica_ligada = not esta_mudo(bus)
+
+func _carregar_config() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(ARQUIVO_CONFIG) != OK:
+		return
+	for bus in BUSES:
+		volumes[bus] = clampf(float(cfg.get_value("volume", bus, 1.0)), 0.0, 1.0)
+		mudos[bus] = bool(cfg.get_value("mudo", bus, false))
+
+func _salvar_config() -> void:
+	var cfg := ConfigFile.new()
+	for bus in BUSES:
+		cfg.set_value("volume", bus, volumes[bus])
+		cfg.set_value("mudo", bus, mudos[bus])
+	cfg.save(ARQUIVO_CONFIG)
 
 func escolher_musica() -> String:
 	var cena: Node = get_tree().current_scene
