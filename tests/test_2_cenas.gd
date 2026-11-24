@@ -794,10 +794,56 @@ func _controle_volume() -> void:
 	check(cv.painel.visible, "Painel abre")
 	cv.fechar()
 	check(not cv.painel.visible, "Painel fecha")
-	# não cobre o minimapa (que vai até y=142 + legenda até ~162)
-	check(cv.botao.offset_top >= 162, "Botão fica abaixo do minimapa e da legenda")
+	# Posição: sempre no canto superior direito. Historinha -> à esquerda do botão de pular
+	# (x -32..-6); escola -> no canto, sem ficar em cima do nome do diretor nem do minimapa (y>=38)
+	# A historinha de verdade não é aberta aqui (ela dispara falas e transições que atrapalham
+	# o Teste 3); uma cena falsa com o botão de pular no mesmo lugar basta.
+	var cenas: Array = [["historinha (botão de pular)", false], ["res://scenes/school/school_corridor.tscn", true]]
+	GameManager.intro_dialogue_finished = true
+	for par in cenas:
+		var room: Node = _instantiate(par[0]) if par[1] else _cena_com_botao_pular()
+		tree().root.add_child(room)
+		tree().current_scene = room
+		for i in 3:
+			await tree().process_frame
+		var b: Button = cv.botao
+		if par[1]:
+			var dir: Control = room.find_child("PanelDirector", true, false) as Control
+			GameManager.player_named = true
+			dir.visible = true
+			await tree().process_frame
+			await tree().process_frame
+			var r_botao: Rect2 = b.get_global_rect()
+			check(b.offset_top <= 12 and b.offset_bottom <= 38, "%s: botão no canto de cima, acima do minimapa" % par[0].get_file())
+			check(not r_botao.intersects(dir.get_global_rect()), "%s: botão não fica em cima do nome do diretor (%s x %s)" % [par[0].get_file(), str(r_botao), str(dir.get_global_rect())])
+		else:
+			check(b.offset_top <= 10 and b.offset_right <= -36, "%s: botão no canto de cima, à esquerda do botão de pular" % par[0])
+		DialogueManager.end_dialogue()
+		DialogueManager.modal_open = false
+		tree().current_scene = null
+		room.queue_free()
+		await tree().process_frame
+	GameManager.reset_progress()
 	for bus in antes_vol:
 		Audio.volumes[bus] = antes_vol[bus]
 		Audio.mudos[bus] = antes_mudo[bus]
 		Audio.set_volume(bus, antes_vol[bus])
 		Audio.set_mudo(bus, antes_mudo[bus])
+
+# Cena mínima com um "BotaoPular" igual ao da historinha (canto superior direito, x -32..-6)
+func _cena_com_botao_pular() -> Node:
+	var raiz := Node.new()
+	raiz.name = "FalsaHistoria"
+	var ui := CanvasLayer.new()
+	ui.layer = 60
+	raiz.add_child(ui)
+	var b := Button.new()
+	b.name = "BotaoPular"
+	b.anchor_left = 1.0
+	b.anchor_right = 1.0
+	b.offset_left = -32
+	b.offset_right = -6
+	b.offset_top = 6
+	b.offset_bottom = 22
+	ui.add_child(b)
+	return raiz

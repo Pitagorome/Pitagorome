@@ -1,6 +1,6 @@
 extends Node
 
-# Ferramenta: print do botão de volume fechado e com o painel aberto, no corredor da Fase 1.
+# Ferramenta: print do botão de volume (fechado e aberto) no corredor da Fase 1 e na historinha.
 # Rodar COM janela:
 #   Godot_v4.6.2-stable_win64.exe --path . res://tests/capture_volume.tscn -- --out=C:/pasta
 
@@ -14,6 +14,8 @@ func _ready() -> void:
 	DirAccess.make_dir_recursive_absolute(out_dir)
 	GameManager.start_task(1)
 	GameManager.intro_dialogue_finished = true
+	GameManager.player_name = "Teste"
+	GameManager.player_named = true
 	GameManager.seen_events["t1_briefing"] = true
 	get_tree().current_scene = null
 	_capture.call_deferred()
@@ -31,6 +33,17 @@ func _capture() -> void:
 	await _print("volume_aberto.png")
 	Audio.set_mudo("Musica", false)
 	Audio.set_volume("Efeitos", 1.0)
+	ControleVolume.fechar()
+	get_tree().current_scene = null
+	room.queue_free()
+	var hist: Node = load("res://scenes/intro/historia_inicio.tscn").instantiate()
+	get_tree().root.add_child(hist)
+	get_tree().current_scene = hist
+	for i in 60:
+		await get_tree().process_frame
+	await _print("volume_historia.png")
+	ControleVolume.abrir()
+	await _print("volume_historia_aberto.png")
 	get_tree().quit()
 
 func _print(nome: String) -> void:
