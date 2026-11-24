@@ -5,3 +5,9 @@
 *.aseprite
 # Builds exportadas (ver VERSOES.md e tools/exportar.sh)
 /builds/
+
+# Dependências do site (npm install recria)
+node_modules/
+
+# Cache do Python (tools/*.py)
+__pycache__/
