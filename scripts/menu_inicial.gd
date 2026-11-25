@@ -15,9 +15,14 @@ extends Node2D
 #               ControleVolume.criar_linhas, tudo sincronizado)
 #   Créditos -> equipe e ferramentas
 #   Sair     -> fecha o jogo (só no executável; no navegador não aparece)
+#   Escolher tarefa (canto de baixo, "godmode" para a apresentação) -> lista das 15 tarefas;
+#               clicar numa começa direto nela, como se as anteriores já tivessem sido feitas
+#               (GameManager.jump_to_task). Existe também na versão final.
 # Enter/Espaço apertam Jogar; Esc fecha a janelinha aberta.
 
 const CENA_HISTORIA: String = "res://scenes/intro/historia_inicio.tscn"
+const CENA_GABINETE: String = "res://scenes/intro/intro_scene.tscn"
+const CENA_GERADOR: String = "res://scenes/school/sala_gerador_scene.tscn"
 const FUNDO: Texture2D = preload("res://assets/ui/menu_fundo.jpg")
 const LOGO: Texture2D = preload("res://assets/ui/logo.png")
 const FRAMES_DIRETOR: SpriteFrames = preload("res://assets/character_frames/adam_frames.tres")
@@ -53,6 +58,9 @@ var botao_sair: Button
 var janela_volume: PanelContainer
 var caixa_volume: VBoxContainer
 var janela_creditos: PanelContainer
+var janela_tarefas: PanelContainer
+var botao_tarefas: Button
+var botoes_tarefa: Dictionary = {} # id da tarefa -> Button
 var veu: ColorRect # escurece o menu atrás da janelinha aberta; clicar nele fecha
 var diretor: AnimatedSprite2D
 var saindo: bool = false
@@ -83,7 +91,7 @@ func _process(delta: float) -> void:
 			diretor.position.x = -40.0
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel") and (janela_volume.visible or janela_creditos.visible):
+	if event.is_action_pressed("ui_cancel") and (janela_volume.visible or janela_creditos.visible or janela_tarefas.visible):
 		get_viewport().set_input_as_handled()
 		_fechar_janelas()
 
@@ -202,6 +210,49 @@ func _montar_interface() -> void:
 	cred.add_child(_label("Godot Engine 4 · GDScript · pixel art", FONTE_REG, 9, COR_CREME))
 	cred.add_child(_label("Trabalho de Desenvolvimento de Sistemas · IFSP", FONTE_REG, 9, COR_CREME))
 	ui.add_child(janela_creditos)
+
+	# Godmode da apresentação: botão discreto no canto + janela com as tarefas por fase
+	botao_tarefas = _botao("Escolher tarefa", 10, 20)
+	botao_tarefas.name = "BotaoEscolherTarefa"
+	botao_tarefas.tooltip_text = "Modo apresentação: comece direto em qualquer tarefa"
+	botao_tarefas.anchor_left = 1.0
+	botao_tarefas.anchor_right = 1.0
+	botao_tarefas.anchor_top = 1.0
+	botao_tarefas.anchor_bottom = 1.0
+	botao_tarefas.offset_left = -112
+	botao_tarefas.offset_right = -12
+	botao_tarefas.offset_top = -32
+	botao_tarefas.offset_bottom = -12
+	botao_tarefas.focus_mode = Control.FOCUS_NONE
+	botao_tarefas.pressed.connect(alternar_tarefas)
+	ui.add_child(botao_tarefas)
+
+	janela_tarefas = _janela("Escolher tarefa", 560, -150)
+	var conteudo: VBoxContainer = janela_tarefas.get_meta("conteudo")
+	conteudo.add_child(_label("Modo apresentação: começa direto na tarefa, como se as anteriores já estivessem feitas.", FONTE_REG, 9, COR_CREME))
+	var colunas := HBoxContainer.new()
+	colunas.add_theme_constant_override("separation", 8)
+	conteudo.add_child(colunas)
+	for fase in [1, 2, 3]:
+		var col := VBoxContainer.new()
+		col.add_theme_constant_override("separation", 4)
+		col.custom_minimum_size.x = 172
+		colunas.add_child(col)
+		col.add_child(_label("Fase %d" % fase, FONTE_BOLD, 11, COR_LARANJA))
+		var tarefas: Array = GameManager.TASK_PHASE.keys().filter(func(t): return GameManager.TASK_PHASE[t] == fase)
+		tarefas.sort()
+		for t in tarefas:
+			var b := _botao("%d. %s" % [t, GameManager.TASK_NAMES[t]], 9, 20)
+			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			b.focus_mode = Control.FOCUS_NONE
+			for estado in ["normal", "hover", "focus", "pressed"]:
+				var e: StyleBoxFlat = b.get_theme_stylebox(estado).duplicate()
+				e.content_margin_left = 6
+				b.add_theme_stylebox_override(estado, e)
+			b.pressed.connect(ir_para_tarefa.bind(t))
+			col.add_child(b)
+			botoes_tarefa[t] = b
+	ui.add_child(janela_tarefas)
 	_fechar_janelas()
 
 func jogar() -> void:
@@ -210,6 +261,29 @@ func jogar() -> void:
 	saindo = true
 	GameManager.reset_progress()
 	Transition.change_scene(CENA_HISTORIA)
+
+# Godmode: começa direto na tarefa escolhida
+func ir_para_tarefa(tarefa: int) -> void:
+	if saindo or Transition.is_transitioning:
+		return
+	saindo = true
+	GameManager.jump_to_task(tarefa)
+	if tarefa <= 1:
+		Transition.change_scene(CENA_GABINETE, "SpawnFromCorridor") # igual ao fim da historinha
+		return
+	var fase: int = GameManager.TASK_PHASE[tarefa]
+	var cena: String = CENA_GERADOR if tarefa == 8 else CENA_GABINETE
+	var spawn: String = "SpawnFromAla" if tarefa == 8 else "SpawnDesk"
+	Transition.change_scene_with_cards(cena, spawn, [
+		["Fase %d" % fase, GameManager.PHASE_NAMES[fase], 2.0],
+		["Tarefa %d" % tarefa, GameManager.TASK_NAMES[tarefa], 1.8],
+	])
+
+func alternar_tarefas() -> void:
+	var abrir: bool = not janela_tarefas.visible
+	_fechar_janelas()
+	janela_tarefas.visible = abrir
+	veu.visible = abrir
 
 func alternar_volume() -> void:
 	var abrir: bool = not janela_volume.visible
@@ -228,6 +302,8 @@ func _fechar_janelas() -> void:
 	janela_volume.visible = false
 	caixa_volume.visible = false
 	janela_creditos.visible = false
+	if janela_tarefas:
+		janela_tarefas.visible = false
 	veu.visible = false
 	if is_inside_tree() and botao_jogar.is_inside_tree():
 		botao_jogar.grab_focus.call_deferred()
@@ -235,18 +311,18 @@ func _fechar_janelas() -> void:
 # ---------------- visual ----------------
 
 # Janelinha centralizada embaixo dos botões, com título e "Fechar"
-func _janela(titulo: String) -> PanelContainer:
+func _janela(titulo: String, largura: int = 250, topo: int = -95) -> PanelContainer:
 	var j := PanelContainer.new()
-	j.name = "Janela" + titulo.replace("é", "e")
+	j.name = "Janela" + titulo.replace("é", "e").replace(" ", "")
 	j.add_theme_stylebox_override("panel", _estilo_hud(12, true))
 	j.anchor_left = 0.5
 	j.anchor_right = 0.5
 	j.anchor_top = 0.5
 	j.anchor_bottom = 0.5
-	j.offset_left = -125
-	j.offset_right = 125
-	j.offset_top = -95
-	j.offset_bottom = -95
+	j.offset_left = -largura / 2.0
+	j.offset_right = largura / 2.0
+	j.offset_top = topo
+	j.offset_bottom = topo
 	j.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 5)
