@@ -79,6 +79,7 @@ e abra http://localhost:8000. Ou, no editor do Godot, o botão *Executar no nave
 
 | Versão | Data | Canal | O que mudou |
 |---|---|---|---|
+| v1.0.1-teste / **v1.0.1** | 25/11/2026 | teste e **final** | Botão **Escolher tarefa** no menu (modo apresentação): começa direto em qualquer uma das 15 tarefas. |
 | **v1.0.0** | 24/11/2026 | **final** | Entrega oficial: as 3 fases, historinha, encerramento e menu inicial, igual à v0.3.7-teste, mas sem os botões de pular fase e sem a marca de teste. No site em `/jogo/`. |
 | v0.3.7-teste | 24/11/2026 | teste | Menu: letra pixelada (Pixelify Sans, a do site), botões do mesmo tamanho e logo do site sem a faixa. |
 | v0.3.6-teste | 24/11/2026 | teste | Menu inicial refeito no estilo do site do grupo: ilustração da escola, logo oficial, botões amarelos, diretor andando, janelinhas de Volume e Créditos. |
