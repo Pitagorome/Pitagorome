@@ -7,7 +7,8 @@
 | Jogar no navegador (última versão de **teste**) | https://pitagorome.github.io/Pitagorome/teste/ |
 | Jogar no navegador (versão **final**) | https://pitagorome.github.io/Pitagorome/jogo/ (só a partir da v1.0.0) |
 | Página com todas as versões | https://pitagorome.github.io/Pitagorome/ |
-| Download para Windows (.zip) | https://github.com/Pitagorome/Pitagorome/releases |
+| Download para Windows (.zip com o executável) | botão **Baixar para Windows** em https://pitagorome.github.io/Pitagorome/ (arquivo em `/downloads/` do site) |
+| Releases no GitHub (opcional) | https://github.com/Pitagorome/Pitagorome/releases |
 
 ## TESTE x FINAL
 
@@ -53,8 +54,11 @@ e vocês mudaram algo, a próxima build é `v0.3.1-teste`. O script avisa e recu
    Saem em `builds/<versão>/` (pasta ignorada pelo git):
    `Pitagorome_<versão>_windows.zip` e `Pitagorome_<versão>_web.zip`.
 5. Criar a tag e mandar: `git tag -a v0.3.1-teste -m "..." && git push origin v0.3.1-teste`.
-6. **Download Windows:** GitHub → Releases → *Draft a new release* → escolher a tag → anexar o
-   `_windows.zip` (e o `_web.zip`, se quiser) → em teste marcar **Set as a pre-release**.
+6. **Download Windows:** copiar o `builds/<versão>/Pitagorome_<versão>_windows.zip` para a pasta
+   `downloads/` do branch `gh-pages` (deixar só o da versão atual, para o repositório não crescer à toa)
+   e apontar o botão **Baixar para Windows** do `index.html` para ele. Assim o botão baixa o executável,
+   e não o código do projeto (a página da tag no GitHub só oferece o código-fonte).
+   Opcional: GitHub → Releases → *Draft a new release* → tag → anexar o mesmo .zip → **Set as a pre-release**.
 7. **Navegador:** copiar o conteúdo de `builds/<versão>/web/` para a pasta `teste/` (ou `jogo/` na final)
    do branch `gh-pages`, atualizar a tabela do `index.html` desse branch e dar push.
    O GitHub Pages publica sozinho em ~1 minuto.
@@ -71,6 +75,7 @@ e abra http://localhost:8000. Ou, no editor do Godot, o botão *Executar no nave
 
 | Versão | Data | Canal | O que mudou |
 |---|---|---|---|
+| v0.3.4-teste | 24/11/2026 | teste | **Som no navegador consertado** (os buses Musica/Efeitos eram criados por código e o Godot desligava o som da saída na web; agora vêm do `default_bus_layout.tres`). Menu inicial com Jogar, Volume e Sair. "Baixar para Windows" do site baixa o executável. |
 | v0.3.3-teste | 24/11/2026 | teste | Botão de volume do mesmo tamanho e cor do botão de pular (ícone em pixel art). No navegador, aviso "Clique ou aperte uma tecla para ligar o som" até o navegador liberar o áudio. |
 | v0.3.2-teste | 24/11/2026 | teste | Botão de volume sempre no canto superior direito (na historinha, ao lado do botão de pular). |
 | v0.3.1-teste | 24/11/2026 | teste | Sons e música (trilha da escola no estilo 8-bit clássico). Botão de volume embaixo do minimapa (Geral, Música e Interações, salvo entre partidas). "[E] Conversar" não fica mais escondido atrás dos móveis nem duplicado perto de dois NPCs. |
