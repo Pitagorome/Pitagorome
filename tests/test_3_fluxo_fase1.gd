@@ -135,6 +135,10 @@ func _menu() -> void:
 		Audio.set_volume("Musica", antes)
 		Audio.salvar_config_ativo = true
 	check(not menu.botao_sair.visible or not OS.has_feature("web"), "Sair não aparece no navegador")
+	check(menu.botao_creditos.visible and not menu.janela_creditos.visible, "Tem o botão Créditos e a janela começa fechada")
+	menu.botao_creditos.pressed.emit()
+	check(menu.janela_creditos.visible and not menu.caixa_volume.visible, "Créditos abre e fecha o Volume (uma janela por vez)")
+	menu.alternar_creditos()
 	menu.botao_jogar.pressed.emit()
 	var inicio: int = Time.get_ticks_msec()
 	while Time.get_ticks_msec() - inicio < 10000:
