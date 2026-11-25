@@ -75,6 +75,7 @@ e abra http://localhost:8000. Ou, no editor do Godot, o botão *Executar no nave
 
 | Versão | Data | Canal | O que mudou |
 |---|---|---|---|
+| v0.3.7-teste | 24/11/2026 | teste | Menu: letra pixelada (Pixelify Sans, a do site), botões do mesmo tamanho e logo do site sem a faixa. |
 | v0.3.6-teste | 24/11/2026 | teste | Menu inicial refeito no estilo do site do grupo: ilustração da escola, logo oficial, botões amarelos, diretor andando, janelinhas de Volume e Créditos. |
 | v0.3.5-teste | 24/11/2026 | teste | Som no navegador de verdade: a página destrava o áudio no primeiro clique/tecla (script no `<head>` do export web) e a música começa direto no volume certo (sem crossfade na web, que deixava a música quase muda). |
 | v0.3.4-teste | 24/11/2026 | teste | **Som no navegador consertado** (os buses Musica/Efeitos eram criados por código e o Godot desligava o som da saída na web; agora vêm do `default_bus_layout.tres`). Menu inicial com Jogar, Volume e Sair. "Baixar para Windows" do site baixa o executável. |
