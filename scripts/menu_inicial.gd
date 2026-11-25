@@ -1,60 +1,70 @@
 extends Node2D
 
-# Menu inicial (cena principal: scenes/ui/menu_inicial.tscn), pedido de 24/11.
-#   Jogar  -> historinha do começo (scenes/intro/historia_inicio.tscn)
-#   Volume -> abre/fecha as barrinhas de Geral, Música e Interações (as mesmas do botão do canto,
-#             montadas por ControleVolume.criar_linhas, então tudo fica sincronizado)
-#   Sair   -> fecha o jogo (só no executável; no navegador não aparece)
-# Fundo: o portão da escola de verdade, carregado sem o script da sala (igual à historinha),
-# escurecido. Toca a música da escola.
-# Bônus na versão web: o clique em "Jogar" já libera o som do navegador antes da historinha.
+# Menu inicial (cena principal: scenes/ui/menu_inicial.tscn). Pedido de 24/11, refeito no mesmo dia
+# ("tá muito feio"): inspirado no site do grupo (github.com/Pitagorome/Pitagorome-Site) e no menu
+# do Aeromática.
+#   - fundo: a ilustração da Escola Pitagórica do site (assets/ui/menu_fundo.jpg);
+#   - título: o logo oficial (assets/ui/logo.png);
+#   - botões amarelos com borda verde e sombra "pixel", iguais ao botão "game" do site;
+#   - o diretor (Adam) passa andando pela calçada, como no topo do site.
+# Botões:
+#   Jogar    -> historinha do começo (scenes/intro/historia_inicio.tscn)
+#   Volume   -> janelinha com Geral, Música e Interações (as mesmas barrinhas do botão do canto,
+#               ControleVolume.criar_linhas, tudo sincronizado)
+#   Créditos -> equipe e ferramentas
+#   Sair     -> fecha o jogo (só no executável; no navegador não aparece)
+# Enter/Espaço apertam Jogar; Esc fecha a janelinha aberta.
 
 const CENA_HISTORIA: String = "res://scenes/intro/historia_inicio.tscn"
-const CENA_FUNDO: String = "res://scenes/school/portao_scene.tscn"
+const FUNDO: Texture2D = preload("res://assets/ui/menu_fundo.jpg")
+const LOGO: Texture2D = preload("res://assets/ui/logo.png")
+const FRAMES_DIRETOR: SpriteFrames = preload("res://assets/character_frames/adam_frames.tres")
 const FONTE_BOLD: FontFile = preload("res://assets/fonts/Montserrat-Bold.ttf")
 const FONTE_REG: FontFile = preload("res://assets/fonts/Montserrat-Regular.ttf")
-const COR_CREME := Color(0.98, 0.96, 0.88)
-const COR_AMARELO := Color(0.99, 0.75, 0.35)
-const COR_VERDE := Color(0.18, 0.25, 0.16, 0.92)
-const COR_VERDE_HOVER := Color(0.26, 0.35, 0.22, 0.95)
-const COR_BORDA := Color(0.95, 0.91, 0.82, 0.9)
-# Nós das salas que não entram no fundo (mesma ideia da historinha)
-const NOS_REMOVIDOS: Array[String] = ["HUD", "DialogueBox", "ChallengeModal", "Excursao", "Vans"]
 
-@onready var palco: Node2D = $Palco
-@onready var camera: Camera2D = $Camera2D
+# Cores do site (src/styles.css, convertidas de oklch)
+const COR_AMARELO := Color(0.956, 0.836, 0.463)       # --accent (botões)
+const COR_AMARELO_HOVER := Color(1.0, 0.9, 0.6)
+const COR_TEXTO_BOTAO := Color(0.096, 0.21, 0.102)    # --accent-foreground
+const COR_BORDA := Color(0.177, 0.293, 0.181)         # --panel-border
+const COR_SOMBRA := Color(0.065, 0.142, 0.094, 0.45)  # --pixel-shadow
+const COR_HUD := Color(0.065, 0.142, 0.094, 0.88)     # --ink (janelinhas e dica)
+const COR_CREME := Color(0.965, 0.934, 0.848)         # --ink-foreground
+const COR_LARANJA := Color(0.99, 0.75, 0.35)
+
+const EQUIPE: Array[String] = [
+	"Ana Julia Cardoso Moser",
+	"Eduardo de Lazzari Oliveira",
+	"Guilherme Pereira de Oliveira",
+	"João Paulo Queiroz Costa",
+]
 
 var botao_jogar: Button
 var botao_volume: Button
+var botao_creditos: Button
 var botao_sair: Button
+var janela_volume: PanelContainer
 var caixa_volume: VBoxContainer
+var janela_creditos: PanelContainer
+var veu: ColorRect # escurece o menu atrás da janelinha aberta; clicar nele fecha
+var diretor: AnimatedSprite2D
 var saindo: bool = false
 
 func _ready() -> void:
-	_montar_fundo()
-	camera.position = Vector2(0, -10)
-	camera.make_current()
 	_montar_interface()
 	botao_jogar.grab_focus.call_deferred() # Enter/Espaço já começa o jogo
 
-func _montar_fundo() -> void:
-	var sala: Node2D = (load(CENA_FUNDO) as PackedScene).instantiate() as Node2D
-	sala.set_script(null) # sem school_room.gd: não dispara falas nem tarefas
-	var remover: Array[Node] = []
-	for nome in NOS_REMOVIDOS:
-		var n: Node = sala.get_node_or_null(nome)
-		if n:
-			remover.append(n)
-	for n in sala.find_children("*", "", true, false):
-		if n is CharacterBody2D or n.name in ["ExclamationMarker", "DoorLabel"] or n.name.begins_with("Marca"):
-			remover.append(n)
-	for n in remover:
-		if is_instance_valid(n) and n.get_parent():
-			n.get_parent().remove_child(n)
-			n.queue_free()
-	for area in sala.find_children("*", "Area2D", true, false):
-		(area as Area2D).monitoring = false
-	palco.add_child(sala)
+func _process(delta: float) -> void:
+	# o diretor atravessa a calçada e volta a entrar pela esquerda
+	if diretor:
+		diretor.position.x += 38.0 * delta
+		if diretor.position.x > 680.0:
+			diretor.position.x = -40.0
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel") and (janela_volume.visible or janela_creditos.visible):
+		get_viewport().set_input_as_handled()
+		_fechar_janelas()
 
 func _montar_interface() -> void:
 	var ui := CanvasLayer.new()
@@ -62,71 +72,113 @@ func _montar_interface() -> void:
 	ui.layer = 5
 	add_child(ui)
 
-	var escuro := ColorRect.new()
-	escuro.color = Color(0.04, 0.07, 0.05, 0.55)
-	escuro.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	escuro.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	ui.add_child(escuro)
+	var fundo := TextureRect.new()
+	fundo.texture = FUNDO
+	fundo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fundo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	fundo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	fundo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	fundo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ui.add_child(fundo)
 
-	var centro := CenterContainer.new()
-	centro.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	centro.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	ui.add_child(centro)
+	# Diretor andando na calçada (como no topo do site)
+	diretor = AnimatedSprite2D.new()
+	diretor.sprite_frames = FRAMES_DIRETOR
+	diretor.animation = &"walk_right"
+	diretor.scale = Vector2(2, 2)
+	diretor.position = Vector2(60, 330)
+	diretor.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	diretor.play()
+	ui.add_child(diretor)
 
-	var quadro := PanelContainer.new()
-	quadro.name = "Quadro"
-	quadro.add_theme_stylebox_override("panel", _estilo(COR_VERDE, 16))
-	quadro.custom_minimum_size = Vector2(240, 0)
-	centro.add_child(quadro)
+	var logo := TextureRect.new()
+	logo.texture = LOGO
+	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	logo.anchor_left = 0.5
+	logo.anchor_right = 0.5
+	logo.offset_left = -170
+	logo.offset_right = 170
+	logo.offset_top = 16
+	logo.offset_bottom = 16 + 73
+	logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ui.add_child(logo)
 
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 8)
-	quadro.add_child(vbox)
+	var coluna := VBoxContainer.new()
+	coluna.name = "Botoes"
+	coluna.add_theme_constant_override("separation", 9)
+	coluna.anchor_left = 0.5
+	coluna.anchor_right = 0.5
+	coluna.offset_left = -80
+	coluna.offset_right = 80
+	coluna.offset_top = 112
+	ui.add_child(coluna)
 
-	var titulo := _label("Pitagorome", FONTE_BOLD, 28, COR_AMARELO)
-	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	titulo.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.6))
-	titulo.add_theme_constant_override("shadow_offset_x", 2)
-	titulo.add_theme_constant_override("shadow_offset_y", 2)
-	vbox.add_child(titulo)
-
-	var sub := _label("Você é o novo diretor da Escola Pitagórica", FONTE_REG, 9, COR_CREME)
-	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(sub)
-
-	var espaco := Control.new()
-	espaco.custom_minimum_size = Vector2(0, 4)
-	vbox.add_child(espaco)
-
-	botao_jogar = _botao("Jogar", 14)
+	botao_jogar = _botao("Jogar", 15, 30)
 	botao_jogar.pressed.connect(jogar)
-	vbox.add_child(botao_jogar)
+	coluna.add_child(botao_jogar)
 
-	botao_volume = _botao("Volume", 11)
+	botao_volume = _botao("Volume", 12, 25)
 	botao_volume.pressed.connect(alternar_volume)
-	vbox.add_child(botao_volume)
+	coluna.add_child(botao_volume)
 
-	caixa_volume = VBoxContainer.new()
-	caixa_volume.name = "CaixaVolume"
-	caixa_volume.add_theme_constant_override("separation", 4)
-	caixa_volume.visible = false
-	vbox.add_child(caixa_volume)
-	ControleVolume.criar_linhas(caixa_volume, 9, 120.0)
+	botao_creditos = _botao("Créditos", 12, 25)
+	botao_creditos.pressed.connect(alternar_creditos)
+	coluna.add_child(botao_creditos)
 
-	botao_sair = _botao("Sair", 11)
+	botao_sair = _botao("Sair", 12, 25)
 	botao_sair.pressed.connect(func(): get_tree().quit())
 	botao_sair.visible = not OS.has_feature("web") # no navegador é só fechar a aba
-	vbox.add_child(botao_sair)
+	coluna.add_child(botao_sair)
 
-	var dica := _label("WASD ou setas para andar  ·  E para interagir  ·  Tab abre a tarefa", FONTE_REG, 8, Color(COR_CREME, 0.85))
-	dica.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	dica.anchor_left = 0.0
-	dica.anchor_right = 1.0
+	# Dica dos controles, numa "plaquinha" escura como o HUD do jogo/site
+	var dica := PanelContainer.new()
+	dica.add_theme_stylebox_override("panel", _estilo_hud(5))
+	dica.anchor_left = 0.5
+	dica.anchor_right = 0.5
 	dica.anchor_top = 1.0
 	dica.anchor_bottom = 1.0
-	dica.offset_top = -22
-	dica.offset_bottom = -8
+	dica.offset_left = -150
+	dica.offset_right = 150
+	dica.offset_top = -50
+	dica.offset_bottom = -50
+	dica.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	dica.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var texto_dica := _label("WASD ou setas para andar  ·  E para interagir  ·  Tab abre a tarefa", FONTE_REG, 8, COR_CREME)
+	texto_dica.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	dica.add_child(texto_dica)
 	ui.add_child(dica)
+
+	veu = ColorRect.new()
+	veu.name = "Veu"
+	veu.color = Color(0, 0, 0, 0.45)
+	veu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	veu.gui_input.connect(func(ev: InputEvent):
+		if ev is InputEventMouseButton and ev.pressed:
+			_fechar_janelas())
+	ui.add_child(veu)
+
+	# Janelinha de volume
+	janela_volume = _janela("Volume")
+	caixa_volume = janela_volume.get_meta("conteudo")
+	ControleVolume.criar_linhas(caixa_volume, 9, 130.0)
+	ui.add_child(janela_volume)
+
+	# Janelinha de créditos
+	janela_creditos = _janela("Créditos")
+	var cred: VBoxContainer = janela_creditos.get_meta("conteudo")
+	cred.add_child(_label("Equipe", FONTE_BOLD, 10, COR_LARANJA))
+	for nome in EQUIPE:
+		cred.add_child(_label(nome, FONTE_REG, 9, COR_CREME))
+	var espaco := Control.new()
+	espaco.custom_minimum_size = Vector2(0, 4)
+	cred.add_child(espaco)
+	cred.add_child(_label("Feito com", FONTE_BOLD, 10, COR_LARANJA))
+	cred.add_child(_label("Godot Engine 4 · GDScript · pixel art", FONTE_REG, 9, COR_CREME))
+	cred.add_child(_label("Trabalho de Desenvolvimento de Sistemas · IFSP", FONTE_REG, 9, COR_CREME))
+	ui.add_child(janela_creditos)
+	_fechar_janelas()
 
 func jogar() -> void:
 	if saindo or Transition.is_transitioning:
@@ -136,21 +188,84 @@ func jogar() -> void:
 	Transition.change_scene(CENA_HISTORIA)
 
 func alternar_volume() -> void:
-	caixa_volume.visible = not caixa_volume.visible
-	botao_volume.text = "Fechar volume" if caixa_volume.visible else "Volume"
+	var abrir: bool = not janela_volume.visible
+	_fechar_janelas()
+	janela_volume.visible = abrir
+	caixa_volume.visible = abrir
+	veu.visible = abrir
+
+func alternar_creditos() -> void:
+	var abrir: bool = not janela_creditos.visible
+	_fechar_janelas()
+	janela_creditos.visible = abrir
+	veu.visible = abrir
+
+func _fechar_janelas() -> void:
+	janela_volume.visible = false
+	caixa_volume.visible = false
+	janela_creditos.visible = false
+	veu.visible = false
+	if is_inside_tree() and botao_jogar.is_inside_tree():
+		botao_jogar.grab_focus.call_deferred()
 
 # ---------------- visual ----------------
 
-func _estilo(cor: Color, margem: int) -> StyleBoxFlat:
+# Janelinha centralizada embaixo dos botões, com título e "Fechar"
+func _janela(titulo: String) -> PanelContainer:
+	var j := PanelContainer.new()
+	j.name = "Janela" + titulo.replace("é", "e")
+	j.add_theme_stylebox_override("panel", _estilo_hud(12, true))
+	j.anchor_left = 0.5
+	j.anchor_right = 0.5
+	j.anchor_top = 0.5
+	j.anchor_bottom = 0.5
+	j.offset_left = -125
+	j.offset_right = 125
+	j.offset_top = -95
+	j.offset_bottom = -95
+	j.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 5)
+	j.add_child(vbox)
+	var cabeca := HBoxContainer.new()
+	vbox.add_child(cabeca)
+	var t := _label(titulo, FONTE_BOLD, 13, COR_AMARELO)
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cabeca.add_child(t)
+	var fechar := _botao("Fechar", 9, 18)
+	fechar.custom_minimum_size.x = 56
+	fechar.pressed.connect(_fechar_janelas)
+	cabeca.add_child(fechar)
+	var conteudo := VBoxContainer.new()
+	conteudo.add_theme_constant_override("separation", 3)
+	vbox.add_child(conteudo)
+	j.set_meta("conteudo", conteudo)
+	return j
+
+func _estilo_hud(margem: int, opaco: bool = false) -> StyleBoxFlat:
 	var e := StyleBoxFlat.new()
-	e.bg_color = cor
-	e.border_color = COR_BORDA
+	e.bg_color = Color(COR_HUD, 1.0) if opaco else COR_HUD
+	e.border_color = Color(COR_CREME, 0.85)
 	e.set_border_width_all(1)
 	e.set_corner_radius_all(8)
 	e.content_margin_left = margem
 	e.content_margin_right = margem
-	e.content_margin_top = margem * 0.75
-	e.content_margin_bottom = margem * 0.75
+	e.content_margin_top = margem * 0.6
+	e.content_margin_bottom = margem * 0.6
+	return e
+
+# Botão "game" do site: amarelo, borda verde de 2px, cantos arredondados e sombra dura embaixo
+func _estilo_botao(fundo: Color, sombra: int) -> StyleBoxFlat:
+	var e := StyleBoxFlat.new()
+	e.bg_color = fundo
+	e.border_color = COR_BORDA
+	e.set_border_width_all(2)
+	e.set_corner_radius_all(5)
+	e.shadow_color = COR_SOMBRA
+	e.shadow_size = 0
+	e.shadow_offset = Vector2(sombra, sombra)
+	e.content_margin_top = 2
+	e.content_margin_bottom = 2
 	return e
 
 func _label(texto: String, fonte: FontFile, tamanho: int, cor: Color) -> Label:
@@ -162,22 +277,17 @@ func _label(texto: String, fonte: FontFile, tamanho: int, cor: Color) -> Label:
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l
 
-func _botao(texto: String, tamanho: int) -> Button:
+func _botao(texto: String, tamanho: int, altura: int) -> Button:
 	var b := Button.new()
 	b.text = texto
-	b.custom_minimum_size = Vector2(0, 26 if tamanho >= 14 else 22)
+	b.custom_minimum_size = Vector2(0, altura)
 	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	b.add_theme_font_override("font", FONTE_BOLD)
 	b.add_theme_font_size_override("font_size", tamanho)
-	b.add_theme_color_override("font_color", COR_CREME)
-	b.add_theme_color_override("font_hover_color", COR_AMARELO)
-	b.add_theme_color_override("font_focus_color", COR_AMARELO)
-	b.add_theme_color_override("font_pressed_color", COR_AMARELO)
-	var normal := _estilo(Color(0.12, 0.17, 0.11, 0.9), 6)
-	var hover := _estilo(COR_VERDE_HOVER, 6)
-	hover.border_color = COR_AMARELO
-	b.add_theme_stylebox_override("normal", normal)
-	b.add_theme_stylebox_override("hover", hover)
-	b.add_theme_stylebox_override("pressed", hover)
-	b.add_theme_stylebox_override("focus", hover)
+	for cor in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
+		b.add_theme_color_override(cor, COR_TEXTO_BOTAO)
+	b.add_theme_stylebox_override("normal", _estilo_botao(COR_AMARELO, 3))
+	b.add_theme_stylebox_override("hover", _estilo_botao(COR_AMARELO_HOVER, 3))
+	b.add_theme_stylebox_override("focus", _estilo_botao(COR_AMARELO_HOVER, 3))
+	b.add_theme_stylebox_override("pressed", _estilo_botao(COR_AMARELO_HOVER, 1))
 	return b
