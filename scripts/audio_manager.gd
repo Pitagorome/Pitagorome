@@ -73,6 +73,10 @@ var _escuro_antes: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS # continua tocando com o jogo pausado
+	# Os buses Musica e Efeitos vêm de res://default_bus_layout.tres. Criar bus por código
+	# (AudioServer.add_bus) depois que o jogo abriu QUEBRA o som na versão web: o Godot
+	# desliga o Master da saída do navegador e não religa (medido em 24/11, v0.3.3).
+	# _criar_bus fica só de reserva, caso o arquivo de layout suma.
 	_criar_bus("Musica")
 	_criar_bus("Efeitos")
 	_carregar_config()
