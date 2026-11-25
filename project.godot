@@ -27,6 +27,7 @@ Fase2Flow="*res://scripts/fase2_flow.gd"
 Fase3Flow="*res://scripts/fase3_flow.gd"
 Versao="*res://scripts/versao.gd"
 ControleVolume="*res://scripts/controle_volume.gd"
+MenuPausa="*res://scripts/menu_pausa.gd"
 
 [display]
 
