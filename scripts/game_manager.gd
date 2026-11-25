@@ -167,6 +167,23 @@ func jump_to_phase(phase: int) -> void:
 	current_phase = phase
 	start_task(first_task_of_phase(phase))
 
+# Modo apresentação (botão "Escolher tarefa" do menu inicial): começa direto na tarefa pedida,
+# como se o jogador tivesse feito todas as anteriores. Quem leva para a sala certa é o menu
+# (scripts/menu_inicial.gd), porque a Tarefa 8 começa na Sala do Gerador e as outras no gabinete.
+func jump_to_task(task: int) -> void:
+	var phase: int = TASK_PHASE.get(task, 1)
+	if task <= 1:
+		reset_progress() # Tarefa 1 = jogo novo (só pula a historinha)
+		intro_dialogue_finished = false
+		return
+	jump_to_phase(phase)
+	for t in TASK_PHASE:
+		if TASK_PHASE[t] == phase and t < task:
+			completed_tasks.append(t)
+			seen_events["t%d_briefing" % t] = true
+	set_lights_out(task == 8) # a Tarefa 8 começa no apagão
+	start_task(task)
+
 func first_task_of_phase(phase: int) -> int:
 	var first: int = 0
 	for task in TASK_PHASE:
