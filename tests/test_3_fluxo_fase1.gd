@@ -10,6 +10,7 @@ const MATEMATICA: String = "res://scenes/school/math_classroom.tscn"
 const ALMOX: String = "res://scenes/school/almoxarifado_scene.tscn"
 const PORTAO: String = "res://scenes/school/portao_scene.tscn"
 const HISTORIA: String = "res://scenes/intro/historia_inicio.tscn"
+const MENU: String = "res://scenes/ui/menu_inicial.tscn"
 
 func _init() -> void:
 	suite_name = "Teste 3 — Jogada completa da Fase 1"
@@ -18,6 +19,7 @@ func _init() -> void:
 func get_cases() -> Array:
 	return [
 		["T3.0 Historinha do começo (demissão, jornal, chegada) e botão de pular", _historia],
+		["T3.0b Menu inicial: Jogar leva à historinha e Volume mostra Geral, Música e Interações", _menu],
 		["T3.1 Início: diálogo da Coordenadora e criação do personagem", _inicio],
 		["T3.2 Movimento do jogador e porta para o corredor", _movimento_e_porta],
 		["T3.3 Task 1: tour (Zelador e Professor) leva de volta ao gabinete", _task1_tour],
@@ -109,9 +111,50 @@ func _assistir_historia(pular_depois_de: int = -1) -> Array:
 	await _frames(4)
 	return lines
 
+# Pedido de 24/11: menu inicial com Jogar e ajuste de volume
+func _menu() -> void:
+	GameManager.reset_progress()
+	Transition.change_scene(MENU)
+	await _wait_transition()
+	await _frames(5)
+	var menu: Node = scene()
+	if not check(menu != null and menu.name == "MenuInicial", "Menu inicial abre"):
+		return
+	check(menu.botao_jogar.visible and menu.botao_jogar.text == "Jogar", "Tem o botão Jogar")
+	check(not menu.caixa_volume.visible, "Barrinhas de volume começam escondidas")
+	menu.botao_volume.pressed.emit()
+	check(menu.caixa_volume.visible, "Botão Volume mostra as barrinhas")
+	var sliders: Array = menu.caixa_volume.find_children("*", "HSlider", true, false)
+	check_eq(sliders.size(), 3, "3 barrinhas (Geral, Música, Interações)")
+	if sliders.size() == 3:
+		Audio.salvar_config_ativo = false
+		var antes: float = Audio.get_volume("Musica")
+		(sliders[1] as HSlider).value = 40
+		check(absf(Audio.get_volume("Musica") - 0.4) < 0.01, "Barrinha de Música do menu muda o volume da música")
+		check(absf(ControleVolume._sliders["Musica"].value - 40.0) < 0.01, "Painel do canto acompanha o menu")
+		Audio.set_volume("Musica", antes)
+		Audio.salvar_config_ativo = true
+	check(not menu.botao_sair.visible or not OS.has_feature("web"), "Sair não aparece no navegador")
+	menu.botao_jogar.pressed.emit()
+	var inicio: int = Time.get_ticks_msec()
+	while Time.get_ticks_msec() - inicio < 10000:
+		await _frames(1)
+		if scene() and scene().name == "HistoriaInicio" and not Transition.is_transitioning:
+			break
+	check(scene() != null and scene().name == "HistoriaInicio", "Jogar leva à historinha")
+	# deixa a historinha pronta para o próximo caso (que abre a historinha de novo do zero)
+	if scene() and scene().has_method("pular"):
+		scene().pular()
+	inicio = Time.get_ticks_msec()
+	while Time.get_ticks_msec() - inicio < 15000:
+		await _frames(1)
+		if scene() and scene().get("location_id") == "gabinete" and not Transition.is_transitioning:
+			break
+	DialogueManager.end_dialogue()
+
 func _historia() -> void:
 	GameManager.reset_progress()
-	check_eq(ProjectSettings.get_setting("application/run/main_scene"), HISTORIA, "O jogo abre na historinha")
+	check_eq(ProjectSettings.get_setting("application/run/main_scene"), MENU, "O jogo abre no menu inicial (Jogar leva à historinha)")
 	var lines: Array = await _assistir_historia()
 	check(lines.any(func(l): return l.begins_with("Coordenadora:") and l.contains("demitido")), "Cena 1: a Coordenadora conta ao Diretor Otávio que ele foi demitido")
 	check(lines.any(func(l): return l.begins_with("Diretor Otávio:")), "O Diretor Otávio fala")

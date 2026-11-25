@@ -1,6 +1,7 @@
 extends Node
 
-# Ferramenta: print do botão de volume (fechado e aberto) no corredor da Fase 1 e na historinha.
+# Ferramenta: print do botão de volume (fechado e aberto) no corredor da Fase 1, na historinha
+# e no menu inicial (menu.png e menu_volume.png).
 # Rodar COM janela:
 #   Godot_v4.6.2-stable_win64.exe --path . res://tests/capture_volume.tscn -- --out=C:/pasta
 
@@ -22,6 +23,17 @@ func _ready() -> void:
 	_capture.call_deferred()
 
 func _capture() -> void:
+	var menu: Node = load("res://scenes/ui/menu_inicial.tscn").instantiate()
+	get_tree().root.add_child(menu)
+	get_tree().current_scene = menu
+	for i in 30:
+		await get_tree().process_frame
+	await _print("menu.png")
+	menu.alternar_volume()
+	await _print("menu_volume.png")
+	get_tree().current_scene = null
+	menu.queue_free()
+	await get_tree().process_frame
 	var room: Node = load("res://scenes/school/school_corridor.tscn").instantiate()
 	get_tree().root.add_child(room)
 	get_tree().current_scene = room
@@ -45,6 +57,9 @@ func _capture() -> void:
 	await _print("volume_historia.png")
 	ControleVolume.abrir()
 	await _print("volume_historia_aberto.png")
+	ControleVolume.fechar()
+	get_tree().current_scene = null
+	hist.queue_free()
 	get_tree().quit()
 
 func _print(nome: String) -> void:
