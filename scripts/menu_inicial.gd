@@ -26,23 +26,14 @@ const CENA_GERADOR: String = "res://scenes/school/sala_gerador_scene.tscn"
 const FUNDO: Texture2D = preload("res://assets/ui/menu_fundo.jpg")
 const LOGO: Texture2D = preload("res://assets/ui/logo.png")
 const FRAMES_DIRETOR: SpriteFrames = preload("res://assets/character_frames/adam_frames.tres")
-const FONTE_PIXEL: FontFile = preload("res://assets/fonts/PixelifySans.ttf") # fonte variável (peso 400 a 700)
-const LARGURA_BOTAO: int = 150
-const ALTURA_BOTAO: int = 26
-const TAMANHO_FONTE_BOTAO: int = 13
+# Visual (fonte pixelada, cores e botões do site): scripts/estilo_menu.gd
+const LARGURA_BOTAO: int = EstiloMenu.LARGURA_BOTAO
+const COR_AMARELO := EstiloMenu.COR_AMARELO
+const COR_CREME := EstiloMenu.COR_CREME
+const COR_LARANJA := EstiloMenu.COR_LARANJA
 
 var FONTE_BOLD: FontVariation
 var FONTE_REG: FontVariation
-
-# Cores do site (src/styles.css, convertidas de oklch)
-const COR_AMARELO := Color(0.956, 0.836, 0.463)       # --accent (botões)
-const COR_AMARELO_HOVER := Color(1.0, 0.9, 0.6)
-const COR_TEXTO_BOTAO := Color(0.096, 0.21, 0.102)    # --accent-foreground
-const COR_BORDA := Color(0.177, 0.293, 0.181)         # --panel-border
-const COR_SOMBRA := Color(0.065, 0.142, 0.094, 0.45)  # --pixel-shadow
-const COR_HUD := Color(0.065, 0.142, 0.094, 0.88)     # --ink (janelinhas e dica)
-const COR_CREME := Color(0.965, 0.934, 0.848)         # --ink-foreground
-const COR_LARANJA := Color(0.99, 0.75, 0.35)
 
 const EQUIPE: Array[String] = [
 	"Ana Julia Cardoso Moser",
@@ -65,21 +56,9 @@ var veu: ColorRect # escurece o menu atrás da janelinha aberta; clicar nele fec
 var diretor: AnimatedSprite2D
 var saindo: bool = false
 
-# Mesma fonte com outro peso (Pixelify Sans é variável: eixo "wght")
-func _peso(base: FontFile, peso: int) -> FontVariation:
-	var f := FontVariation.new()
-	f.base_font = base
-	f.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): peso}
-	return f
-
 func _ready() -> void:
-	# letra pixelada tem que ficar sem suavização, senão borra quando a tela aumenta
-	var pixel: FontFile = FONTE_PIXEL.duplicate()
-	pixel.antialiasing = TextServer.FONT_ANTIALIASING_NONE
-	pixel.hinting = TextServer.HINTING_NONE
-	pixel.subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_DISABLED
-	FONTE_BOLD = _peso(pixel, 700)
-	FONTE_REG = _peso(pixel, 500)
+	FONTE_BOLD = EstiloMenu.fonte_bold()
+	FONTE_REG = EstiloMenu.fonte_reg()
 	_montar_interface()
 	botao_jogar.grab_focus.call_deferred() # Enter/Espaço já começa o jogo
 
@@ -343,51 +322,10 @@ func _janela(titulo: String, largura: int = 250, topo: int = -95) -> PanelContai
 	return j
 
 func _estilo_hud(margem: int, opaco: bool = false) -> StyleBoxFlat:
-	var e := StyleBoxFlat.new()
-	e.bg_color = Color(COR_HUD, 1.0) if opaco else COR_HUD
-	e.border_color = Color(COR_CREME, 0.85)
-	e.set_border_width_all(1)
-	e.set_corner_radius_all(8)
-	e.content_margin_left = margem
-	e.content_margin_right = margem
-	e.content_margin_top = margem * 0.6
-	e.content_margin_bottom = margem * 0.6
-	return e
-
-# Botão "game" do site: amarelo, borda verde de 2px, cantos arredondados e sombra dura embaixo
-func _estilo_botao(fundo: Color, sombra: int) -> StyleBoxFlat:
-	var e := StyleBoxFlat.new()
-	e.bg_color = fundo
-	e.border_color = COR_BORDA
-	e.set_border_width_all(2)
-	e.set_corner_radius_all(5)
-	e.shadow_color = COR_SOMBRA
-	e.shadow_size = 0
-	e.shadow_offset = Vector2(sombra, sombra)
-	e.content_margin_top = 2
-	e.content_margin_bottom = 2
-	return e
+	return EstiloMenu.estilo_hud(margem, opaco)
 
 func _label(texto: String, fonte: Font, tamanho: int, cor: Color) -> Label:
-	var l := Label.new()
-	l.text = texto
-	l.add_theme_font_override("font", fonte)
-	l.add_theme_font_size_override("font_size", tamanho)
-	l.add_theme_color_override("font_color", cor)
-	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	return l
+	return EstiloMenu.label(texto, fonte, tamanho, cor)
 
-func _botao(texto: String, tamanho: int = TAMANHO_FONTE_BOTAO, altura: int = ALTURA_BOTAO) -> Button:
-	var b := Button.new()
-	b.text = texto
-	b.custom_minimum_size = Vector2(0, altura)
-	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	b.add_theme_font_override("font", FONTE_BOLD)
-	b.add_theme_font_size_override("font_size", tamanho)
-	for cor in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
-		b.add_theme_color_override(cor, COR_TEXTO_BOTAO)
-	b.add_theme_stylebox_override("normal", _estilo_botao(COR_AMARELO, 3))
-	b.add_theme_stylebox_override("hover", _estilo_botao(COR_AMARELO_HOVER, 3))
-	b.add_theme_stylebox_override("focus", _estilo_botao(COR_AMARELO_HOVER, 3))
-	b.add_theme_stylebox_override("pressed", _estilo_botao(COR_AMARELO_HOVER, 1))
-	return b
+func _botao(texto: String, tamanho: int = EstiloMenu.TAMANHO_FONTE_BOTAO, altura: int = EstiloMenu.ALTURA_BOTAO) -> Button:
+	return EstiloMenu.botao(texto, tamanho, altura)
