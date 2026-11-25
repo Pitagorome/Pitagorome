@@ -38,6 +38,7 @@ var _sliders: Dictionary = {}    # bus -> HSlider
 var _icones: Dictionary = {}     # bus -> IconeSom
 var _porcentos: Dictionary = {}  # bus -> Label
 var _atualizando: bool = false
+var _extras: Array = []  # linhas de volume montadas fora do painel (menu inicial)
 var _cena_posicao: Node = null
 var _botao_pular: Control = null
 var _com_pular: bool = false
@@ -107,9 +108,21 @@ func _criar_painel() -> void:
 	var titulo := _label("Volume", 11)
 	vbox.add_child(titulo)
 
+	_montar_linhas(vbox, 9, 110, _sliders, _icones, _porcentos)
+
+# Monta as 3 linhas (Geral, Música, Interações) dentro de qualquer container.
+# Usado pelo painel do canto e pelo menu inicial (scenes/ui/menu_inicial.tscn).
+# As linhas ficam sincronizadas: mexer numa atualiza todas.
+func criar_linhas(container: Container, tamanho_fonte: int = 9, largura_slider: float = 110.0) -> void:
+	var extra: Dictionary = {"sliders": {}, "icones": {}, "porcentos": {}}
+	_montar_linhas(container, tamanho_fonte, largura_slider, extra["sliders"], extra["icones"], extra["porcentos"])
+	_extras.append(extra)
+	_atualizar()
+
+func _montar_linhas(vbox: Container, tamanho_fonte: int, largura_slider: float, sliders: Dictionary, icones: Dictionary, porcentos: Dictionary) -> void:
 	for linha in LINHAS:
 		var bus: String = linha[0]
-		var nome := _label(linha[1], 9)
+		var nome := _label(linha[1], tamanho_fonte)
 		nome.tooltip_text = linha[2]
 		nome.mouse_filter = Control.MOUSE_FILTER_PASS
 		vbox.add_child(nome)
@@ -132,13 +145,13 @@ func _criar_painel() -> void:
 		mudo.mouse_entered.connect(func(): ic.cor = COR_DESTAQUE)
 		mudo.mouse_exited.connect(func(): ic.cor = COR_TEXTO)
 		hbox.add_child(mudo)
-		_icones[bus] = ic
+		icones[bus] = ic
 
 		var slider := HSlider.new()
 		slider.min_value = 0
 		slider.max_value = 100
 		slider.step = 5
-		slider.custom_minimum_size = Vector2(110, 18)
+		slider.custom_minimum_size = Vector2(largura_slider, 18)
 		slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		slider.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		slider.focus_mode = Control.FOCUS_NONE # setas do teclado continuam andando com o personagem
@@ -147,13 +160,13 @@ func _criar_painel() -> void:
 		_estilizar_slider(slider)
 		slider.value_changed.connect(func(v: float): _on_slider(bus, v))
 		hbox.add_child(slider)
-		_sliders[bus] = slider
+		sliders[bus] = slider
 
-		var pct := _label("100%", 9)
+		var pct := _label("100%", tamanho_fonte)
 		pct.custom_minimum_size = Vector2(30, 0)
 		pct.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		hbox.add_child(pct)
-		_porcentos[bus] = pct
+		porcentos[bus] = pct
 
 # Botão de mudo da linha. Se o volume estava no zero, "desmutar" volta para 50%.
 func _on_mudo(bus: String) -> void:
@@ -169,15 +182,19 @@ func _on_slider(bus: String, valor: float) -> void:
 
 func _atualizar() -> void:
 	_atualizando = true
-	for linha in LINHAS:
-		var bus: String = linha[0]
-		var v: float = Audio.get_volume(bus)
-		var mudo: bool = Audio.esta_mudo(bus)
-		_sliders[bus].value = round(v * 100.0)
-		_sliders[bus].modulate.a = 0.45 if mudo else 1.0
-		_porcentos[bus].text = "mudo" if mudo else "%d%%" % int(round(v * 100.0))
-		_icones[bus].mudo = mudo
-		_icones[bus].nivel = v
+	_extras = _extras.filter(func(e): return e["sliders"].values().all(func(n): return is_instance_valid(n)))
+	var conjuntos: Array = [{"sliders": _sliders, "icones": _icones, "porcentos": _porcentos}]
+	conjuntos.append_array(_extras)
+	for c in conjuntos:
+		for linha in LINHAS:
+			var bus: String = linha[0]
+			var v: float = Audio.get_volume(bus)
+			var mudo: bool = Audio.esta_mudo(bus)
+			c["sliders"][bus].value = round(v * 100.0)
+			c["sliders"][bus].modulate.a = 0.45 if mudo else 1.0
+			c["porcentos"][bus].text = "mudo" if mudo else "%d%%" % int(round(v * 100.0))
+			c["icones"][bus].mudo = mudo
+			c["icones"][bus].nivel = v
 	_atualizando = false
 	icone_botao.mudo = Audio.esta_mudo("Master")
 	icone_botao.nivel = Audio.get_volume("Master")

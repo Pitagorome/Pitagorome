@@ -66,8 +66,10 @@ func _criar_botao(texto: String, topo: int) -> Button:
 	return b
 
 func _process(_delta: float) -> void:
-	botao.visible = GameManager.current_phase < 2 and not Transition.is_transitioning
-	botao3.visible = GameManager.current_phase < 3 and not Transition.is_transitioning
+	# no menu inicial não aparecem (só depois de clicar em Jogar)
+	var no_menu: bool = get_tree().current_scene != null and get_tree().current_scene.name == "MenuInicial"
+	botao.visible = GameManager.current_phase < 2 and not Transition.is_transitioning and not no_menu
+	botao3.visible = GameManager.current_phase < 3 and not Transition.is_transitioning and not no_menu
 	# quando só sobra o da Fase 3, ele sobe para o lugar do outro
 	botao3.offset_top = 196 if botao.visible else 172
 	botao3.offset_bottom = botao3.offset_top + 20
