@@ -29,6 +29,7 @@ func get_cases() -> Array:
 		["T3.7 Task 5: calendário e vans (erro e acerto)", _task5_vans],
 		["T3.8 Fim da Fase 1", _fim_fase],
 		["T3.9 Escolher tarefa (godmode da apresentação) começa direto na tarefa certa", _godmode],
+		["T3.10 Menu de pausa: Esc/botão pausa, Continuar despausa e Menu inicial volta para a tela inicial", _pausa],
 	]
 
 # ---------------- Utilitários de simulação ----------------
@@ -553,3 +554,66 @@ func _godmode() -> void:
 	DialogueManager.end_dialogue()
 	DialogueManager.modal_open = false
 	GameManager.reset_progress()
+
+# Pedido de 25/11: menu para voltar à tela inicial ou continuar (despausar)
+func _pausa() -> void:
+	var mp: Node = tree().root.get_node_or_null("MenuPausa")
+	if not check(mp != null, "Autoload MenuPausa existe"):
+		return
+	DialogueManager.end_dialogue()
+	DialogueManager.modal_open = false
+	GameManager.jump_to_task(3)
+	Transition.change_scene("res://scenes/school/school_corridor.tscn")
+	await _wait_transition()
+	await _frames(5)
+	DialogueManager.end_dialogue()
+	check(scene() != null and scene().get("location_id") == "corredor", "Começa no corredor")
+	check(mp.botao.visible, "Botão de pausa aparece dentro da escola")
+	# lugar: canto de cima, à esquerda do volume, sem cobrir o nome do diretor
+	var r_pausa: Rect2 = mp.botao.get_global_rect()
+	var r_volume: Rect2 = ControleVolume.botao.get_global_rect()
+	check(r_pausa.size.is_equal_approx(Vector2(26, 16)), "Botão de pausa do mesmo tamanho do de volume (26x16)")
+	check(not r_pausa.intersects(r_volume) and r_pausa.position.x < r_volume.position.x, "Pausa fica à esquerda do volume, sem encostar")
+	var dir: Control = scene().find_child("PanelDirector", true, false) as Control
+	if dir and dir.is_visible_in_tree():
+		check(not r_pausa.intersects(dir.get_global_rect()), "Botão de pausa não cobre o nome do diretor (%s x %s)" % [str(r_pausa), str(dir.get_global_rect())])
+	# Esc abre
+	var esc := InputEventAction.new()
+	esc.action = "ui_cancel"
+	esc.pressed = true
+	Input.parse_input_event(esc)
+	await _frames(3)
+	check(mp.aberto and tree().paused and mp.janela.visible, "Esc pausa e abre o menu")
+	# Esc de novo continua
+	Input.parse_input_event(esc)
+	await _frames(3)
+	check(not mp.aberto and not tree().paused, "Esc de novo continua o jogo")
+	# botão abre; Continuar fecha
+	mp.botao.pressed.emit()
+	await _frames(2)
+	check(mp.aberto and tree().paused, "Botão de pausa pausa o jogo")
+	mp.botao_volume.pressed.emit()
+	check(mp.caixa_volume.visible and mp.caixa_volume.find_children("*", "HSlider", true, false).size() == 3, "Volume mostra as 3 barrinhas")
+	mp.botao_continuar.pressed.emit()
+	await _frames(2)
+	check(not mp.aberto and not tree().paused and not mp.janela.visible, "Continuar despausa")
+	# Menu inicial pede confirmação; Cancelar volta
+	mp.abrir()
+	mp.botao_menu.pressed.emit()
+	check(mp.caixa_confirmar.visible and not mp.caixa_principal.visible, "Menu inicial pede confirmação")
+	mp.botao_nao.pressed.emit()
+	check(mp.caixa_principal.visible and mp.aberto, "Cancelar volta para o menu de pausa")
+	mp.botao_menu.pressed.emit()
+	mp.botao_sim.pressed.emit()
+	var inicio: int = Time.get_ticks_msec()
+	while Time.get_ticks_msec() - inicio < 10000:
+		await _frames(1)
+		if scene() and scene().name == "MenuInicial" and not Transition.is_transitioning:
+			break
+	check(scene() != null and scene().name == "MenuInicial", "Sim, voltar leva à tela inicial")
+	check(not tree().paused and not mp.aberto, "Na tela inicial o jogo não fica pausado")
+	check(not mp.botao.visible, "Botão de pausa some na tela inicial")
+	check_eq(GameManager.current_task_id, 1, "Progresso volta ao começo")
+	Input.parse_input_event(esc)
+	await _frames(2)
+	check(not mp.aberto and not tree().paused, "Esc na tela inicial não pausa")

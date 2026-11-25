@@ -1,7 +1,7 @@
 extends Node
 
 # Ferramenta: print do botão de volume (fechado e aberto) no corredor da Fase 1, na historinha
-# e no menu inicial (menu.png e menu_volume.png).
+# no menu inicial (menu.png e menu_volume.png) e no menu de pausa (pausa*.png).
 # Rodar COM janela:
 #   Godot_v4.6.2-stable_win64.exe --path . res://tests/capture_volume.tscn -- --out=C:/pasta
 
@@ -49,6 +49,13 @@ func _capture() -> void:
 	Audio.set_mudo("Musica", false)
 	Audio.set_volume("Efeitos", 1.0)
 	ControleVolume.fechar()
+	MenuPausa.abrir()
+	await _print("pausa.png")
+	MenuPausa.botao_volume.pressed.emit()
+	await _print("pausa_volume.png")
+	MenuPausa.botao_menu.pressed.emit()
+	await _print("pausa_confirmar.png")
+	MenuPausa.continuar()
 	get_tree().current_scene = null
 	room.queue_free()
 	var hist: Node = load("res://scenes/intro/historia_inicio.tscn").instantiate()
