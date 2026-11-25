@@ -266,6 +266,16 @@ func tocar_musica(nome: String) -> void:
 	var entra: AudioStreamPlayer = _musica_b if _musica_ativa == _musica_a else _musica_a
 	_musica_ativa = entra
 	entra.stream = stream
+	if OS.has_feature("web"):
+		# No navegador (modo "sample" do Godot) mudar o volume de um som que já está tocando
+		# não pega direito: a música ficava presa perto de -60 dB (quase muda). Então lá não tem
+		# crossfade: a música nova já começa no volume certo e a antiga para na hora.
+		if _tween_musica and _tween_musica.is_valid():
+			_tween_musica.kill()
+		sai.stop()
+		entra.volume_db = VOLUME_MUSICA_DB
+		entra.play()
+		return
 	entra.volume_db = SILENCIO_DB
 	entra.play()
 	if _tween_musica and _tween_musica.is_valid():
