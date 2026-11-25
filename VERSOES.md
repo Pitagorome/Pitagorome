@@ -18,7 +18,7 @@ O que diferencia as duas **não é o nome do arquivo**, é o **preset de exporta
 |---|---|---|
 | Presets (Projeto → Exportar) | `Windows - TESTE`, `Web - TESTE` | `Windows - FINAL`, `Web - FINAL` |
 | Feature tag `teste` | sim | não |
-| Botões "Pular p/ Fase 2/3 (TESTE)" | aparecem | **não existem** |
+| Botões "Pular p/ Fase 2/3 (TESTE)" | removidos na v1.0.2 (use **Escolher tarefa** no menu) | **não existem** |
 | Marca "VERSÃO DE TESTE vX" no canto | aparece | não |
 | Nome | `v0.3.0-teste` | `v1.0.0` |
 | Tag no git | `v0.3.0-teste` | `v1.0.0` |
@@ -79,6 +79,7 @@ e abra http://localhost:8000. Ou, no editor do Godot, o botão *Executar no nave
 
 | Versão | Data | Canal | O que mudou |
 |---|---|---|---|
+| v1.0.2-teste / **v1.0.2** | 25/11/2026 | teste e **final** | **Menu de pausa** (Esc ou botão no canto): Continuar, Volume e voltar ao Menu inicial. Saíram os botões "Pular p/ Fase 2/3" do teste (use **Escolher tarefa** no menu). |
 | v1.0.1-teste / **v1.0.1** | 25/11/2026 | teste e **final** | Botão **Escolher tarefa** no menu (modo apresentação): começa direto em qualquer uma das 15 tarefas. |
 | **v1.0.0** | 24/11/2026 | **final** | Entrega oficial: as 3 fases, historinha, encerramento e menu inicial, igual à v0.3.7-teste, mas sem os botões de pular fase e sem a marca de teste. No site em `/jogo/`. |
 | v0.3.7-teste | 24/11/2026 | teste | Menu: letra pixelada (Pixelify Sans, a do site), botões do mesmo tamanho e logo do site sem a faixa. |
