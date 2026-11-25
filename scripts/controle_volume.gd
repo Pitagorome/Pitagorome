@@ -43,11 +43,18 @@ var _botao_pular: Control = null
 var _com_pular: bool = false
 var _modo_posicao: int = -1 # 0 = canto da tela, 1 = ao lado do botão de pular
 
+# Versão web: o navegador só libera o som depois do primeiro clique/tecla na página
+# (regra de autoplay do Chrome, Edge, Firefox e Safari). Até lá aparece um aviso.
+var aviso_som: PanelContainer
+var som_liberado: bool = true
+var _tempo_checagem: float = 0.0
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS # funciona com o jogo pausado
 	layer = 61 # por cima de tudo do jogo, até da tela preta (50) e do botão de pular da historinha (60)
 	_criar_botao()
 	_criar_painel()
+	_criar_aviso_som()
 	Audio.volume_mudou.connect(_atualizar)
 	_atualizar()
 	fechar()
@@ -198,11 +205,13 @@ func _input(event: InputEvent) -> void:
 		if not painel.get_global_rect().has_point(pos) and not botao.get_global_rect().has_point(pos):
 			fechar()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_checar_som_liberado(delta)
 	_posicionar()
 	# Some durante a troca de sala (tela preta), mas na historinha fica junto do botão de
 	# pular, que continua aparecendo nas telas pretas com texto
 	botao.visible = _com_pular or not Transition.is_transitioning
+	aviso_som.visible = not som_liberado and botao.visible and not aberto
 	if not botao.visible and aberto:
 		fechar()
 
@@ -236,6 +245,46 @@ func _posicionar() -> void:
 	painel.offset_left = direita - 190.0
 	painel.offset_top = topo + TAMANHO_BOTAO.y + 4.0
 	painel.offset_bottom = painel.offset_top
+	# aviso de som bloqueado: logo abaixo do botão, alinhado pela direita
+	aviso_som.offset_right = direita
+	aviso_som.offset_left = direita - 160.0
+	aviso_som.offset_top = topo + TAMANHO_BOTAO.y + 4.0
+	aviso_som.offset_bottom = aviso_som.offset_top
+
+# ---------------- aviso de som bloqueado (só no navegador) ----------------
+
+func _criar_aviso_som() -> void:
+	aviso_som = PanelContainer.new()
+	var estilo := _estilo_pular()
+	estilo.content_margin_left = 6
+	estilo.content_margin_right = 6
+	estilo.content_margin_top = 2
+	estilo.content_margin_bottom = 3
+	aviso_som.add_theme_stylebox_override("panel", estilo)
+	aviso_som.anchor_left = 1.0
+	aviso_som.anchor_right = 1.0
+	aviso_som.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	aviso_som.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var texto := _label("Clique ou aperte uma tecla para ligar o som", 7)
+	texto.add_theme_color_override("font_color", COR_PULAR_ICONE)
+	aviso_som.add_child(texto)
+	add_child(aviso_som)
+	som_liberado = not OS.has_feature("web")
+	aviso_som.visible = not som_liberado
+
+# Pergunta ao navegador se a pessoa já clicou/apertou algo na página
+# (navigator.userActivation.hasBeenActive). Depois que libera, não pergunta mais.
+func _checar_som_liberado(delta: float) -> void:
+	if som_liberado:
+		return
+	_tempo_checagem -= delta
+	if _tempo_checagem > 0.0:
+		return
+	_tempo_checagem = 0.25
+	var ativo = JavaScriptBridge.eval("navigator.userActivation ? navigator.userActivation.hasBeenActive : true", true)
+	if ativo == null or bool(ativo):
+		som_liberado = true
+		aviso_som.visible = false
 
 # ---------------- visual ----------------
 
