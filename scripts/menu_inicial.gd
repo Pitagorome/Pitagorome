@@ -4,7 +4,9 @@ extends Node2D
 # ("tá muito feio"): inspirado no site do grupo (github.com/Pitagorome/Pitagorome-Site) e no menu
 # do Aeromática.
 #   - fundo: a ilustração da Escola Pitagórica do site (assets/ui/menu_fundo.jpg);
-#   - título: o logo oficial (assets/ui/logo.png);
+#   - título: o logo oficial sem a faixa (assets/ui/logo.png = Pitagorome-Site/Site/src/assets/logo.png);
+#   - fonte pixelada Pixelify Sans, a mesma do site (assets/fonts/PixelifySans.ttf, licença OFL ao lado);
+#   - os 4 botões com o mesmo tamanho (LARGURA_BOTAO x ALTURA_BOTAO);
 #   - botões amarelos com borda verde e sombra "pixel", iguais ao botão "game" do site;
 #   - o diretor (Adam) passa andando pela calçada, como no topo do site.
 # Botões:
@@ -19,8 +21,13 @@ const CENA_HISTORIA: String = "res://scenes/intro/historia_inicio.tscn"
 const FUNDO: Texture2D = preload("res://assets/ui/menu_fundo.jpg")
 const LOGO: Texture2D = preload("res://assets/ui/logo.png")
 const FRAMES_DIRETOR: SpriteFrames = preload("res://assets/character_frames/adam_frames.tres")
-const FONTE_BOLD: FontFile = preload("res://assets/fonts/Montserrat-Bold.ttf")
-const FONTE_REG: FontFile = preload("res://assets/fonts/Montserrat-Regular.ttf")
+const FONTE_PIXEL: FontFile = preload("res://assets/fonts/PixelifySans.ttf") # fonte variável (peso 400 a 700)
+const LARGURA_BOTAO: int = 150
+const ALTURA_BOTAO: int = 26
+const TAMANHO_FONTE_BOTAO: int = 13
+
+var FONTE_BOLD: FontVariation
+var FONTE_REG: FontVariation
 
 # Cores do site (src/styles.css, convertidas de oklch)
 const COR_AMARELO := Color(0.956, 0.836, 0.463)       # --accent (botões)
@@ -50,7 +57,21 @@ var veu: ColorRect # escurece o menu atrás da janelinha aberta; clicar nele fec
 var diretor: AnimatedSprite2D
 var saindo: bool = false
 
+# Mesma fonte com outro peso (Pixelify Sans é variável: eixo "wght")
+func _peso(base: FontFile, peso: int) -> FontVariation:
+	var f := FontVariation.new()
+	f.base_font = base
+	f.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): peso}
+	return f
+
 func _ready() -> void:
+	# letra pixelada tem que ficar sem suavização, senão borra quando a tela aumenta
+	var pixel: FontFile = FONTE_PIXEL.duplicate()
+	pixel.antialiasing = TextServer.FONT_ANTIALIASING_NONE
+	pixel.hinting = TextServer.HINTING_NONE
+	pixel.subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_DISABLED
+	FONTE_BOLD = _peso(pixel, 700)
+	FONTE_REG = _peso(pixel, 500)
 	_montar_interface()
 	botao_jogar.grab_focus.call_deferred() # Enter/Espaço já começa o jogo
 
@@ -98,36 +119,37 @@ func _montar_interface() -> void:
 	logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	logo.anchor_left = 0.5
 	logo.anchor_right = 0.5
-	logo.offset_left = -170
-	logo.offset_right = 170
-	logo.offset_top = 16
-	logo.offset_bottom = 16 + 73
+	# 520x84 desenhado em 260x42: na janela padrão (1280x720, 2x) fica pixel por pixel, sem borrar
+	logo.offset_left = -130
+	logo.offset_right = 130
+	logo.offset_top = 44
+	logo.offset_bottom = 44 + 42
 	logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ui.add_child(logo)
 
 	var coluna := VBoxContainer.new()
 	coluna.name = "Botoes"
-	coluna.add_theme_constant_override("separation", 9)
+	coluna.add_theme_constant_override("separation", 10)
 	coluna.anchor_left = 0.5
 	coluna.anchor_right = 0.5
-	coluna.offset_left = -80
-	coluna.offset_right = 80
+	coluna.offset_left = -LARGURA_BOTAO / 2.0
+	coluna.offset_right = LARGURA_BOTAO / 2.0
 	coluna.offset_top = 112
 	ui.add_child(coluna)
 
-	botao_jogar = _botao("Jogar", 15, 30)
+	botao_jogar = _botao("Jogar")
 	botao_jogar.pressed.connect(jogar)
 	coluna.add_child(botao_jogar)
 
-	botao_volume = _botao("Volume", 12, 25)
+	botao_volume = _botao("Volume")
 	botao_volume.pressed.connect(alternar_volume)
 	coluna.add_child(botao_volume)
 
-	botao_creditos = _botao("Créditos", 12, 25)
+	botao_creditos = _botao("Créditos")
 	botao_creditos.pressed.connect(alternar_creditos)
 	coluna.add_child(botao_creditos)
 
-	botao_sair = _botao("Sair", 12, 25)
+	botao_sair = _botao("Sair")
 	botao_sair.pressed.connect(func(): get_tree().quit())
 	botao_sair.visible = not OS.has_feature("web") # no navegador é só fechar a aba
 	coluna.add_child(botao_sair)
@@ -145,7 +167,7 @@ func _montar_interface() -> void:
 	dica.offset_bottom = -50
 	dica.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	dica.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var texto_dica := _label("WASD ou setas para andar  ·  E para interagir  ·  Tab abre a tarefa", FONTE_REG, 8, COR_CREME)
+	var texto_dica := _label("WASD ou setas para andar  ·  E para interagir  ·  Tab abre a tarefa", FONTE_REG, 9, COR_CREME)
 	texto_dica.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	dica.add_child(texto_dica)
 	ui.add_child(dica)
@@ -162,7 +184,9 @@ func _montar_interface() -> void:
 	# Janelinha de volume
 	janela_volume = _janela("Volume")
 	caixa_volume = janela_volume.get_meta("conteudo")
-	ControleVolume.criar_linhas(caixa_volume, 9, 130.0)
+	ControleVolume.criar_linhas(caixa_volume, 10, 130.0)
+	for l in caixa_volume.find_children("*", "Label", true, false):
+		(l as Label).add_theme_font_override("font", FONTE_REG) # mesma letra pixelada do resto do menu
 	ui.add_child(janela_volume)
 
 	# Janelinha de créditos
@@ -232,7 +256,7 @@ func _janela(titulo: String) -> PanelContainer:
 	var t := _label(titulo, FONTE_BOLD, 13, COR_AMARELO)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cabeca.add_child(t)
-	var fechar := _botao("Fechar", 9, 18)
+	var fechar := _botao("Fechar", 10, 18)
 	fechar.custom_minimum_size.x = 56
 	fechar.pressed.connect(_fechar_janelas)
 	cabeca.add_child(fechar)
@@ -268,7 +292,7 @@ func _estilo_botao(fundo: Color, sombra: int) -> StyleBoxFlat:
 	e.content_margin_bottom = 2
 	return e
 
-func _label(texto: String, fonte: FontFile, tamanho: int, cor: Color) -> Label:
+func _label(texto: String, fonte: Font, tamanho: int, cor: Color) -> Label:
 	var l := Label.new()
 	l.text = texto
 	l.add_theme_font_override("font", fonte)
@@ -277,7 +301,7 @@ func _label(texto: String, fonte: FontFile, tamanho: int, cor: Color) -> Label:
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l
 
-func _botao(texto: String, tamanho: int, altura: int) -> Button:
+func _botao(texto: String, tamanho: int = TAMANHO_FONTE_BOTAO, altura: int = ALTURA_BOTAO) -> Button:
 	var b := Button.new()
 	b.text = texto
 	b.custom_minimum_size = Vector2(0, altura)
