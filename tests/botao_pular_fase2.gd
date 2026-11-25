@@ -2,6 +2,8 @@ extends CanvasLayer
 
 # =====================================================================
 # TEMP-PULAR-FASE2  [TEMPORÁRIO - SÓ PARA TESTE] Botão "Pular para a Fase 2"
+# DESATIVADO em 25/11: a linha do autoload saiu do project.godot (o botão "Escolher tarefa"
+# do menu inicial faz isso melhor). O arquivo ficou só para não apagar nada sem autorização.
 # ---------------------------------------------------------------------
 # Botões no canto superior direito que pulam direto para o começo da Fase 2
 # (Tarefa 6) ou da Fase 3 (Tarefa 11), no gabinete. Cada um some quando o jogo já

@@ -27,8 +27,6 @@ Fase2Flow="*res://scripts/fase2_flow.gd"
 Fase3Flow="*res://scripts/fase3_flow.gd"
 Versao="*res://scripts/versao.gd"
 ControleVolume="*res://scripts/controle_volume.gd"
-; TEMP-PULAR-FASE2: botão temporário de teste, apagar esta linha antes da entrega (ver tests/botao_pular_fase2.gd)
-BotaoPularFase2="*res://tests/botao_pular_fase2.gd"
 
 [display]
 
