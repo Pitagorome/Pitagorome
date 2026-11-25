@@ -92,7 +92,7 @@ body {
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
-
+<script>/* Pitagorome: libera o som do navegador no 1o clique/tecla (ver Explicacoes/controle_volume_24-11.md) */(function(){var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;var lista=[];function W(o){var c=o?new AC(o):new AC();lista.push(c);return c;}W.prototype=AC.prototype;window.AudioContext=W;window.webkitAudioContext=W;function liberar(){for(var i=0;i<lista.length;i++){if(lista[i].state!=='running'){lista[i].resume();}}}['pointerdown','mousedown','touchend','keydown','click'].forEach(function(e){window.addEventListener(e,liberar,true);});})();</script>
 	</head>
 	<body>
 		<canvas id="canvas">
@@ -111,7 +111,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":5791348,"index.wasm":37695054},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":5791492,"index.wasm":37695054},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
