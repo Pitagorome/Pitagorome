@@ -5,7 +5,7 @@
 | O quê | Onde |
 |---|---|
 | Jogar no navegador (última versão de **teste**) | https://pitagorome.github.io/Pitagorome/teste/ |
-| Jogar no navegador (versão **final**) | https://pitagorome.github.io/Pitagorome/jogo/ (só a partir da v1.0.0) |
+| Jogar no navegador (versão **final**, v1.0.0) | https://pitagorome.github.io/Pitagorome/jogo/ |
 | Página com todas as versões | https://pitagorome.github.io/Pitagorome/ |
 | Download para Windows (.zip com o executável) | botão **Baixar para Windows** em https://pitagorome.github.io/Pitagorome/ (arquivo em `/downloads/` do site) |
 | Releases no GitHub (opcional) | https://github.com/Pitagorome/Pitagorome/releases |
@@ -55,10 +55,14 @@ e vocês mudaram algo, a próxima build é `v0.3.1-teste`. O script avisa e recu
    `Pitagorome_<versão>_windows.zip` e `Pitagorome_<versão>_web.zip`.
 5. Criar a tag e mandar: `git tag -a v0.3.1-teste -m "..." && git push origin v0.3.1-teste`.
 6. **Download Windows:** copiar o `builds/<versão>/Pitagorome_<versão>_windows.zip` para a pasta
-   `downloads/` do branch `gh-pages` (deixar só o da versão atual, para o repositório não crescer à toa)
+   `downloads/` do branch `gh-pages` (deixar só o zip atual de **cada canal**, um de teste e um final, para o repositório não crescer à toa)
    e apontar o botão **Baixar para Windows** do `index.html` para ele. Assim o botão baixa o executável,
    e não o código do projeto (a página da tag no GitHub só oferece o código-fonte).
-   Opcional: GitHub → Releases → *Draft a new release* → tag → anexar o mesmo .zip → **Set as a pre-release**.
+   Opcional (Release no GitHub, com o `gh` instalado e logado: `winget install GitHub.cli` e `gh auth login`):
+   ```
+   gh release create v1.0.0 builds/v1.0.0/Pitagorome_v1.0.0_windows.zip builds/v1.0.0/Pitagorome_v1.0.0_web.zip --title "Pitagorome v1.0.0" --notes "Versão final"
+   ```
+   (na de teste, acrescentar `--prerelease`). Ou pelo site: GitHub → Releases → *Draft a new release* → tag → anexar o .zip.
 7. **Navegador:** copiar o conteúdo de `builds/<versão>/web/` para a pasta `teste/` (ou `jogo/` na final)
    do branch `gh-pages`, atualizar a tabela do `index.html` desse branch e dar push.
    O GitHub Pages publica sozinho em ~1 minuto.
