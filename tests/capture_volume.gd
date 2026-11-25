@@ -31,6 +31,8 @@ func _capture() -> void:
 	await _print("menu.png")
 	menu.alternar_volume()
 	await _print("menu_volume.png")
+	menu.alternar_tarefas()
+	await _print("menu_tarefas.png")
 	get_tree().current_scene = null
 	menu.queue_free()
 	await get_tree().process_frame

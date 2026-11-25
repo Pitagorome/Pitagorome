@@ -28,6 +28,7 @@ func get_cases() -> Array:
 		["T3.6 Task 4: depoimentos e acusação (erro e acerto)", _task4_suspeitos],
 		["T3.7 Task 5: calendário e vans (erro e acerto)", _task5_vans],
 		["T3.8 Fim da Fase 1", _fim_fase],
+		["T3.9 Escolher tarefa (godmode da apresentação) começa direto na tarefa certa", _godmode],
 	]
 
 # ---------------- Utilitários de simulação ----------------
@@ -507,3 +508,48 @@ func _segurar_tecla(tecla: Key, frames: int) -> void:
 	solta.pressed = false
 	Input.parse_input_event(solta)
 	await _physics_frames(1)
+
+# Pedido de 25/11: botão de godmode no menu para escolher a tarefa na apresentação
+func _godmode() -> void:
+	# [tarefa, sala onde começa]
+	var casos: Array = [[1, "gabinete"], [3, "gabinete"], [6, "gabinete"], [8, "sala_gerador"], [12, "gabinete"], [15, "gabinete"]]
+	for caso in casos:
+		var tarefa: int = caso[0]
+		DialogueManager.end_dialogue()
+		DialogueManager.modal_open = false
+		await _wait_transition() # a sala anterior pode estar no meio de uma troca de cena
+		DialogueManager.end_dialogue()
+		GameManager.reset_progress()
+		Transition.change_scene(MENU)
+		await _wait_transition()
+		await _frames(3)
+		var menu: Node = scene()
+		if not check(menu != null and menu.name == "MenuInicial", "T%d: menu abre (cena: %s)" % [tarefa, scene().name if scene() else "nenhuma"]):
+			return
+		if tarefa == 1:
+			check(menu.botao_tarefas.visible and not menu.janela_tarefas.visible, "Botão 'Escolher tarefa' aparece e a janela começa fechada")
+			menu.botao_tarefas.pressed.emit()
+			check(menu.janela_tarefas.visible, "Botão abre a lista de tarefas")
+			check_eq(menu.botoes_tarefa.size(), 15, "Lista tem as 15 tarefas")
+		menu.botoes_tarefa[tarefa].pressed.emit()
+		var inicio: int = Time.get_ticks_msec()
+		while Time.get_ticks_msec() - inicio < 15000:
+			await _frames(1)
+			if scene() and scene().get("location_id") == caso[1] and not Transition.is_transitioning:
+				break
+		check(scene() != null and scene().get("location_id") == caso[1], "T%d: começa em %s" % [tarefa, caso[1]])
+		check_eq(GameManager.current_task_id, tarefa, "T%d: tarefa atual" % tarefa)
+		check_eq(GameManager.current_phase, GameManager.TASK_PHASE[tarefa], "T%d: fase certa" % tarefa)
+		var anteriores_ok: bool = true
+		for t in range(1, tarefa):
+			anteriores_ok = anteriores_ok and GameManager.is_task_completed(t)
+		check(anteriores_ok and not GameManager.is_task_completed(tarefa), "T%d: tarefas anteriores feitas e a escolhida não" % tarefa)
+		check_eq(GameManager.lights_out, tarefa == 8, "T%d: luz apagada só na Tarefa 8" % tarefa)
+		if tarefa == 1:
+			check(not GameManager.intro_dialogue_finished, "T1: começa do diálogo de chegada (jogo novo sem a historinha)")
+		else:
+			check(GameManager.player_named, "T%d: já tem diretor (não pede para criar o personagem de novo)" % tarefa)
+		await _frames(30)
+	DialogueManager.end_dialogue()
+	DialogueManager.modal_open = false
+	GameManager.reset_progress()
